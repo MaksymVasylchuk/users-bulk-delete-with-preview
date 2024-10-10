@@ -1,7 +1,8 @@
 # Users Bulk Delete With Preview
 <p align="center">
-   <img src="https://github.com/user-attachments/assets/0bf5ea08-a41a-425f-83eb-ec2dd8c90e7e" height="300" alt="Users Bulk Delete With Preview" />
+   <img src="https://github.com/user-attachments/assets/9e194d8f-5c49-4105-92ad-56c17d713a13" height="300" alt="Users Bulk Delete With Preview" />
 </p>
+
 
 Effortlessly delete multiple WordPress users with our **Users Bulk Delete With Preview** plugin. View and confirm user details before removal to ensure accuracy and avoid mistakes. Streamline your user management process with ease and confidence!
 
