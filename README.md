@@ -89,3 +89,4 @@ This plugin relies on the following third-party libraries:
 
 ## License
 This plugin is licensed under the GPLv2 or later license. See the [LICENSE](LICENSE) file for details.
+
