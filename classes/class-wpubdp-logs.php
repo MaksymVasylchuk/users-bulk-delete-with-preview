@@ -152,7 +152,7 @@ if ( ! class_exists( 'WPUBDPLogs' ) ) {
 		private function get_total_record_count(): int {
 			global $wpdb;
 
-			return (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %s', $this->table_name ) ); // db call ok; no-cache ok.
+			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $this->table_name" ) ); // db call ok; no-cache ok.
 		}
 
 		/**

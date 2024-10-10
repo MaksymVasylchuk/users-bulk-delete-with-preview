@@ -21,11 +21,11 @@ $title = $title ?? '';
 			<table id="logs" class="display" style="width:100%">
 				<thead>
 				<tr>
-					<th><?php esc_html_e( 'ID', 'users_bulk_delete_with_preview' ); ?></th>
-					<th><?php esc_html_e( 'User', 'users_bulk_delete_with_preview' ); ?></th>
-					<th><?php esc_html_e( 'Deleted Users Count', 'users_bulk_delete_with_preview' ); ?></th>
-					<th><?php esc_html_e( 'Deleted User Data', 'users_bulk_delete_with_preview' ); ?></th>
-					<th><?php esc_html_e( 'Deletion Time', 'users_bulk_delete_with_preview' ); ?></th>
+					<th><?php esc_html_e( 'ID', 'users-bulk-delete-with-preview' ); ?></th>
+					<th><?php esc_html_e( 'User', 'users-bulk-delete-with-preview' ); ?></th>
+					<th><?php esc_html_e( 'Deleted Users Count', 'users-bulk-delete-with-preview' ); ?></th>
+					<th><?php esc_html_e( 'Deleted User Data', 'users-bulk-delete-with-preview' ); ?></th>
+					<th><?php esc_html_e( 'Deletion Time', 'users-bulk-delete-with-preview' ); ?></th>
 				</tr>
 				</thead>
 			</table>

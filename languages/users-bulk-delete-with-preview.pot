@@ -12,7 +12,7 @@ msgstr ""
 "<translations@example."
 "com>\n"
 "POT-Creation-Date: "
-"2024-09-01 14:30+0200\n"
+"2024-10-10 12:03+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Your "
 "Name <you@example.com>\n"
@@ -50,79 +50,6 @@ msgstr ""
 "3.4.4\n"
 "X-Poedit-"
 "SearchPath-0: .\n"
-
-#: assets/admin/admin.js:30
-msgid "Search for users"
-msgstr ""
-
-#: assets/admin/admin.js:81
-msgid "Select meta field"
-msgstr ""
-
-#: assets/admin/admin.js:86
-msgid "Select user roles"
-msgstr ""
-
-#: assets/admin/admin.js:87
-#: templates/partials/_woocommerce_filters_form.php:14
-msgid ""
-"Select products that "
-"bought user"
-msgstr ""
-
-#: assets/admin/admin.js:88
-msgid ""
-"Select subscriptions"
-msgstr ""
-
-#: assets/admin/admin.js:89
-msgid "Select memberships"
-msgstr ""
-
-#: assets/admin/admin.js:100
-msgid ""
-"Select registration date"
-msgstr ""
-
-#: assets/admin/admin.js:446
-msgid ""
-"An unexpected error "
-"occurred."
-msgstr ""
-
-#: assets/admin/admin.js:509
-#: templates/logs-page.php:24
-#: templates/partials/_users_table.php:26
-msgid "ID"
-msgstr ""
-
-#: assets/admin/admin.js:510
-#: templates/partials/_users_table.php:27
-msgid "Username"
-msgstr ""
-
-#: assets/admin/admin.js:511
-#: templates/partials/_users_table.php:28
-msgid "Email"
-msgstr ""
-
-#: assets/admin/admin.js:512
-#: templates/partials/_users_table.php:29
-msgid "Registered"
-msgstr ""
-
-#: assets/admin/admin.js:513
-#: templates/partials/_users_table.php:30
-msgid "Role"
-msgstr ""
-
-#: assets/admin/admin.js:515
-#: templates/partials/_users_table.php:11
-#: templates/partials/_users_table.php:31
-msgid ""
-"Assign related content "
-"to user"
-msgstr ""
 
 #: classes/class-wpubdp-helper.php:29
 msgid ""
@@ -220,6 +147,11 @@ msgid ""
 "You must update "
 "WordPress to use the "
 "plugin."
+msgstr ""
+
+#: templates/logs-page.php:24
+#: templates/partials/_users_table.php:27
+msgid "ID"
 msgstr ""
 
 #: templates/logs-page.php:25
@@ -376,34 +308,57 @@ msgid ""
 "Enter user meta value"
 msgstr ""
 
+#: templates/partials/_step-2-buttons.php:3
+msgid "Previous step"
+msgstr ""
+
+#: templates/partials/_step-2-buttons.php:6
+msgid ""
+"Export Selected Users"
+msgstr ""
+
+#: templates/partials/_step-2-buttons.php:9
+msgid ""
+"Delete selected users"
+msgstr ""
+
 #: templates/partials/_step-wizard.php:14
 #: templates/partials/_step-wizard.php:18
 #: templates/partials/_step-wizard.php:22
 msgid "Step"
 msgstr ""
 
-#: templates/partials/_success_user_delete.php:13
-#, php-format
+#: templates/partials/_users_table.php:11
+#: templates/partials/_users_table.php:32
 msgid ""
-"Success! The selected "
-"user %1$s (%2$s) was "
-"removed!"
+"Assign related content "
+"to user"
 msgstr ""
 
-#: templates/partials/_success_user_delete.php:15
-#, php-format
-msgid ""
-"Success! All selected "
-"users (%d) were removed!"
-msgstr ""
-
-#: templates/partials/_success_user_delete.php:17
-msgid ""
-"No users were removed."
-msgstr ""
-
-#: templates/partials/_users_table.php:25
+#: templates/partials/_users_table.php:26
 msgid "Select"
+msgstr ""
+
+#: templates/partials/_users_table.php:28
+msgid "Username"
+msgstr ""
+
+#: templates/partials/_users_table.php:29
+msgid "Email"
+msgstr ""
+
+#: templates/partials/_users_table.php:30
+msgid "Registered"
+msgstr ""
+
+#: templates/partials/_users_table.php:31
+msgid "Role"
+msgstr ""
+
+#: templates/partials/_woocommerce_filters_form.php:14
+msgid ""
+"Select products that "
+"bought user"
 msgstr ""
 
 #: templates/steps/step-1.php:21
@@ -414,45 +369,31 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: templates/steps/step-2.php:16
-msgid "Previous step"
-msgstr ""
-
-#: templates/steps/step-2.php:19
-msgid ""
-"Export Selected Users"
-msgstr ""
-
-#: templates/steps/step-2.php:22
-msgid ""
-"Delete selected users"
-msgstr ""
-
-#: wp-user-bulk-delete-with-preview.php:130
-#: wp-user-bulk-delete-with-preview.php:131
+#: users-bulk-delete-with-preview.php:131
+#: users-bulk-delete-with-preview.php:132
 msgid "Bulk Users Delete"
 msgstr ""
 
-#: wp-user-bulk-delete-with-preview.php:141
-#: wp-user-bulk-delete-with-preview.php:145
+#: users-bulk-delete-with-preview.php:142
+#: users-bulk-delete-with-preview.php:146
 msgid ""
 "Bulk Users Delete Logs"
 msgstr ""
 
-#: wp-user-bulk-delete-with-preview.php:171
+#: users-bulk-delete-with-preview.php:175
 msgid ""
-"WP Users Bulk Delete "
-"With Preview"
+"Users Bulk Delete With "
+"Preview"
 msgstr ""
 
-#: wp-user-bulk-delete-with-preview.php:194
+#: users-bulk-delete-with-preview.php:198
 msgid "Logs page"
 msgstr ""
 
-#: wp-user-bulk-delete-with-preview.php:338
+#: users-bulk-delete-with-preview.php:371
 msgid "Delete users"
 msgstr ""
 
-#: wp-user-bulk-delete-with-preview.php:340
+#: users-bulk-delete-with-preview.php:373
 msgid "Logs"
 msgstr ""

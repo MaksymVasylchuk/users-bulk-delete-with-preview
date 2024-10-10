@@ -8,7 +8,7 @@
 ?>
 <!-- Users table preview -->
 <div class="form-group">
-	<label for="generalSelect"><?php esc_html_e( 'Assign related content to user', 'users_bulk_delete_with_preview' ); ?>:</label>
+	<label for="generalSelect"><?php esc_html_e( 'Assign related content to user', 'users-bulk-delete-with-preview' ); ?>:</label>
 	<br>
 	<!-- General select dropdown outside the table -->
 	<select id="generalSelect" class="general-select">
@@ -23,13 +23,13 @@
 	<table id="userTable" class="display" style="width:100%">
 		<thead>
 		<tr>
-			<th><?php esc_html_e( 'Select', 'users_bulk_delete_with_preview' ); ?></th>
-			<th><?php esc_html_e( 'ID', 'users_bulk_delete_with_preview' ); ?></th>
-			<th><?php esc_html_e( 'Username', 'users_bulk_delete_with_preview' ); ?></th>
-			<th><?php esc_html_e( 'Email', 'users_bulk_delete_with_preview' ); ?></th>
-			<th><?php esc_html_e( 'Registered', 'users_bulk_delete_with_preview' ); ?></th>
-			<th><?php esc_html_e( 'Role', 'users_bulk_delete_with_preview' ); ?></th>
-			<th><?php esc_html_e( 'Assign related content to user', 'users_bulk_delete_with_preview' ); ?></th>
+			<th><?php esc_html_e( 'Select', 'users-bulk-delete-with-preview' ); ?></th>
+			<th><?php esc_html_e( 'ID', 'users-bulk-delete-with-preview' ); ?></th>
+			<th><?php esc_html_e( 'Username', 'users-bulk-delete-with-preview' ); ?></th>
+			<th><?php esc_html_e( 'Email', 'users-bulk-delete-with-preview' ); ?></th>
+			<th><?php esc_html_e( 'Registered', 'users-bulk-delete-with-preview' ); ?></th>
+			<th><?php esc_html_e( 'Role', 'users-bulk-delete-with-preview' ); ?></th>
+			<th><?php esc_html_e( 'Assign related content to user', 'users-bulk-delete-with-preview' ); ?></th>
 		</tr>
 		</thead>
 		<tbody>

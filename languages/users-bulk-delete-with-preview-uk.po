@@ -6,11 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2024-09-01 14:30+0200\n"
+"POT-Creation-Date: 2024-10-10 12:03+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
-"Language: uk\n"
+"Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,64 +21,6 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "X-Generator: Poedit 3.4.4\n"
 "X-Poedit-SearchPath-0: .\n"
-
-#: assets/admin/admin.js:30
-msgid "Search for users"
-msgstr "Пошук користувачів"
-
-#: assets/admin/admin.js:81
-msgid "Select meta field"
-msgstr "Виберіть мета-поле"
-
-#: assets/admin/admin.js:86
-msgid "Select user roles"
-msgstr "Виберіть ролі користувачів"
-
-#: assets/admin/admin.js:87 templates/partials/_woocommerce_filters_form.php:14
-msgid "Select products that bought user"
-msgstr "Виберіть продукти, які купив користувач"
-
-#: assets/admin/admin.js:88
-msgid "Select subscriptions"
-msgstr "Виберіть підписки"
-
-#: assets/admin/admin.js:89
-msgid "Select memberships"
-msgstr "Виберіть членства"
-
-#: assets/admin/admin.js:100
-msgid "Select registration date"
-msgstr "Виберіть дату реєстрації"
-
-#: assets/admin/admin.js:446
-msgid "An unexpected error occurred."
-msgstr "Сталася неочікувана помилка."
-
-#: assets/admin/admin.js:509 templates/logs-page.php:24
-#: templates/partials/_users_table.php:26
-msgid "ID"
-msgstr "ID"
-
-#: assets/admin/admin.js:510 templates/partials/_users_table.php:27
-msgid "Username"
-msgstr "Ім’я користувача"
-
-#: assets/admin/admin.js:511 templates/partials/_users_table.php:28
-msgid "Email"
-msgstr "Електронна пошта"
-
-#: assets/admin/admin.js:512 templates/partials/_users_table.php:29
-msgid "Registered"
-msgstr "Зареєстрований"
-
-#: assets/admin/admin.js:513 templates/partials/_users_table.php:30
-msgid "Role"
-msgstr "Роль"
-
-#: assets/admin/admin.js:515 templates/partials/_users_table.php:11
-#: templates/partials/_users_table.php:31
-msgid "Assign related content to user"
-msgstr "Призначте пов’язаний вміст користувачу"
 
 #: classes/class-wpubdp-helper.php:29
 msgid "An unknown error occurred."
@@ -149,6 +91,10 @@ msgstr "Метод %1$s не існує в класі %2$s."
 msgid "You must update WordPress to use the plugin."
 msgstr "Ви повинні оновити WordPress, щоб використовувати плагін."
 
+#: templates/logs-page.php:24 templates/partials/_users_table.php:27
+msgid "ID"
+msgstr "ID"
+
 #: templates/logs-page.php:25
 msgid "User"
 msgstr "Користувач"
@@ -192,7 +138,7 @@ msgstr "Виберіть існуючих користувачів"
 #: templates/partials/_existing_user_form.php:21
 #: templates/partials/_woocommerce_filters_form.php:25
 msgid "Select All"
-msgstr "Виберіть усі"
+msgstr "Виберати усі"
 
 #: templates/partials/_find_user_form.php:14
 msgid "User Role"
@@ -286,29 +232,52 @@ msgstr "Greater than or equal to (number)"
 msgid "Enter user meta value"
 msgstr "Введіть мета-значення користувача"
 
+#: templates/partials/_step-2-buttons.php:3
+msgid "Previous step"
+msgstr "Попередній крок"
+
+#: templates/partials/_step-2-buttons.php:6
+msgid "Export Selected Users"
+msgstr "Експорт вибраних користувачів"
+
+#: templates/partials/_step-2-buttons.php:9
+msgid "Delete selected users"
+msgstr "Видалити вибраних користувачів"
+
 #: templates/partials/_step-wizard.php:14
 #: templates/partials/_step-wizard.php:18
 #: templates/partials/_step-wizard.php:22
 msgid "Step"
 msgstr "Крок"
 
-#: templates/partials/_success_user_delete.php:13
-#, php-format
-msgid "Success! The selected user %1$s (%2$s) was removed!"
-msgstr "Успіх! Вибраного користувача %1$s (%2$s) видалено!"
+#: templates/partials/_users_table.php:11
+#: templates/partials/_users_table.php:32
+msgid "Assign related content to user"
+msgstr "Призначте пов’язаний вміст користувачу"
 
-#: templates/partials/_success_user_delete.php:15
-#, php-format
-msgid "Success! All selected users (%d) were removed!"
-msgstr "Успіх! Усі вибрані користувачі (%d) були видалені!"
-
-#: templates/partials/_success_user_delete.php:17
-msgid "No users were removed."
-msgstr "Користувачів не видалено."
-
-#: templates/partials/_users_table.php:25
+#: templates/partials/_users_table.php:26
 msgid "Select"
 msgstr "Виберіть"
+
+#: templates/partials/_users_table.php:28
+msgid "Username"
+msgstr "Ім’я користувача"
+
+#: templates/partials/_users_table.php:29
+msgid "Email"
+msgstr "Електронна пошта"
+
+#: templates/partials/_users_table.php:30
+msgid "Registered"
+msgstr "Зареєстрований"
+
+#: templates/partials/_users_table.php:31
+msgid "Role"
+msgstr "Роль"
+
+#: templates/partials/_woocommerce_filters_form.php:14
+msgid "Select products that bought user"
+msgstr "Виберіть продукти, які купив користувач"
 
 #: templates/steps/step-1.php:21
 msgid "Choose filter type"
@@ -318,40 +287,28 @@ msgstr "Виберіть тип фільтра"
 msgid "Preview"
 msgstr "Попередній перегляд"
 
-#: templates/steps/step-2.php:16
-msgid "Previous step"
-msgstr "Попередній крок"
-
-#: templates/steps/step-2.php:19
-msgid "Export Selected Users"
-msgstr "Експорт вибраних користувачів"
-
-#: templates/steps/step-2.php:22
-msgid "Delete selected users"
-msgstr "Видалити вибраних користувачів"
-
-#: wp-user-bulk-delete-with-preview.php:130
-#: wp-user-bulk-delete-with-preview.php:131
+#: users-bulk-delete-with-preview.php:131
+#: users-bulk-delete-with-preview.php:132
 msgid "Bulk Users Delete"
 msgstr "Масове видалення користувачів"
 
-#: wp-user-bulk-delete-with-preview.php:141
-#: wp-user-bulk-delete-with-preview.php:145
+#: users-bulk-delete-with-preview.php:142
+#: users-bulk-delete-with-preview.php:146
 msgid "Bulk Users Delete Logs"
 msgstr "Журнал масового видалення користувачів"
 
-#: wp-user-bulk-delete-with-preview.php:171
+#: users-bulk-delete-with-preview.php:175
 msgid "Users Bulk Delete With Preview"
-msgstr "Масове видалення користувачів WP із попереднім переглядом"
+msgstr "Масове видалення користувачів із попереднім переглядом"
 
-#: wp-user-bulk-delete-with-preview.php:194
+#: users-bulk-delete-with-preview.php:198
 msgid "Logs page"
 msgstr "Сторінка журналів"
 
-#: wp-user-bulk-delete-with-preview.php:338
+#: users-bulk-delete-with-preview.php:371
 msgid "Delete users"
 msgstr "Видалити користувачів"
 
-#: wp-user-bulk-delete-with-preview.php:340
+#: users-bulk-delete-with-preview.php:373
 msgid "Logs"
 msgstr "Журнали"

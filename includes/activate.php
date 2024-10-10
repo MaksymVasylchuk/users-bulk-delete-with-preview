@@ -23,7 +23,7 @@ if ( ! function_exists( 'wpubdp_activate_plugin' ) ) {
 			wp_die(
 				esc_html__(
 					'You must update WordPress to use the plugin.',
-					'users_bulk_delete_with_preview'
+					'users-bulk-delete-with-preview'
 				)
 			);
 		}

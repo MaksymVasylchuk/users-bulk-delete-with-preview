@@ -11,7 +11,7 @@
 <?php if ( isset( $products ) && ! empty( $products ) ) : ?>
 <tr class="woocommerce_filters_form" style="display: none;">
 	<th scope="row">
-		<label for="products"><?php esc_html_e( 'Select products that bought user', 'users_bulk_delete_with_preview' ); ?>:</label>
+		<label for="products"><?php esc_html_e( 'Select products that bought user', 'users-bulk-delete-with-preview' ); ?>:</label>
 	</th>
 	<td>
 		<select id="products" name="products[]" multiple="multiple" class="form-control">
@@ -22,7 +22,7 @@
 		<br>
 		<label for="selectAllProducts">
 			<input type="checkbox" id="selectAllProducts" name="selectAllProducts">
-			<?php esc_html_e( 'Select All', 'users_bulk_delete_with_preview' ); ?>
+			<?php esc_html_e( 'Select All', 'users-bulk-delete-with-preview' ); ?>
 		</label>
 	</td>
 </tr>

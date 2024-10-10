@@ -18,7 +18,7 @@
 			<?php if ( isset( $types ) && ! empty( $types ) ) : ?>
 				<tr>
 					<th scope="row">
-						<label for="filter_type"><?php esc_html_e( 'Choose filter type', 'users_bulk_delete_with_preview' ); ?>:</label>
+						<label for="filter_type"><?php esc_html_e( 'Choose filter type', 'users-bulk-delete-with-preview' ); ?>:</label>
 					</th>
 					<td>
 						<div class="form-group">
@@ -43,7 +43,7 @@
 		</table>
 		<!-- Preview Button -->
 		<p class="submit">
-			<button type="button" class="button button-primary preview_before_remove"><?php esc_html_e( 'Preview', 'users_bulk_delete_with_preview' ); ?></button>
+			<button type="button" class="button button-primary preview_before_remove"><?php esc_html_e( 'Preview', 'users-bulk-delete-with-preview' ); ?></button>
 		</p>
 	</form>
 	<!-- Search users form -->

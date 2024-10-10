@@ -10,7 +10,7 @@
  * Author URI: https://github.com/MaksymVasylchuk
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: users_bulk_delete_with_preview
+ * Text Domain: users-bulk-delete-with-preview
  * Domain Path: /languages
  *
  * @package WPUserBulkDeleteWithPreviw
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Main plugin class.
 if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 	/**
-	 * users_bulk_delete_with_preview class.
+	 * Users_Bulk_Delete_With_Preview class.
 	 */
 	class Users_Bulk_Delete_With_Preview {
 		/**
@@ -128,8 +128,8 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 		 */
 		public function admin_menu(): void {
 			add_menu_page(
-				__( 'Bulk Users Delete', 'users_bulk_delete_with_preview' ),
-				__( 'Bulk Users Delete', 'users_bulk_delete_with_preview' ),
+				__( 'Bulk Users Delete', 'users-bulk-delete-with-preview' ),
+				__( 'Bulk Users Delete', 'users-bulk-delete-with-preview' ),
 				'manage_options',
 				'wpubdp_admin',
 				array( $this, 'wpubdp_settings_page' ),
@@ -140,11 +140,11 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 				'wpubdp_admin',
 				__(
 					'Bulk Users Delete Logs',
-					'users_bulk_delete_with_preview'
+					'users-bulk-delete-with-preview'
 				),
 				__(
 					'Bulk Users Delete Logs',
-					'users_bulk_delete_with_preview'
+					'users-bulk-delete-with-preview'
 				),
 				'manage_options',
 				'wpubdp_admin_logs',
@@ -173,7 +173,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 			$data = array(
 				'title'         => __(
 					'Users Bulk Delete With Preview',
-					'users_bulk_delete_with_preview'
+					'users-bulk-delete-with-preview'
 				),
 				'roles'         => $all_roles,
 				'types'         => $types,
@@ -196,7 +196,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 			$data = array(
 				'title' => __(
 					'Logs page',
-					'users_bulk_delete_with_preview'
+					'users-bulk-delete-with-preview'
 				),
 			);
 
@@ -382,7 +382,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 		 */
 		public function load_text_domain(): void {
 			load_plugin_textdomain(
-				'users_bulk_delete_with_preview',
+				'users-bulk-delete-with-preview',
 				false,
 				dirname( plugin_basename( __FILE__ ) ) . '/languages/'
 			);
@@ -391,7 +391,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 }
 
 // Initialize the plugin if the class exists.
-if ( class_exists( 'users_bulk_delete_with_preview' ) ) {
+if ( class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 	$users_bulk_delete_with_preview = new Users_Bulk_Delete_With_Preview();
 
 	// Register activation hook.

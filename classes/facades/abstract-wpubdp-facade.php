@@ -64,7 +64,7 @@ if ( ! class_exists( 'WPUBDPFacadeAbstract' ) ) {
 				sprintf(
 					esc_html__(
 						'Method %1$s does not exist in class %2$s.',
-						'users_bulk_delete_with_preview'
+						'users-bulk-delete-with-preview'
 					),
 					$name,
 					$class_name

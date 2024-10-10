@@ -3,7 +3,7 @@ Contributors: maksymvasylchuk
 Tags: delete, bulk delete, users delete, users bulk delete, clean, bulk clean, users bulk clean
 Requires at least: 5.6
 Tested up to: 6.6.2
-Stable tag: trunk
+Stable tag: 1.0.0
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html

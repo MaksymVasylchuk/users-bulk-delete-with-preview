@@ -26,7 +26,7 @@ if ( ! class_exists( 'WPUBDPHelper' ) ) {
 		public function get_error_message( string $code ): string {
 			$messages = $this->get_error_messages();
 
-			return $messages[ $code ] ?? esc_html__( 'An unknown error occurred.', 'users_bulk_delete_with_preview' );
+			return $messages[ $code ] ?? esc_html__( 'An unknown error occurred.', 'users-bulk-delete-with-preview' );
 		}
 
 		/**
@@ -36,16 +36,16 @@ if ( ! class_exists( 'WPUBDPHelper' ) ) {
 		 */
 		private function get_error_messages(): array {
 			return array(
-				'permission_error'                  => esc_html__( 'You do not have sufficient permissions to perform this action.', 'users_bulk_delete_with_preview' ),
-				'invalid_nonce'                     => esc_html__( 'Invalid nonce', 'users_bulk_delete_with_preview' ),
-				'select_type'                       => esc_html__( 'Select type', 'users_bulk_delete_with_preview' ),
-				'security_error'                    => esc_html__( 'Invalid security token', 'users_bulk_delete_with_preview' ),
-				'generic_error'                     => esc_html__( 'Something went wrong. Please try again.', 'users_bulk_delete_with_preview' ),
-				'invalid_input'                     => esc_html__( 'User IDs should be an array.', 'users_bulk_delete_with_preview' ),
-				'at_least_one_required'             => esc_html__( 'At least one required field.', 'users_bulk_delete_with_preview' ),
-				'no_users_found_with_given_filters' => esc_html__( 'No users found with the given filters', 'users_bulk_delete_with_preview' ),
-				'no_users_found'                    => esc_html__( 'No users found for the provided IDs.', 'users_bulk_delete_with_preview' ),
-				'select_any_user'                   => esc_html__( 'Please select at least one user for deletion.', 'users_bulk_delete_with_preview' ),
+				'permission_error'                  => esc_html__( 'You do not have sufficient permissions to perform this action.', 'users-bulk-delete-with-preview' ),
+				'invalid_nonce'                     => esc_html__( 'Invalid nonce', 'users-bulk-delete-with-preview' ),
+				'select_type'                       => esc_html__( 'Select type', 'users-bulk-delete-with-preview' ),
+				'security_error'                    => esc_html__( 'Invalid security token', 'users-bulk-delete-with-preview' ),
+				'generic_error'                     => esc_html__( 'Something went wrong. Please try again.', 'users-bulk-delete-with-preview' ),
+				'invalid_input'                     => esc_html__( 'User IDs should be an array.', 'users-bulk-delete-with-preview' ),
+				'at_least_one_required'             => esc_html__( 'At least one required field.', 'users-bulk-delete-with-preview' ),
+				'no_users_found_with_given_filters' => esc_html__( 'No users found with the given filters', 'users-bulk-delete-with-preview' ),
+				'no_users_found'                    => esc_html__( 'No users found for the provided IDs.', 'users-bulk-delete-with-preview' ),
+				'select_any_user'                   => esc_html__( 'Please select at least one user for deletion.', 'users-bulk-delete-with-preview' ),
 			);
 		}
 
@@ -69,13 +69,13 @@ if ( ! class_exists( 'WPUBDPHelper' ) ) {
 		 */
 		public function get_types_of_user_search(): array {
 			$types = array(
-				'select_existing' => __( 'Choose from existing users', 'users_bulk_delete_with_preview' ),
-				'find_users'      => __( 'Find users according to certain criteria', 'users_bulk_delete_with_preview' ),
+				'select_existing' => __( 'Choose from existing users', 'users-bulk-delete-with-preview' ),
+				'find_users'      => __( 'Find users according to certain criteria', 'users-bulk-delete-with-preview' ),
 			);
 
 			if ( $this->check_if_woocommerce_is_active() ) {
 				$types['find_users_by_woocommerce_filters']
-					= __( 'Find users using WooCommerce filters', 'users_bulk_delete_with_preview' );
+					= __( 'Find users using WooCommerce filters', 'users-bulk-delete-with-preview' );
 			}
 
 			return $types;
@@ -184,7 +184,7 @@ if ( ! class_exists( 'WPUBDPHelper' ) ) {
 		 * @return string HTML string of select options.
 		 */
 		private function build_select_options( array $all_users ): string {
-			$options = '<option value="">' . __( 'Select a user', 'users_bulk_delete_with_preview' ) . '</option>';
+			$options = '<option value="">' . __( 'Select a user', 'users-bulk-delete-with-preview' ) . '</option>';
 
 			foreach ( $all_users as $user ) {
 				$options .= '<option value="' . esc_attr( $user->ID ) . '">' . esc_html( $user->user_login ) . '</option>';
