@@ -7,7 +7,7 @@
 
 ?>
 <!-- Users table preview -->
-<div class="form-group">
+<div class="form-group mb-4">
 	<label for="generalSelect"><?php esc_html_e( 'Assign related content to user', 'users-bulk-delete-with-preview' ); ?>:</label>
 	<br>
 	<!-- General select dropdown outside the table -->
