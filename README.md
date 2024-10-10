@@ -82,6 +82,11 @@ This plugin relies on the following third-party libraries:
 - **[Select2](https://select2.org/)** - A jQuery-based replacement for select boxes with support for searching and custom styling.  
   Licensed under [MIT License](https://opensource.org/licenses/MIT).
 
+## Donate
+If you find this plugin helpful and would like to support further development, please consider donating:
+
+[Donate Here](https://www.paypal.com/donate/?hosted_button_id=NXKRKRDFLKBFG)
+
 ## Changelog
 
 ### 1.0.0

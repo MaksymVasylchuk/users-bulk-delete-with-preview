@@ -64,6 +64,10 @@ The manual installation method requires downloading the Users Bulk Delete With P
 7. Deleted Users Review
 8. Logs
 
+=== Donate ===
+If you find this plugin helpful and would like to support further development, please consider donating:
+[Donate Here](https://www.paypal.com/donate/?hosted_button_id=NXKRKRDFLKBFG)
+
 == Credits ==
 
 This plugin uses the following third-party libraries:
