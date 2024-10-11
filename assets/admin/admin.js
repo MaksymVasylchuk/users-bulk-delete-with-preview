@@ -27,7 +27,7 @@
     function initializeUserSearch() {
         var $user_search_select = $( '#user_search' ).select2(
             {
-                placeholder: __( 'Search for users', 'wp_user_bulk_delete_with_preview' ),
+                placeholder: __( 'Search for users', 'users-bulk-delete-with-preview' ),
                 width: '400px',
                 ajax: {
                     url: myAjax.ajaxurl,
@@ -78,13 +78,13 @@
                     }),
                     processResults: data => ({results: data.data})
                 },
-                placeholder: __( 'Select meta field', 'wp_user_bulk_delete_with_preview' ),
+                placeholder: __( 'Select meta field', 'users-bulk-delete-with-preview' ),
                 minimumInputLength: 1
             }
         );
 
-        initializeSelect2WithHeightAdjustment( '#user_role', __( 'Select user roles', 'wp_user_bulk_delete_with_preview' ) );
-        initializeSelect2WithHeightAdjustment( '#products', __( 'Select products that bought user', 'wp_user_bulk_delete_with_preview' ) );
+        initializeSelect2WithHeightAdjustment( '#user_role', __( 'Select user roles', 'users-bulk-delete-with-preview' ) );
+        initializeSelect2WithHeightAdjustment( '#products', __( 'Select products that bought user', 'users-bulk-delete-with-preview' ) );
 
         // Initial setting for an empty Select2
         $( '.select2-selection--multiple' ).css( 'height', '35px' );
@@ -95,7 +95,7 @@
                 changeMonth: true,
                 changeYear: true,
                 dateFormat: 'yy-mm-dd',
-                placeholder: __( 'Select registration date', 'wp_user_bulk_delete_with_preview' )
+                placeholder: __( 'Select registration date', 'users-bulk-delete-with-preview' )
             }
         );
     }
@@ -512,7 +512,7 @@
         if (response.data && response.data.errors) {
             showErrorsUnderInputs( form, response.data.errors );
         } else {
-            createWordpressError( response.data.message || __( 'An unexpected error occurred.', 'wp_user_bulk_delete_with_preview' ) );
+            createWordpressError( response.data.message || __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );
         }
     }
 
@@ -610,13 +610,13 @@
                         orderable: false,
                         searchable: false
                     },
-                    {title: __( 'ID', 'wp_user_bulk_delete_with_preview' ), data: 'ID'},
-                    {title: __( 'Username', 'wp_user_bulk_delete_with_preview' ), data: 'user_login'},
-                    {title: __( 'Email', 'wp_user_bulk_delete_with_preview' ), data: 'user_email'},
-                    {title: __( 'Registered', 'wp_user_bulk_delete_with_preview' ), data: 'user_registered'},
-                    {title: __( 'Role', 'wp_user_bulk_delete_with_preview' ), data: 'user_role'},
+                    {title: __( 'ID', 'users-bulk-delete-with-preview' ), data: 'ID'},
+                    {title: __( 'Username', 'users-bulk-delete-with-preview' ), data: 'user_login'},
+                    {title: __( 'Email', 'users-bulk-delete-with-preview' ), data: 'user_email'},
+                    {title: __( 'Registered', 'users-bulk-delete-with-preview' ), data: 'user_registered'},
+                    {title: __( 'Role', 'users-bulk-delete-with-preview' ), data: 'user_role'},
                     {
-                        title: __( 'Assign related content to user', 'wp_user_bulk_delete_with_preview' ),
+                        title: __( 'Assign related content to user', 'users-bulk-delete-with-preview' ),
                         data: 'select',
                         orderable: false,
                         searchable: false
