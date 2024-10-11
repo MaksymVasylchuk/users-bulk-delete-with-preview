@@ -109,7 +109,7 @@ if ( ! class_exists( 'WPUBDPUsers' ) ) {
 				return new WP_Error( 'invalid_input', WPUBDPHelperFacade::get_error_message( 'invalid_input' ) );
 			}
 
-			$user_ids = array_map( 'esc_attr', $user_ids );
+			$user_ids = array_unique( array_map('absint', $user_ids ) );
 
 			$users = get_users( array( 'include' => $user_ids ) );
 
@@ -134,10 +134,10 @@ if ( ! class_exists( 'WPUBDPUsers' ) ) {
 				'date_query' => array(),
 			);
 
-			$this->apply_role_filter( $args, $request );
-			$this->apply_registration_date_filter( $args, $request );
-			$this->apply_usermeta_filter( $args, $request );
-			$this->apply_email_filters( $args, $request['user_email'] ?? '', $request['user_email_equal'] ?? '' );
+			$this->apply_role_filter( $args, $request ); //Request sanitized in apply_role_filter
+			$this->apply_registration_date_filter( $args, $request ); //Request sanitized in apply_registration_date_filter
+			$this->apply_usermeta_filter( $args, $request ); //Request sanitized in apply_usermeta_filter
+			$this->apply_email_filters( $args, $request['user_email'] ?? '', $request['user_email_equal'] ?? '' ); //Request sanitized in apply_email_filters
 
 			$user_query = new WP_User_Query( $args );
 
@@ -155,8 +155,7 @@ if ( ! class_exists( 'WPUBDPUsers' ) ) {
 		 */
 		public function get_users_by_woocommerce_filters(): mixed {
 
-			$products = $_POST['products'] ?? array();
-			$products = array_map( 'esc_attr', $products );
+			$products = array_unique( array_map('absint', $_POST['products'] ?? array() ) );
 
 			$user_ids = array_merge(
 				$this->get_users_by_product_purchase( $products )
@@ -181,8 +180,8 @@ if ( ! class_exists( 'WPUBDPUsers' ) ) {
 		 */
 		public function get_users_exclude_ids( array $exclude_ids ): array {
 			return get_users( array(
-				'exclude' => $exclude_ids,
-				'number'  => - 1,
+				'exclude' => array_unique( array_map('absint', $exclude_ids ) ),
+				'number'  => -1,
 				'orderby' => 'ID',
 				'order'   => 'ASC',
 			) );
@@ -319,7 +318,7 @@ if ( ! class_exists( 'WPUBDPUsers' ) ) {
 		 */
 		private function apply_usermeta_filter( array &$args, array $request ): void {
 			if ( ! empty( $request['user_meta'] ) && ! empty( $request['user_meta_value'] ) ) {
-				$compare              = $this->get_meta_compare_operator( $request['user_meta_equal'] );
+				$compare              = $this->get_meta_compare_operator( sanitize_text_field( $request['user_meta_equal'] ) );
 				$args['meta_query'][] = array(
 					'key'     => sanitize_text_field( $request['user_meta'] ),
 					'value'   => sanitize_text_field( $request['user_meta_value'] ),
@@ -344,7 +343,7 @@ if ( ! class_exists( 'WPUBDPUsers' ) ) {
 			}
 
 			// Sanitize product IDs: convert all IDs to integers.
-			$products_ids = array_map( 'intval', $products_ids );
+			$products_ids = array_unique( array_map('absint', $products_ids ) );
 
 			// Create placeholders for the prepared SQL statement.
 			$placeholders = implode( ',', array_fill( 0, count( $products_ids ), '%d' ) );
