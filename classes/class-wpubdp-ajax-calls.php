@@ -2,7 +2,7 @@
 /**
  * Ajax calls class
  *
- * @package     WPUserBulkDeleteWithPreviw\Classes
+ * @package     UsersBulkDeleteWithPreview\Classes
  */
 
 // Ensure this file is not accessed directly.
@@ -79,7 +79,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 			$field = $_POST[ $nonce_field ] ?? null; // WPCS: XSS ok.
 
 			if( strtoupper($type) === 'GET' ) {
-				$field = $_GET[ $nonce_field ]; // WPCS: XSS ok.
+				$field = $_GET[ $nonce_field ] ?? null; // WPCS: XSS ok.
 			}
 
 			if ( ! isset( $field )
@@ -176,7 +176,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 					'delete_users_nonce'
 				);
 
-				$users    = $_POST['users'] ?? array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
+				$users = array_map( 'sanitize_text_field', wp_unslash( $_POST['users'] ?? [] ) );
 				$user_ids = array_column( $users, 'id' );
 
 				if ( empty( $user_ids ) ) {

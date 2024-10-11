@@ -2,7 +2,7 @@
 /**
  * Logs class
  *
- * @package     WPUserBulkDeleteWithPreviw\Classes
+ * @package     UsersBulkDeleteWithPreview\Classes
  */
 
 // Ensure this file is not accessed directly.

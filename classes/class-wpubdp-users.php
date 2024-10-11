@@ -2,7 +2,7 @@
 /**
  * Users class
  *
- * @package     WPUserBulkDeleteWithPreviw\Classes
+ * @package     UsersBulkDeleteWithPreview\Classes
  */
 
 // Ensure this file is not accessed directly.
@@ -63,7 +63,7 @@ if ( ! class_exists( 'WPUBDPUsers' ) ) {
 			if ( ! empty( $user_query->results ) ) {
 				foreach ( $user_query->results as $user ) {
 					$results[] = array(
-						'id'   => $user->ID,
+						'id'   => intval( $user->ID ),
 						'text' => sprintf( '%s (%s)', $user->display_name, $user->user_email ),
 					);
 				}

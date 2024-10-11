@@ -2,7 +2,7 @@
 /**
  * Views facade
  *
- * @package     WPUserBulkDeleteWithPreviw\Classes\Facades
+ * @package     UsersBulkDeleteWithPreview\Classes\Facades
  */
 
 // Ensure this file is not accessed directly.

@@ -2,7 +2,7 @@
 /**
  * Abstract facade
  *
- * @package     WPUserBulkDeleteWithPreviw\Classes\Facades
+ * @package     UsersBulkDeleteWithPreview\Classes\Facades
  */
 
 // Ensure this file is not accessed directly.
@@ -66,8 +66,8 @@ if ( ! class_exists( 'WPUBDPFacadeAbstract' ) ) {
 						'Method %1$s does not exist in class %2$s.',
 						'users-bulk-delete-with-preview'
 					),
-					$name,
-					$class_name
+					esc_html( $name ),
+					esc_html( $class_name )
 				)
 			);
 		}
