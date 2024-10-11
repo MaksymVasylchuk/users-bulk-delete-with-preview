@@ -440,5 +440,14 @@ label:has(> input[type=checkbox]) {
     }
 }
 
+.dataTables_wrapper {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.dataTables_paginate {
+    display: block; /* Ensures the pagination is displayed */
+    margin: 20px 0; /* Adjusts margin as needed */
+}
 
 /**DataTables**/

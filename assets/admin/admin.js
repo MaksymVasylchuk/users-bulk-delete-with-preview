@@ -602,6 +602,7 @@
         let usersTable = $( '#userTable' ).DataTable(
             {
                 data: data,
+                responsive: true,
                 columns: [
                     {
                         title: '<input type="checkbox" id="select-all">',
@@ -649,6 +650,13 @@
             });
 
             $('.user-select').select2( {width: '200px'} );
+        });
+
+        // Trigger resize event
+        $(window).trigger('resize');
+
+        $(window).resize(function() {
+            table.columns.adjust().responsive.recalc();
         });
     }
 
