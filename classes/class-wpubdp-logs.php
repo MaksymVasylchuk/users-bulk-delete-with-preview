@@ -189,9 +189,9 @@ if ( ! class_exists( 'WPUBDPLogs' ) ) {
 					true
 				);
 				$data[]            = array(
-					$row->ID,
-					$row->display_name,
-					$deleted_user_data['user_delete_count'] ?? 0,
+					intval( $row->ID ),
+					sanitize_text_field( $row->display_name ),
+					intval( $deleted_user_data['user_delete_count'] ) ?? 0,
 					implode(
 						', ',
 						array_map(
