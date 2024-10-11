@@ -24,7 +24,7 @@
 						<div class="form-group">
 							<select id="filter_type" name="filter_type" class="form-control">
 								<?php foreach ( $types as $type_key => $type ) : ?>
-									<option value="<?php echo esc_attr( $type_key ); ?>"><?php esc_html_e( $type ); ?></option>
+									<option value="<?php echo esc_attr( $type_key ); ?>"><?php esc_html( $type ); ?></option>
 								<?php endforeach; ?>
 							</select>
 						</div>

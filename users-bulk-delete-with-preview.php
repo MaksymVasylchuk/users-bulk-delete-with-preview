@@ -73,7 +73,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 				define( 'WPUBDP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 			}
 			if ( ! defined( 'WPUBDP_PLUGIN_VERSION' ) ) {
-				define( 'WPUBDP_PLUGIN_VERSION', '1.0.0' );
+				define( 'WPUBDP_PLUGIN_VERSION', time() );
 			}
 			if ( ! defined( 'WPUBDP_BASE_NAME' ) ) {
 				define(
@@ -244,7 +244,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 				wp_enqueue_style(
 					'wpubdp-dataTables-css',
 					WPUBDP_PLUGIN_URL
-					. 'assets/DataTables/jquery.dataTables.css',
+					. 'assets/dataTables/datatables.min.css',
 					array(),
 					WPUBDP_PLUGIN_VERSION
 				);
@@ -306,7 +306,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 				wp_register_script(
 					'wpubdp-dataTables-js',
 					WPUBDP_PLUGIN_URL
-					. 'assets/DataTables/jquery.dataTables.js',
+					. 'assets/dataTables/datatables.min.js',
 					array( 'jquery' ),
 					WPUBDP_PLUGIN_VERSION,
 					true
@@ -332,7 +332,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 				wp_register_script(
 					'wpubdp-dataTables-js',
 					WPUBDP_PLUGIN_URL
-					. 'assets/dataTables/jquery.dataTables.js',
+					. 'assets/dataTables/datatables.min.js',
 					array( 'jquery' ),
 					WPUBDP_PLUGIN_VERSION,
 					true
@@ -368,9 +368,9 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 		 */
 		public function action_links( array $links ): array {
 			$settings_link = '<a href="admin.php?page=wpubdp_admin">'
-							. __( 'Delete users' ) . '</a>';
+							. __( 'Delete users' , 'users-bulk-delete-with-preview') . '</a>';
 			$logs_link     = '<a href="admin.php?page=wpubdp_admin_logs">'
-							. __( 'Logs' ) . '</a>';
+							. __( 'Logs' , 'users-bulk-delete-with-preview') . '</a>';
 			array_unshift( $links, $settings_link );
 			array_unshift( $links, $logs_link );
 

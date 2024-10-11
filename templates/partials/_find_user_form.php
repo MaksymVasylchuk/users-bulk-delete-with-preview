@@ -16,7 +16,7 @@
 		<td>
 			<select id="user_role" name="user_role[]" multiple="multiple" class="form-control">
 				<?php foreach ( $roles as $role_key => $role ) : ?>
-					<option value="<?php echo esc_attr( $role_key ); ?>"><?php esc_html_e( $role['name'] ); ?></option>
+					<option value="<?php echo esc_attr( $role_key ); ?>"><?php esc_html( $role['name'] ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</td>

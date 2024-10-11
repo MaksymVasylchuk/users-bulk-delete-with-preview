@@ -9,7 +9,7 @@ $title = $title ?? '';
 ?>
 <!-- Logs page -->
 <div class="wrap">
-	<h2><?php esc_html_e( $title ); ?></h2>
+	<h2><?php esc_html( $title ); ?></h2>
 	<div id="poststuff_logs">
 		<div id="post-body" class="metabox-holder columns-1">
 
