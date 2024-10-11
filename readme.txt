@@ -1,6 +1,6 @@
 === Users Bulk Delete With Preview ===
 Contributors: maksymvasylchuk
-Tags: delete, bulk delete, users delete, users bulk delete, clean, bulk clean, users bulk clean
+Tags: bulk delete, users delete with preview, users bulk delete with preview, users bulk clean with preview
 Requires at least: 5.6
 Tested up to: 6.6.2
 Stable tag: 1.0.0
@@ -8,7 +8,7 @@ Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Effortlessly delete multiple WordPress users with our Users Bulk Delete With Preview plugin. View and confirm user details before removal to ensure accuracy and avoid mistakes. Streamline your user management process with ease and confidence!
+Easily delete multiple WordPress users with the Users Bulk Delete With Preview plugin. Preview details before removal for accuracy and better control.
 
 == Description ==
 
@@ -64,7 +64,27 @@ The manual installation method requires downloading the Users Bulk Delete With P
 7. Deleted Users Review
 8. Logs
 
-=== Donate ===
+== Frequently Asked Questions ==
+
+= Does this plugin permanently delete users? =
+
+Yes, once the deletion process is confirmed, the selected users are permanently removed from your WordPress site.
+
+= Can I restore deleted users? =
+
+No, once users are deleted, they cannot be restored. Please make sure to verify the list during the preview step.
+
+= Is this plugin compatible with WooCommerce? =
+
+Yes, the plugin is compatible with WooCommerce and allows filtering users who have placed orders.
+
+== Upgrade Notice ==
+
+= 1.0.0 =
+Initial release of the Users Bulk Delete With Preview plugin. No upgrade steps required for this version.
+
+== Donate ==
+
 If you find this plugin helpful and would like to support further development, please consider donating:
 [Donate Here](https://www.paypal.com/donate/?hosted_button_id=NXKRKRDFLKBFG)
 
@@ -72,12 +92,12 @@ If you find this plugin helpful and would like to support further development, p
 
 This plugin uses the following third-party libraries:
 
-- [Bootstrap](https://getbootstrap.com/) - Licensed under MIT License.
-- [jQuery](https://jquery.com/) - Licensed under MIT License.
-- [jQuery UI](https://jqueryui.com/) - Licensed under MIT License.
-- [jQuery UI Datepicker](https://jqueryui.com/datepicker/) - Licensed under MIT License.
-- [DataTables](https://datatables.net/) - Licensed under MIT License.
-- [Select2](https://select2.org/) - Licensed under MIT License.
+– [Bootstrap](https://getbootstrap.com/) – Licensed under MIT License.
+– [jQuery](https://jquery.com/) – Licensed under MIT License.
+– [jQuery UI](https://jqueryui.com/) – Licensed under MIT License.
+– [jQuery UI Datepicker](https://jqueryui.com/datepicker/) – Licensed under MIT License.
+– [DataTables](https://datatables.net/) – Licensed under MIT License.
+– [Select2](https://select2.org/) – Licensed under MIT License.
 
 == Changelog ==
 = 1.0.0 =
