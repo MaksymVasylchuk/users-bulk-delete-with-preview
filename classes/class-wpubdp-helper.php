@@ -100,7 +100,7 @@ if ( ! class_exists( 'WPUBDPHelper' ) ) {
 		 * @param  array $request  The request data.
 		 */
 		public function validate_user_search_for_existing_users( array $request ): void {
-			$user_search = $request['user_search'] ?? array(); // WPCS: XSS ok.
+			$user_search = array_unique( array_map('absint',$request['user_search'] ?? array() ) ); // WPCS: XSS ok.
 
 			if ( empty( $user_search ) ) {
 				$this->send_error_response( 'no_users_found' );
@@ -113,7 +113,7 @@ if ( ! class_exists( 'WPUBDPHelper' ) ) {
 		 * @param  array $request  The request data.
 		 */
 		public function validate_find_user_form( array $request ): void {
-			$user_role  = $request['user_role'] ?? array();
+			$user_role  = array_unique( array_map('sanitize_text_field',$request['user_role'] ?? array() ) );
 			$user_email = sanitize_text_field( $request['user_email'] ?? '' );
 			$registration_date
 			            = sanitize_text_field( $request['registration_date'] ??
@@ -137,7 +137,7 @@ if ( ! class_exists( 'WPUBDPHelper' ) ) {
 		 * @param  array $request  The request data.
 		 */
 		public function validate_woocommerce_filters( array $request ): void {
-			$products      = $request['products'] ?? array(); // WPCS: XSS ok.
+			$products      = array_unique( array_map('absint',$request['products'] ?? array() ) ); // WPCS: XSS ok.
 
 			if ( empty( $products ) ) {
 				$this->send_error_response( 'at_least_one_required' );
@@ -168,7 +168,7 @@ if ( ! class_exists( 'WPUBDPHelper' ) ) {
 				return array();
 			}
 
-			$user_ids       = array_map( fn( $user ) => $user->ID, $users );
+			$user_ids       = array_unique( array_map('absint', array_map( fn( $user ) => $user->ID, $users ) ) );
 			$all_users
 			                = WPUBDPUsersFacade::get_users_exclude_ids( $user_ids );
 			$select_options = $this->build_select_options( $all_users );
@@ -204,10 +204,10 @@ if ( ! class_exists( 'WPUBDPHelper' ) ) {
 		private function format_user_data_for_table( WP_User $user, string $select_options ): array {
 			return array(
 				'checkbox'        => '<input type="checkbox" class="user-checkbox" name="users[' . esc_attr( $user->ID ) . '][id]" value="' . esc_attr( $user->ID ) . '">',
-				'ID'              => $user->ID,
-				'user_login'      => $user->user_login,
-				'user_email'      => $user->user_email,
-				'user_registered' => $user->user_registered,
+				'ID'              => intval( $user->ID ),
+				'user_login'      => sanitize_text_field( $user->user_login ),
+				'user_email'      => sanitize_email( $user->user_email ),
+				'user_registered' => sanitize_text_field( $user->user_registered ),
 				'user_role'       => implode( ', ', $user->roles ),
 				'select'          => $this->build_user_select_html( $user, $select_options ),
 			);
@@ -243,5 +243,106 @@ if ( ! class_exists( 'WPUBDPHelper' ) ) {
 
 			return 'data:image/svg+xml;base64,' . $encoded_logo;
 		}
+
+		/**
+		 * Custom sanitization function for $_POST data.
+		 *
+		 * @param array $data The data to sanitize.
+		 * @return array The sanitized data.
+		 */
+		public function sanitize_post_data( array $data ): array {
+			$sanitized_data = array();
+			foreach ( $data as $key => $value ) {
+				switch ( $key ) {
+					case 'find_users_nonce':
+					case 'search_user_existing_nonce':
+					case 'search_user_meta_nonce':
+					case 'registration_date':
+					case 'user_meta_value':
+					case 'user_email':
+						$sanitized_data[ $key ] = sanitize_text_field( $value );
+						break;
+
+					case 'filter_type':
+					case 'action':
+					case 'user_email_equal':
+					case 'user_meta_equal':
+						$sanitized_data[ $key ] = sanitize_key( $value );
+						break;
+
+					case 'user_search':
+					case 'products': // Added 'products[]' sanitization
+						$sanitized_data[ $key ] = array_unique( array_map('absint', $value ) ) ;
+						break;
+
+					case 'user_role':
+						$sanitized_data[ $key ] = array_unique( array_map('sanitize_text_field', $value ) ) ;
+						break;
+
+					default:
+						// Fallback for unexpected keys
+						$sanitized_data[ $key ] = sanitize_text_field( $value );
+						break;
+				}
+			}
+			return $sanitized_data;
+		}
+
+		/**
+		 * Custom sanitization function for $_POST data.
+		 *
+		 * @param array $data The data to sanitize.
+		 * @return array The sanitized data.
+		 */
+		public function sanitize_get_data( array $data ): array {
+			$sanitized_data = array();
+
+			foreach ( $data as $key => $value ) {
+				switch ( $key ) {
+					case 'draw':
+					case 'start':
+					case 'length':
+					case '_':
+						$sanitized_data[ $key ] = absint( $value );
+						break;
+
+					case 'action':
+					case 'logs_datatable_nonce':
+						$sanitized_data[ $key ] = sanitize_text_field( $value );
+						break;
+
+					case 'search':
+						$sanitized_data[ $key ] = array(
+							'value' => sanitize_text_field( $value['value'] ?? '' ),
+							'regex' => filter_var( $value['regex'] ?? 'false', FILTER_VALIDATE_BOOLEAN )
+						);
+						break;
+
+					case 'columns':
+						$sanitized_data[ $key ] = array_map( function( $column ) {
+							return array(
+								'data'       => absint( $column['data'] ?? 0 ),
+								'name'       => sanitize_text_field( $column['name'] ?? '' ),
+								'searchable' => filter_var( $column['searchable'] ?? 'false', FILTER_VALIDATE_BOOLEAN ),
+								'orderable'  => filter_var( $column['orderable'] ?? 'false', FILTER_VALIDATE_BOOLEAN ),
+								'search'     => array(
+									'value' => sanitize_text_field( $column['search']['value'] ?? '' ),
+									'regex' => filter_var( $column['search']['regex'] ?? 'false', FILTER_VALIDATE_BOOLEAN )
+								)
+							);
+						}, $value );
+						break;
+
+					default:
+						// Fallback for unexpected keys
+						$sanitized_data[ $key ] = sanitize_text_field( $value );
+						break;
+				}
+			}
+
+			return $sanitized_data;
+		}
+
+
 	}
 }

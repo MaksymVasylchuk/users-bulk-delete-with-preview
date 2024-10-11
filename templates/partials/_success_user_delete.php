@@ -10,7 +10,7 @@ $deleted_users     = $deleted_users ?? array(); // Array with information about 
 ?>
 
 <!-- Success deletion -->
-<?php if ( $user_delete_count > 1 && ! empty( $deleted_users ) ) : ?>
+<?php if ( $user_delete_count >= 1 && ! empty( $deleted_users ) ) : ?>
 		<?php foreach ( $deleted_users as $user ) : ?>
             <tr>
                 <td><?php echo esc_html($user['user_id']); ?></td>
