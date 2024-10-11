@@ -15,7 +15,7 @@ $title = $title ?? '';
 
 <!-- Main page -->
 <div class="wrap">
-	<h2><?php esc_html( $title ); ?></h2>
+	<h2><?php echo esc_html( $title ); ?></h2>
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-1">
 
