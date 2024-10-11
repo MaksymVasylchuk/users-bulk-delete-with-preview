@@ -103,7 +103,10 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 			$this->verify_nonce( 'nonce', 'search_user_existing_nonce' );
 
 			// Process the search request.
-			$search_data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
+			$search_data = array(
+				'q' => sanitize_text_field( $_POST['q'] ),
+				'select_all' => sanitize_text_field( $_POST['select_all'] ),
+			);
 			$results = WPUBDPUsersFacade::search_users_ajax( $search_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
 			wp_send_json_success( array( 'results' => $results ) );
 			wp_die();
@@ -117,8 +120,10 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 			$this->verify_nonce( 'nonce', 'search_user_meta_nonce' );
 
 			// Process the metadata search request.
-			$search_data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
-			$results = WPUBDPUsersFacade::search_usermeta_ajax( $search_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
+			$sanitized_data = array(
+				'q' => sanitize_text_field($_POST['q']),
+			);
+			$results = WPUBDPUsersFacade::search_usermeta_ajax( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
 			wp_send_json_success( $results );
 			wp_die();
 		}
@@ -137,7 +142,26 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 					wp_die();
 				}
 
-				$sanitized_data = WPUBDPHelperFacade::sanitize_post_data( $_POST ); //POST data sanitized in this method
+				// Define the keys that need to be extracted from $_POST.
+				$keys = [
+					'find_users_nonce',
+					'search_user_existing_nonce',
+					'search_user_meta_nonce',
+					'registration_date',
+					'user_meta_value',
+					'user_email',
+					'filter_type',
+					'action',
+					'user_email_equal',
+					'user_meta_equal',
+					'user_search',
+					'products',
+					'user_role',
+				];
+
+				$data_before_sanitize = array_intersect_key( $_POST, array_flip( $keys ) );
+
+				$sanitized_data = WPUBDPHelperFacade::sanitize_post_data( $data_before_sanitize ); //POST data sanitized in this method
 
 				switch ( $type ) {
 					case 'select_existing':
@@ -187,7 +211,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 						'email'         => sanitize_email( $user['email'] ?? '' ),
 						'display_name'  => sanitize_text_field( $user['display_name'] ?? '' )
 					] : null;
-				}, $_POST['users'] ?? [] ) );
+				}, $_POST['users'] ?? array() ) );
 
 
 				$user_ids = array_unique( array_map('absint', array_column( $sanitized_users, 'id' ) ) );
@@ -203,9 +227,9 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 					if ( intval( $user['id'] ) > 0 ) {
 						$deleted_users[ $user['id'] ] = array(
 							'user_id'      => intval( $user['id'] ),
-							'email'        => sanitize_email( $user['email'] ),
-							'display_name' => sanitize_text_field( $user['display_name'] ),
-							'reassign'     => esc_attr( $user['reassign'] ) ?? '',
+							'email'        => $user['email'],
+							'display_name' => $user['display_name'],
+							'reassign'     => $user['reassign'] ?? '',
 						);
 						wp_delete_user( esc_attr( $user['id'] ), esc_attr( $user['reassign'] ) ?? null );
 					}
@@ -246,7 +270,21 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 				'GET'
 			);
 
-			$sanitized_data = WPUBDPHelperFacade::sanitize_get_data( $_GET );
+			// Create a custom array from $_GET with specific keys
+			$custom_data = array(
+				'draw' => $_GET['draw'] ?? 0,
+				'start' => $_GET['start'] ?? 0,
+				'length' => $_GET['length'] ?? 10,
+				'action' => $_GET['action'] ?? '',
+				'logs_datatable_nonce' => $_GET['logs_datatable_nonce'] ?? '',
+				'search' => isset($_GET['search']) ? array(
+					'value' => $_GET['search']['value'] ?? '',
+					'regex' => $_GET['search']['regex'] ?? false,
+				) : array('value' => '', 'regex' => false),
+				'columns' => isset($_GET['columns']) ? $_GET['columns'] : array(),
+			);
+
+			$sanitized_data = WPUBDPHelperFacade::sanitize_get_data( $custom_data );
 			
 			WPUBDPLogsFacade::logs_data_table( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce is checked in method above.
 		}
@@ -267,7 +305,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 						'name'  => sanitize_text_field( $user['name'] ?? '' ),
 						'email' => sanitize_email( $user['email'] ?? '' ),
 					] : null;
-				}, $_POST['users'] ?? [] ) );
+				}, $_POST['users'] ?? array() ) );
 
 				$user_ids  = array_column( $sanitized_users, 'value' );
 				$user_ids  = array_map( 'esc_attr', $user_ids );
