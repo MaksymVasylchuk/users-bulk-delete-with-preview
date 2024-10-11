@@ -10,12 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	echo "Hi there! I'm just a plugin, not much I can do when called directly.";
 	exit;
 }
-if ( ! class_exists( 'WPUBDPUsers' ) ) {
+if ( ! class_exists( 'UBDWPUsers' ) ) {
 	/**
-	 * Class WPUBDPUsers
+	 * Class UBDWPUsers
 	 * Handles user-related operations for the Users Bulk Delete With Preview plugin.
 	 */
-	class WPUBDPUsers {
+	class UBDWPUsers {
 		/**
 		 * Current user_id
 		 *
@@ -106,7 +106,7 @@ if ( ! class_exists( 'WPUBDPUsers' ) ) {
 		 */
 		public function get_users_by_ids( array $user_ids ): mixed {
 			if ( empty( $user_ids ) || ! is_array( $user_ids ) ) {
-				return new WP_Error( 'invalid_input', WPUBDPHelperFacade::get_error_message( 'invalid_input' ) );
+				return new WP_Error( 'invalid_input', UBDWPHelperFacade::get_error_message( 'invalid_input' ) );
 			}
 
 			$user_ids = array_unique( array_map('absint', $user_ids ) );
@@ -114,10 +114,10 @@ if ( ! class_exists( 'WPUBDPUsers' ) ) {
 			$users = get_users( array( 'include' => $user_ids ) );
 
 			if ( ! empty( $users ) ) {
-				return WPUBDPHelperFacade::prepare_users_for_table( $users );
+				return UBDWPHelperFacade::prepare_users_for_table( $users );
 			}
 
-			return new WP_Error( 'no_users_found', WPUBDPHelperFacade::get_error_message( 'no_users_found' ) );
+			return new WP_Error( 'no_users_found', UBDWPHelperFacade::get_error_message( 'no_users_found' ) );
 		}
 
 		/**
@@ -142,10 +142,10 @@ if ( ! class_exists( 'WPUBDPUsers' ) ) {
 			$user_query = new WP_User_Query( $args );
 
 			if ( ! empty( $user_query->get_results() ) ) {
-				return WPUBDPHelperFacade::prepare_users_for_table( $user_query->get_results() );
+				return UBDWPHelperFacade::prepare_users_for_table( $user_query->get_results() );
 			}
 
-			return new WP_Error( 'no_users_found_with_given_filters', WPUBDPHelperFacade::get_error_message( 'no_users_found_with_given_filters' ) );
+			return new WP_Error( 'no_users_found_with_given_filters', UBDWPHelperFacade::get_error_message( 'no_users_found_with_given_filters' ) );
 		}
 
 		/**
@@ -165,10 +165,10 @@ if ( ! class_exists( 'WPUBDPUsers' ) ) {
 				$user_ids = array_unique( $user_ids );
 				$users    = get_users( array( 'include' => $user_ids ) );
 
-				return WPUBDPHelperFacade::prepare_users_for_table( $users );
+				return UBDWPHelperFacade::prepare_users_for_table( $users );
 			}
 
-			return new WP_Error( 'no_users_found_with_given_filters', WPUBDPHelperFacade::get_error_message( 'no_users_found_with_given_filters' ) );
+			return new WP_Error( 'no_users_found_with_given_filters', UBDWPHelperFacade::get_error_message( 'no_users_found_with_given_filters' ) );
 		}
 
 		/**
@@ -270,7 +270,7 @@ if ( ! class_exists( 'WPUBDPUsers' ) ) {
 				if ( ! empty( $user_ids ) ) {
 					$args['include'] = $user_ids;
 				} else {
-					return new WP_Error( 'no_users_found_with_given_filters', WPUBDPHelperFacade::get_error_message( 'no_users_found_with_given_filters' ) );
+					return new WP_Error( 'no_users_found_with_given_filters', UBDWPHelperFacade::get_error_message( 'no_users_found_with_given_filters' ) );
 				}
 			} else {
 				$args['search']         = '*' . $email_search . '*';

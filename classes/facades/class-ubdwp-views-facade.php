@@ -13,23 +13,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Facade class for rendering templates.
- * Extends the abstract class WPUBDPFacadeAbstract.
+ * Extends the abstract class UBDWPFacadeAbstract.
  *
  * Example Usage:
  *
  * $templateName = 'my-template.php';
  * $data = ['title' => 'Hello, World!', 'content' => 'This is the content.'];
  *
- * echo WPUBDPViewsFacade::render_template($templateName, $data);
+ * echo UBDWPViewsFacade::render_template($templateName, $data);
  *
  * This will render the specified template with the provided data.
  */
-if ( ! class_exists( 'WPUBDPViewsFacade' ) ) {
+if ( ! class_exists( 'UBDWPViewsFacade' ) ) {
 	/**
 	 * Facade class for WPUBDPViews functionality.
-	 * Inherits from the abstract class WPUBDPFacadeAbstract.
+	 * Inherits from the abstract class UBDWPFacadeAbstract.
 	 */
-	class WPUBDPViewsFacade extends WPUBDPFacadeAbstract {
+	class UBDWPViewsFacade extends UBDWPFacadeAbstract {
 		/**
 		 * Get the name of the class that this facade represents.
 		 *

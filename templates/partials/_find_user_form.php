@@ -2,9 +2,14 @@
 /**
  * Fins user filters elements
  *
- * @package WPUserBulkDeleteWithPreviw\Templates\Partials
+ * @package UsersBulkDeleteWithPreview\Templates\Partials
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	// Security check: Ensure the file is not accessed directly.
+	echo 'Hi there! I\'m just a plugin, not much I can do when called directly.';
+	exit;
+}
 ?>
 <!-- Find Users Form -->
 <!-- User Role -->

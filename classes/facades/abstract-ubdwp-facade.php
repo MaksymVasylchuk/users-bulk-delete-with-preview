@@ -2,7 +2,7 @@
 /**
  * Abstract facade
  *
- * @package     UsersBulkDeleteWithPreview\Classes\Facades
+ * @package     UBDWP_Users_Bulk_Delete_With_Preview\Classes\Facades
  */
 
 // Ensure this file is not accessed directly.
@@ -11,12 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'WPUBDPFacadeAbstract' ) ) {
+if ( ! class_exists( 'UBDWPFacadeAbstract' ) ) {
 	/**
 	 * Abstract base class for a facade pattern.
 	 * Provides a mechanism for lazy-loading and static method calls.
 	 */
-	abstract class WPUBDPFacadeAbstract {
+	abstract class UBDWPFacadeAbstract {
 		/**
 		 * Array of instances
 		 *

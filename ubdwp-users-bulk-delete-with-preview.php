@@ -13,7 +13,7 @@
  * Text Domain: users-bulk-delete-with-preview
  * Domain Path: /languages
  *
- * @package WPUserBulkDeleteWithPreviw
+ * @package UsersBulkDeleteWithPreview
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,11 +23,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Main plugin class.
-if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
+if ( ! class_exists( 'UBDWP_Users_Bulk_Delete_With_Preview' ) ) {
 	/**
-	 * Users_Bulk_Delete_With_Preview class.
+	 * UBDWP_Users_Bulk_Delete_With_Preview class.
 	 */
-	class Users_Bulk_Delete_With_Preview {
+	class UBDWP_Users_Bulk_Delete_With_Preview {
 		/**
 		 * Define constants, add classes, includes, load translations and init hooks and filters.
 		 */
@@ -131,13 +131,13 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 				__( 'Bulk Users Delete', 'users-bulk-delete-with-preview' ),
 				__( 'Bulk Users Delete', 'users-bulk-delete-with-preview' ),
 				'manage_options',
-				'wpubdp_admin',
-				array( $this, 'wpubdp_settings_page' ),
-				WPUBDPHelperFacade::get_icon()
+				'ubdwp_admin',
+				array( $this, 'ubdwp_settings_page' ),
+				UBDWPHelperFacade::get_icon()
 			);
 
 			add_submenu_page(
-				'wpubdp_admin',
+				'ubdwp_admin',
 				__(
 					'Bulk Users Delete Logs',
 					'users-bulk-delete-with-preview'
@@ -147,24 +147,24 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 					'users-bulk-delete-with-preview'
 				),
 				'manage_options',
-				'wpubdp_admin_logs',
-				array( $this, 'wpubdp_logs_page' )
+				'ubdwp_admin_logs',
+				array( $this, 'ubdwp_logs_page' )
 			);
 		}
 
 		/**
 		 * Render the settings page.
 		 */
-		public function wpubdp_settings_page(): void {
+		public function ubdwp_settings_page(): void {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( WPUBDPHelperFacade::get_error_message( 'permission_error' ) ); // WPUBDPHelperFacade will return escaped and translated string.
+				wp_die( UBDWPHelperFacade::get_error_message( 'permission_error' ) ); // UBDWPHelperFacade will return escaped and translated string.
 			}
 
 			$template_name = 'admin-page.php';
 
 			// Retrieve user roles and other data for the settings page.
 			$all_roles     = wp_roles()->roles;
-			$types         = WPUBDPHelperFacade::get_types_of_user_search();
+			$types         = UBDWPHelperFacade::get_types_of_user_search();
 			$products      = array();
 			if ( is_plugin_active( 'woocommerce/woocommerce.php' ) && function_exists( 'wc_get_products' ) ) {
 				$products = wc_get_products( array( 'limit' => - 1 ) );
@@ -180,15 +180,15 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 				'products'      => $products,
 			);
 
-			WPUBDPViewsFacade::include_template( $template_name, $data ); // WPCS: XSS ok.
+			UBDWPViewsFacade::include_template( $template_name, $data ); // WPCS: XSS ok.
 		}
 
 		/**
 		 * Render the logs page.
 		 */
-		public function wpubdp_logs_page(): void {
+		public function ubdwp_logs_page(): void {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( WPUBDPHelperFacade::get_error_message( 'permission_error' ) ); // WPUBDPHelperFacade will return escaped and translated string.
+				wp_die( UBDWPHelperFacade::get_error_message( 'permission_error' ) ); // UBDWPHelperFacade will return escaped and translated string.
 			}
 
 			$template_name = 'logs-page.php';
@@ -200,7 +200,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 				),
 			);
 
-			WPUBDPViewsFacade::include_template( $template_name, $data ); // WPCS: XSS ok.
+			UBDWPViewsFacade::include_template( $template_name, $data ); // WPCS: XSS ok.
 		}
 
 		/**
@@ -209,8 +209,8 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 		 * @param  string $hook_suffix  The hook suffix for the current admin page.
 		 */
 		public function register_admin_styles( string $hook_suffix ): void {
-			if ( $hook_suffix === 'toplevel_page_wpubdp_admin'
-				|| ( isset($_GET['page']) && $_GET['page'] == 'wpubdp_admin_logs' )
+			if ( $hook_suffix === 'toplevel_page_ubdwp_admin'
+				|| ( isset($_GET['page']) && $_GET['page'] == 'ubdwp_admin_logs' )
 			) {
 				wp_enqueue_style(
 					'wpubdp-bootstrap-css',
@@ -264,7 +264,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 		 * @param  string $hook_suffix  The hook suffix for the current admin page.
 		 */
 		public function register_admin_scripts( string $hook_suffix ): void {
-			if ( $hook_suffix === 'toplevel_page_wpubdp_admin' ) {
+			if ( $hook_suffix === 'toplevel_page_ubdwp_admin' ) {
 				wp_register_script(
 					'wpubdp-bootstrap-js',
 					WPUBDP_PLUGIN_URL . 'assets/bootstrap/bootstrap.min.js',
@@ -327,7 +327,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 				);
 			}
 
-			if (isset($_GET['page']) && $_GET['page'] == 'wpubdp_admin_logs') {
+			if (isset($_GET['page']) && $_GET['page'] == 'ubdwp_admin_logs') {
 
 				wp_register_script(
 					'wpubdp-dataTables-js',
@@ -367,9 +367,9 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 		 * @return array Modified action links.
 		 */
 		public function action_links( array $links ): array {
-			$settings_link = '<a href="admin.php?page=wpubdp_admin">'
+			$settings_link = '<a href="admin.php?page=ubdwp_admin">'
 							. __( 'Delete users' , 'users-bulk-delete-with-preview') . '</a>';
-			$logs_link     = '<a href="admin.php?page=wpubdp_admin_logs">'
+			$logs_link     = '<a href="admin.php?page=ubdwp_admin_logs">'
 							. __( 'Logs' , 'users-bulk-delete-with-preview') . '</a>';
 			array_unshift( $links, $settings_link );
 			array_unshift( $links, $logs_link );
@@ -391,9 +391,9 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 }
 
 // Initialize the plugin if the class exists.
-if ( class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
-	$users_bulk_delete_with_preview = new Users_Bulk_Delete_With_Preview();
+if ( class_exists( 'UBDWP_Users_Bulk_Delete_With_Preview' ) ) {
+	$users_bulk_delete_with_preview = new UBDWP_Users_Bulk_Delete_With_Preview();
 
 	// Register activation hook.
-	register_activation_hook( __FILE__, 'wpubdp_activate_plugin' );
+	register_activation_hook( __FILE__, 'ubdwp_activate_plugin' );
 }

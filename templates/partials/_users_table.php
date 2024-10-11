@@ -2,9 +2,14 @@
 /**
  * Users table
  *
- * @package WPUserBulkDeleteWithPreviw\Templates\Partials
+ * @package UsersBulkDeleteWithPreview\Templates\Partials
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	// Security check: Ensure the file is not accessed directly.
+	echo 'Hi there! I\'m just a plugin, not much I can do when called directly.';
+	exit;
+}
 ?>
 <!-- Users table preview -->
 <div class="form-group mb-4">

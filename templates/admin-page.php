@@ -2,8 +2,14 @@
 /**
  * Admin Page
  *
- * @package WPUserBulkDeleteWithPreviw\Templates
+ * @package UsersBulkDeleteWithPreview\Templates
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	// Security check: Ensure the file is not accessed directly.
+	echo 'Hi there! I\'m just a plugin, not much I can do when called directly.';
+	exit;
+}
 
 $title = $title ?? '';
 ?>

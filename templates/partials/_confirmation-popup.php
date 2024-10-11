@@ -2,9 +2,14 @@
 /**
  * Confirmation popup
  *
- * @package WPUserBulkDeleteWithPreviw\Templates\Partials
+ * @package UsersBulkDeleteWithPreview\Templates\Partials
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	// Security check: Ensure the file is not accessed directly.
+	echo 'Hi there! I\'m just a plugin, not much I can do when called directly.';
+	exit;
+}
 ?>
 <!-- Confirmation Modal -->
 <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">

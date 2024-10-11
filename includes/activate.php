@@ -7,16 +7,16 @@
  * 2. Creates the required database table if it does not already exist.
  * 3. Sets the plugin version in the options table.
  *
- * @package     WPUserBulkDeleteWithPreviw\Includes.
+ * @package     UsersBulkDeleteWithPreview\Includes.
  */
 
-if ( ! function_exists( 'wpubdp_activate_plugin' ) ) {
+if ( ! function_exists( 'ubdwp_activate_plugin' ) ) {
 	/**
 	 * Activation callback for the Users Bulk Delete With Preview plugin.
 	 *
 	 * @return void
 	 */
-	function wpubdp_activate_plugin() {
+	function ubdwp_activate_plugin() {
 		// Check if the WordPress version is at least 6.4.
 		if ( version_compare( get_bloginfo( 'version' ), '6.0', '<' ) ) {
 			// Display an error message and stop the activation process if the WordPress version is too old.
@@ -31,7 +31,7 @@ if ( ! function_exists( 'wpubdp_activate_plugin' ) ) {
 		global $wpdb;
 
 		// Define the table name with WordPress table prefix.
-		$table_name = "{$wpdb->prefix}wpubdp_logs";
+		$table_name = "{$wpdb->prefix}ubdwp_logs";
 
 		// Get the charset and collation for the current WordPress database.
 		$charset_collate = $wpdb->get_charset_collate();
@@ -52,6 +52,6 @@ if ( ! function_exists( 'wpubdp_activate_plugin' ) ) {
 		dbDelta( $sql );
 
 		// Set the plugin version in the options table.
-		add_option( 'wpubdp_plugin_db_version', WPUBDP_PLUGIN_VERSION );
+		add_option( 'ubdwp_plugin_db_version', WPUBDP_PLUGIN_VERSION );
 	}
 }

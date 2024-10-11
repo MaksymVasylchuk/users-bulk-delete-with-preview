@@ -62,7 +62,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 		private function check_permissions( array $caps ): void {
 			foreach ( $caps as $cap ) {
 				if ( ! current_user_can( $cap ) ) {
-					wp_send_json_error( array( 'message' => WPUBDPHelperFacade::get_error_message( 'permission_error' ) ) );
+					wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'permission_error' ) ) );
 					wp_die();
 				}
 			}
@@ -85,7 +85,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 			if ( ! isset( $field )
 				|| ! wp_verify_nonce( $field, $action )
 			) {
-				wp_send_json_error( array( 'message' => WPUBDPHelperFacade::get_error_message( 'invalid_nonce' ) ) );
+				wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'invalid_nonce' ) ) );
 				wp_die();
 			}
 		}
@@ -107,7 +107,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 				'q' => sanitize_text_field( $_POST['q'] ),
 				'select_all' => sanitize_text_field( $_POST['select_all'] ),
 			);
-			$results = WPUBDPUsersFacade::search_users_ajax( $search_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
+			$results = UBDWPUsersFacade::search_users_ajax( $search_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
 			wp_send_json_success( array( 'results' => $results ) );
 			wp_die();
 		}
@@ -123,7 +123,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 			$sanitized_data = array(
 				'q' => sanitize_text_field($_POST['q']),
 			);
-			$results = WPUBDPUsersFacade::search_usermeta_ajax( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
+			$results = UBDWPUsersFacade::search_usermeta_ajax( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
 			wp_send_json_success( $results );
 			wp_die();
 		}
@@ -138,7 +138,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 
 				$type = sanitize_text_field( $_POST['filter_type'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
 				if ( empty( $type ) ) {
-					wp_send_json_error( array( 'message' => WPUBDPHelperFacade::get_error_message( 'select_type' ) ) );
+					wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'select_type' ) ) );
 					wp_die();
 				}
 
@@ -161,34 +161,34 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 
 				$data_before_sanitize = array_intersect_key( $_POST, array_flip( $keys ) );
 
-				$sanitized_data = WPUBDPHelperFacade::sanitize_post_data( $data_before_sanitize ); //POST data sanitized in this method
+				$sanitized_data = UBDWPHelperFacade::sanitize_post_data( $data_before_sanitize ); //POST data sanitized in this method
 
 				switch ( $type ) {
 					case 'select_existing':
-						WPUBDPHelperFacade::validate_user_search_for_existing_users( $sanitized_data );
+						UBDWPHelperFacade::validate_user_search_for_existing_users( $sanitized_data );
 						$results
-							= WPUBDPUsersFacade::get_users_by_ids( array_unique( array_map('absint',$_POST['user_search'] ?? array() ) ) );
+							= UBDWPUsersFacade::get_users_by_ids( array_unique( array_map('absint',$_POST['user_search'] ?? array() ) ) );
 						break;
 					case 'find_users':
-						WPUBDPHelperFacade::validate_find_user_form( $sanitized_data );
+						UBDWPHelperFacade::validate_find_user_form( $sanitized_data );
 						$results
-							= WPUBDPUsersFacade::get_users_by_filters( $sanitized_data );
+							= UBDWPUsersFacade::get_users_by_filters( $sanitized_data );
 						break;
 					case 'find_users_by_woocommerce_filters':
-						WPUBDPHelperFacade::validate_woocommerce_filters( $sanitized_data );
+						UBDWPHelperFacade::validate_woocommerce_filters( $sanitized_data );
 						$results
-							= WPUBDPUsersFacade::get_users_by_woocommerce_filters( $sanitized_data );
+							= UBDWPUsersFacade::get_users_by_woocommerce_filters( $sanitized_data );
 						break;
 					default:
-						wp_send_json_error( array( 'message' => WPUBDPHelperFacade::get_error_message( 'select_type' ) ) );
+						wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'select_type' ) ) );
 						wp_die();
 				}
 
-				WPUBDPHelperFacade::handle_wp_error( $results );
+				UBDWPHelperFacade::handle_wp_error( $results );
 				wp_send_json_success( $results );
 				wp_die();
 			} catch ( \Exception $e ) {
-				wp_send_json_error( array( 'message' => WPUBDPHelperFacade::get_error_message( 'generic_error' ) ) );
+				wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'generic_error' ) ) );
 				wp_die();
 			}
 		}
@@ -218,7 +218,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 
 
 				if ( empty( $user_ids ) ) {
-					wp_send_json_error( array( 'message' => WPUBDPHelperFacade::get_error_message( 'select_any_user' ) ) );
+					wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'select_any_user' ) ) );
 					wp_die();
 				}
 
@@ -236,7 +236,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 				}
 
 				$template
-					= WPUBDPViewsFacade::render_template(
+					= UBDWPViewsFacade::render_template(
 						'partials/_success_user_delete.php',
 						array(
 							'user_delete_count' => count( $deleted_users ),
@@ -244,7 +244,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 						)
 					);
 
-				WPUBDPLogsFacade::insert_log_record(
+				UBDWPLogsFacade::insert_log_record(
 					array(
 						'user_delete_count' => count( $deleted_users ),
 						'user_delete_data'  => array_values( $deleted_users ),
@@ -254,7 +254,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 				wp_send_json_success( array( 'template' => $template ) );
 				wp_die();
 			} catch ( \Exception $e ) {
-				wp_send_json_error( array( 'message' => WPUBDPHelperFacade::get_error_message( 'generic_error' ) ) );
+				wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'generic_error' ) ) );
 				wp_die();
 			}
 		}
@@ -284,9 +284,9 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 				'columns' => isset($_GET['columns']) ? $_GET['columns'] : array(),
 			);
 
-			$sanitized_data = WPUBDPHelperFacade::sanitize_get_data( $custom_data );
+			$sanitized_data = UBDWPHelperFacade::sanitize_get_data( $custom_data );
 			
-			WPUBDPLogsFacade::logs_data_table( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce is checked in method above.
+			UBDWPLogsFacade::logs_data_table( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce is checked in method above.
 		}
 
 		/**
@@ -312,7 +312,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 				$user_list = get_users( array( 'include' => $user_ids ) );
 
 				if ( empty( $user_list ) ) {
-					wp_send_json_error( array( 'message' => WPUBDPHelperFacade::get_error_message( 'select_any_user' ) ) );
+					wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'select_any_user' ) ) );
 					wp_die();
 				}
 
@@ -328,7 +328,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 					)
 				);
 			} catch ( \Exception $e ) {
-				wp_send_json_error( array( 'message' => WPUBDPHelperFacade::get_error_message( 'generic_error' ) ) );
+				wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'generic_error' ) ) );
 				wp_die();
 			}
 		}

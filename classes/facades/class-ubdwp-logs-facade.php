@@ -11,19 +11,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'WPUBDPLogsFacade' ) ) {
+if ( ! class_exists( 'UBDWPLogsFacade' ) ) {
 	/**
-	 * Facade class for WPUBDPLogs functionality.
-	 * Extends the abstract class WPUBDPFacadeAbstract.
+	 * Facade class for UBDWPLogs functionality.
+	 * Extends the abstract class UBDWPFacadeAbstract.
 	 */
-	class WPUBDPLogsFacade extends WPUBDPFacadeAbstract {
+	class UBDWPLogsFacade extends UBDWPFacadeAbstract {
 		/**
 		 * Retrieve the name of the class that this facade represents.
 		 *
 		 * @return string The name of the class used by this facade.
 		 */
 		protected static function get_class_name(): string {
-			return 'WPUBDPLogs';
+			return 'UBDWPLogs';
 		}
 	}
 }

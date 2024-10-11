@@ -11,11 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'WPUBDPLogs' ) ) {
+if ( ! class_exists( 'UBDWPLogs' ) ) {
 	/**
 	 * Class for handling log records in the Users Bulk Delete With Preview plugin.
 	 */
-	class WPUBDPLogs {
+	class UBDWPLogs {
 		/**
 		 * Current user ID
 		 *
@@ -35,7 +35,7 @@ if ( ! class_exists( 'WPUBDPLogs' ) ) {
 		public function __construct() {
 			global $wpdb;
 			$this->current_user_id = get_current_user_id();
-			$this->table_name      = "{$wpdb->prefix}wpubdp_logs";
+			$this->table_name      = "{$wpdb->prefix}ubdwp_logs";
 		}
 
 		/**

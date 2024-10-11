@@ -18,8 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 if ( ! class_exists( 'WPUBDPViews' ) ) {
 	/**
-	 * Facade class for WPUBDPLogs functionality.
-	 * Extends the abstract class WPUBDPFacadeAbstract.
+	 * Facade class for UBDWPLogs functionality.
+	 * Extends the abstract class UBDWPFacadeAbstract.
 	 */
 	class WPUBDPViews {
 		// Path to the directory containing template files.

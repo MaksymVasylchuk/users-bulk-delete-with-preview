@@ -2,9 +2,14 @@
 /**
  * Step 1
  *
- * @package WPUserBulkDeleteWithPreviw\Templates\Steps
+ * @package UsersBulkDeleteWithPreview\Templates\Steps
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	// Security check: Ensure the file is not accessed directly.
+	echo 'Hi there! I\'m just a plugin, not much I can do when called directly.';
+	exit;
+}
 ?>
 <!-- Step 1 -->
 <div id="step-1" class="form-step">

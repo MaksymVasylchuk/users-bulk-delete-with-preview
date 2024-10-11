@@ -12,4 +12,4 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 global $wpdb;
-$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}wpubdp_logs" );// db call ok; no-cache ok.
+$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}ubdwp_logs" );// db call ok; no-cache ok.

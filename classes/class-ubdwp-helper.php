@@ -11,11 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'WPUBDPHelper' ) ) {
+if ( ! class_exists( 'UBDWPHelper' ) ) {
 	/**
 	 * Class for handling helper function in the Users Bulk Delete With Preview plugin.
 	 */
-	class WPUBDPHelper {
+	class UBDWPHelper {
 		/**
 		 * Retrieve error messages based on the provided error code.
 		 *
@@ -170,7 +170,7 @@ if ( ! class_exists( 'WPUBDPHelper' ) ) {
 
 			$user_ids       = array_unique( array_map('absint', array_map( fn( $user ) => $user->ID, $users ) ) );
 			$all_users
-			                = WPUBDPUsersFacade::get_users_exclude_ids( $user_ids );
+			                = UBDWPUsersFacade::get_users_exclude_ids( $user_ids );
 			$select_options = $this->build_select_options( $all_users );
 
 			return array_map( fn( $user ) => $this->format_user_data_for_table( $user, $select_options ), $users );
