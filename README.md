@@ -12,6 +12,7 @@
 **Requires PHP**: 8.0  
 **License**: GPLv2 or later  
 **License URI**: [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)
+**Donate link**: https://www.paypal.com/donate/?hosted_button_id=NXKRKRDFLKBFG
 
 Easily delete multiple WordPress users with the Users Bulk Delete With Preview plugin. Preview details before removal for accuracy and better control.
 
