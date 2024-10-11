@@ -59,5 +59,24 @@ if ( ! class_exists( 'WPUBDPViews' ) ) {
 
 			return $output;
 		}
+
+		public function include_template( string $template_name, array $data = array() ) {
+			// Construct the full path to the template file.
+			$template_path = self::TEMPLATE_PATH . $template_name;
+
+			// Check if the template file exists.
+			if ( ! file_exists( $template_path ) ) {
+				return ''; // Return empty string if file does not exist.
+			}
+
+			// Extract data array to individual variables.
+			// extract( $data ). We do not use extract to avoid issues.
+			foreach ( $data as $key => $value ) {
+				${$key} = $value;
+			}
+
+			// Include the template file.
+			include $template_path;
+		}
 	}
 }

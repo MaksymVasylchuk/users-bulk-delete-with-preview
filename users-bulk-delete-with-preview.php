@@ -180,7 +180,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 				'products'      => $products,
 			);
 
-			echo WPUBDPViewsFacade::render_template( $template_name, $data ); // WPCS: XSS ok.
+			WPUBDPViewsFacade::include_template( $template_name, $data ); // WPCS: XSS ok.
 		}
 
 		/**
@@ -200,7 +200,7 @@ if ( ! class_exists( 'Users_Bulk_Delete_With_Preview' ) ) {
 				),
 			);
 
-			echo WPUBDPViewsFacade::render_template( $template_name, $data ); // WPCS: XSS ok.
+			WPUBDPViewsFacade::include_template( $template_name, $data ); // WPCS: XSS ok.
 		}
 
 		/**
