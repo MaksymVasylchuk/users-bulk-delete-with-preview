@@ -122,7 +122,7 @@ if ( ! class_exists( 'UBDWPLogs' ) ) {
 		/**
 		 * Retrieve log records from the database.
 		 *
-		 * @param  string $where   The WHERE clause for filtering.
+		 * @param  string $where   The WHERE clause for filtering, already cleared with prepare, see build_where_clause
 		 * @param  int    $limit   The number of records to retrieve.
 		 * @param  int    $offset  The offset for pagination.
 		 *
@@ -158,7 +158,7 @@ if ( ! class_exists( 'UBDWPLogs' ) ) {
 		/**
 		 * Get the total number of filtered records in the logs table.
 		 *
-		 * @param  string $where  The WHERE clause for filtering.
+		 * @param  string $where  The WHERE clause for filtering, already cleared with prepare, see build_where_clause
 		 *
 		 * @return int The total number of filtered records.
 		 */
