@@ -60,8 +60,8 @@ if ( ! class_exists( 'UBDWPFacadeAbstract' ) ) {
 			}
 
 			throw new Exception(
-				/* translators: %s: method and class name. */
 				sprintf(
+					/* translators: %1$s is the method name; %2$s is the class name. */
 					esc_html__(
 						'Method %1$s does not exist in class %2$s.',
 						'users-bulk-delete-with-preview'

@@ -76,10 +76,10 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 		 * @param  string $type         Type of request.
 		 */
 		private function verify_nonce( string $nonce_field, string $action, string $type = 'POST'): void {
-			$field = sanitize_text_field( $_POST[ $nonce_field ] ) ?? null; // WPCS: XSS ok.
+			$field = sanitize_text_field( $_POST[ $nonce_field ] ?? '' ) ?? null; // WPCS: XSS ok.
 
 			if( strtoupper($type) === 'GET' ) {
-				$field = sanitize_text_field($_GET[ $nonce_field ] ) ?? null; // WPCS: XSS ok.
+				$field = sanitize_text_field( $_GET[ $nonce_field ] ?? '' ) ?? null; // WPCS: XSS ok.
 			}
 
 			if ( ! isset( $field )
@@ -363,15 +363,27 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 		 * Save the generated CSV content to a file.
 		 *
 		 * @param  string $csv_output  The CSV content.
-		 *
 		 * @return string URL of the saved file.
 		 */
 		private function save_csv_file( $csv_output ) {
-			$upload_dir = wp_upload_dir();
-			$file_path  = $upload_dir['path'] . '/users_export_' . time()
-							. '.csv';
-			file_put_contents( $file_path, $csv_output );
+			// Initialize the WordPress filesystem API
+			global $wp_filesystem;
+			if ( ! function_exists( 'WP_Filesystem' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+			}
 
+			WP_Filesystem();
+
+			// Get the upload directory
+			$upload_dir = wp_upload_dir();
+			$file_path  = $upload_dir['path'] . '/users_export_' . time() . '.csv';
+
+			// Use WP_Filesystem's method to write the file
+			if ( ! $wp_filesystem->put_contents( $file_path, $csv_output, FS_CHMOD_FILE ) ) {
+				return new WP_Error( 'file_write_error', __( 'Failed to write the CSV file.', 'users-bulk-delete-with-preview' ) );
+			}
+
+			// Return the URL of the saved file
 			return $upload_dir['url'] . '/' . basename( $file_path );
 		}
 

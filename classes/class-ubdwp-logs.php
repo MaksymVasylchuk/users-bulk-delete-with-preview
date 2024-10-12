@@ -35,7 +35,7 @@ if ( ! class_exists( 'UBDWPLogs' ) ) {
 		public function __construct() {
 			global $wpdb;
 			$this->current_user_id = get_current_user_id();
-			$this->table_name      = "{$wpdb->prefix}ubdwp_logs";
+			$this->table_name      = esc_sql( "{$wpdb->prefix}ubdwp_logs" );
 		}
 
 		/**
