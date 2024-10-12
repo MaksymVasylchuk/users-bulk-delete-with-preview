@@ -104,8 +104,8 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 
 			// Process the search request.
 			$search_data = array(
-				'q' => sanitize_text_field( $_POST['q'] ),
-				'select_all' => sanitize_text_field( $_POST['select_all'] ),
+				'q' => sanitize_text_field( $_POST['q'] ?? '' ),
+				'select_all' => sanitize_text_field( $_POST['select_all'] ?? false ),
 			);
 			$results = UBDWPUsersFacade::search_users_ajax( $search_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
 			wp_send_json_success( array( 'results' => $results ) );
@@ -121,7 +121,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 
 			// Process the metadata search request.
 			$sanitized_data = array(
-				'q' => sanitize_text_field($_POST['q']),
+				'q' => sanitize_text_field( $_POST['q'] ?? ''), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Missing -- Input is already checked for empty or null and sanitized here and the nonce is checked in method above
 			);
 			$results = UBDWPUsersFacade::search_usermeta_ajax( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
 			wp_send_json_success( $results );

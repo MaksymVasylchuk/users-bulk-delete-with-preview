@@ -210,7 +210,7 @@ if ( ! class_exists( 'UBDWP_Users_Bulk_Delete_With_Preview' ) ) {
 		 */
 		public function register_admin_styles( string $hook_suffix ): void {
 			if ( $hook_suffix === 'toplevel_page_ubdwp_admin'
-				|| ( isset($_GET['page']) && $_GET['page'] == 'ubdwp_admin_logs' )
+				|| ( isset($_GET['page']) && $_GET['page'] == 'ubdwp_admin_logs' ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce verification is not required here.
 			) {
 				wp_enqueue_style(
 					'wpubdp-bootstrap-css',
@@ -327,7 +327,7 @@ if ( ! class_exists( 'UBDWP_Users_Bulk_Delete_With_Preview' ) ) {
 				);
 			}
 
-			if (isset($_GET['page']) && $_GET['page'] == 'ubdwp_admin_logs') {
+			if (isset($_GET['page']) && $_GET['page'] == 'ubdwp_admin_logs') { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce verification is not required here.
 
 				wp_register_script(
 					'wpubdp-dataTables-js',
