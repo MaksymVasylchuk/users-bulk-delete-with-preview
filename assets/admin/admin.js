@@ -146,6 +146,7 @@
             'change',
             function () {
                 if ($( this ).is( ':checked' )) {
+                    showLoader();
                     $.ajax(
                         {
                             url: myAjax.ajaxurl,
@@ -158,6 +159,7 @@
                                 select_all: true
                             },
                             success: function (data) {
+                                hideLoader();
                                 const allIds     = data.data.results.map(
                                     item => {
                                         const option = new Option( item.text, item.id, true, true );
@@ -169,7 +171,10 @@
                                 $( '#user_search' ).val( allIds ).trigger( 'change' );
                                 $( '#user_search' ).trigger( 'select2:select' );
                             },
-                            error: () => console.log( 'Error fetching users' )
+                            error: function(data) {
+                                console.log( 'Error fetching users' );
+                                hideLoader();
+                            }
                         }
                     );
                 } else {

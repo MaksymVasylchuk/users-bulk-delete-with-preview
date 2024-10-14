@@ -267,6 +267,7 @@ if ( ! class_exists( 'UBDWPHelper' ) ) {
 					case 'action':
 					case 'user_email_equal':
 					case 'user_meta_equal':
+					case 'user_meta':
 						$sanitized_data[ $key ] = sanitize_key( $value );
 						break;
 

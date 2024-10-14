@@ -157,6 +157,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 					'user_search',
 					'products',
 					'user_role',
+					'user_meta'
 				];
 
 				$data_before_sanitize = array_intersect_key( $_POST, array_flip( $keys ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
