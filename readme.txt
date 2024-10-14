@@ -101,5 +101,12 @@ This plugin uses the following third-party libraries:
 – [Select2](https://select2.org/) – Licensed under MIT License.
 
 == Changelog ==
+= 1.1.0 =
+*Release Date - 14 October 2024*
+
+* Updated Libraries: All core libraries have been updated to their latest versions for enhanced performance, security, and compatibility.
+* Bug Fixes
+* Code Improvements
+
 = 1.0.0 =
 * The first version of the plugin.
