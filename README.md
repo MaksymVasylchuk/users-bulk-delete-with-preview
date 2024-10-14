@@ -84,6 +84,8 @@ Yes, the plugin is compatible with WooCommerce and allows filtering users who ha
 
 ## Upgrade Notice
 
+### 1.1.0
+Updated Libraries, Bug Fixes, Code Improvements. No upgrade steps required for this version.
 ### 1.0.0
 Initial release of the Users Bulk Delete With Preview plugin. No upgrade steps required for this version.
 
