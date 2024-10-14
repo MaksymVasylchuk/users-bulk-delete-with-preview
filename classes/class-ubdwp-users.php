@@ -165,6 +165,10 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 				$this->get_users_by_product_purchase( $products )
 			);
 
+			$user_ids = array_filter($user_ids, function($value) {
+				return $value !== 0 && $value !== '0';
+			});
+
 			if ( ! empty( $user_ids ) ) {
 				$user_ids = array_unique( $user_ids );
 				$users    = get_users( array( 'include' => $user_ids ) );
