@@ -91,7 +91,7 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 				"SELECT DISTINCT meta_key FROM {$wpdb->usermeta} WHERE meta_key LIKE %s LIMIT 10",
 				'%' . $wpdb->esc_like( $search ) . '%'
 			);
-			$results = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used above.
+			$results = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching --  "prepare" is used above, it is a usermeta table, a cache is not needed.
 
 			return array_map( function ( $result ) {
 				return array(
@@ -267,7 +267,7 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
                     WHERE user_email $compare %s 
                     AND ID != %d
                 ";
-				$user_ids = $wpdb->get_col( $wpdb->prepare( $sql, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used here.
+				$user_ids = $wpdb->get_col( $wpdb->prepare( $sql, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching --  "prepare" is used here, we get users with custom filters, a cache is not needed.
 					$email_search,
 					$this->current_user_id ) );
 
@@ -353,14 +353,14 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 			$placeholders = implode( ',', array_fill( 0, count( $products_ids ), '%d' ) );
 
 			// Get order IDs that contain any of the products.
-			$order_items = $wpdb->get_col(
+			$order_items = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- We get it from WooCommerce custom table, a cache is not needed.
 				$wpdb->prepare(
 					"SELECT DISTINCT order_id 
-             FROM %i 
+             FROM {$wpdb->prefix}woocommerce_order_items
              WHERE order_item_id IN (
                  SELECT order_item_id 
-                 FROM %i 
-                 WHERE meta_key = '_product_id' AND meta_value IN ($placeholders) )", "{$wpdb->prefix}woocommerce_order_items", "{$wpdb->prefix}woocommerce_order_items", ...$products_ids ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- "placeholders" in this case are generated placeholders for product IDs in format %d, see logic above
+                 FROM {$wpdb->prefix}woocommerce_order_items
+                 WHERE meta_key = '_product_id' AND meta_value IN ($placeholders) )", ...$products_ids ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- "placeholders" in this case are generated placeholders for product IDs in format %d, see logic above, it is a custom WooCommerce table, a cache is not needed
 			);
 
 
@@ -376,9 +376,9 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 
 
 			// Get user IDs who purchased the products.
-			return $wpdb->get_col(
+			return $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- We get it from WooCommerce custom table, a cache is not needed.
 				$wpdb->prepare(
-					"SELECT DISTINCT posts.post_author FROM {$wpdb->posts} AS posts WHERE posts.ID IN ($order_ids_placeholders) AND posts.post_type IN ('shop_order', 'shop_order_placehold') AND posts.post_status IN ('wc-completed', 'wc-processing', 'wc-on-hold')", ...$order_items ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- "order_ids_placeholders" in this case are generated placeholders for order IDs in format %d, see logic above
+					"SELECT DISTINCT posts.post_author FROM {$wpdb->posts} AS posts WHERE posts.ID IN ($order_ids_placeholders) AND posts.post_type IN ('shop_order', 'shop_order_placehold') AND posts.post_status IN ('wc-completed', 'wc-processing', 'wc-on-hold')", ...$order_items ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.DirectDatabaseQuery.NoCaching  -- "order_ids_placeholders" in this case are generated placeholders for order IDs in format %d, see logic above, it is a custom WooCommerce table, a cache is not needed.
 			);
 		}
 	}
