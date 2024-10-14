@@ -65,7 +65,7 @@ The manual installation method requires downloading the Users Bulk Delete With P
    <img src="https://github.com/user-attachments/assets/df05a326-434a-4429-b247-f75a33ddb2dc" alt="Users Bulk Delete With Preview Interface" height="400" />
 </p>
 <p align="center">
-   <img src="https://github.com/user-attachments/assets/8a9a3172-6980-46c8-9387-d57e671719cc" alt="Users Bulk Delete With Preview Interface" height="400" />
+   <img src="https://github.com/user-attachments/assets/2af99b77-bbdb-47e7-b02d-e2e24a26095f" height="400" />
 </p>
 <p align="center">
    <img src="https://github.com/user-attachments/assets/a281f3d7-ef1e-48a4-bfba-40e7d4b532d1" alt="Users Bulk Delete With Preview Interface" height="400" />
