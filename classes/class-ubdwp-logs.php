@@ -134,13 +134,8 @@ if ( ! class_exists( 'UBDWPLogs' ) ) {
 			$query = $wpdb->prepare(
 				"SELECT t.ID, t.user_id, u.display_name, t.user_deleted_data, t.deletion_time 
                 FROM %i t
-                INNER JOIN {$wpdb->prefix}users u ON t.user_id = u.ID
-                WHERE 1=1 {$where}
-                LIMIT %d OFFSET %d",
-				$this->table_name,
-				$limit,
-				$offset
-			);
+                INNER JOIN {$wpdb->users} u ON t.user_id = u.ID
+                WHERE 1=1 {$where} LIMIT %d OFFSET %d", $this->table_name, $limit, $offset ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared	-- The "where" is prepared with escaped params, please see the "build where clause" method, we did it to avoid code duplication.
 
 			return $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used above.
 		}
@@ -153,7 +148,7 @@ if ( ! class_exists( 'UBDWPLogs' ) ) {
 		private function get_total_record_count(): int {
 			global $wpdb;
 
-			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $this->table_name" ) ); // db call ok; no-cache ok.
+			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i", $this->table_name ) ); // db call ok; no-cache ok.
 		}
 
 		/**
@@ -168,8 +163,8 @@ if ( ! class_exists( 'UBDWPLogs' ) ) {
 
 			$query = "SELECT COUNT(*) 
                       FROM %i t
-                      INNER JOIN {$wpdb->prefix}users u ON t.user_id = u.ID
-                      WHERE 1=1 {$where}";
+                      INNER JOIN {$wpdb->users} u ON t.user_id = u.ID
+                      WHERE 1=1 {$where}"; // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared	-- The "where" is prepared with escaped params, please see the "build where clause" method, we did it to avoid code duplication.
 
 			return (int) $wpdb->get_var( $wpdb->prepare( $query , $this->table_name) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used here.
 		}
