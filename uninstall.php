@@ -12,4 +12,4 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 global $wpdb;
-$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}ubdwp_logs" );// db call ok; no-cache ok.
+$wpdb->query( $wpdb->prepare("DROP TABLE IF EXISTS %i", "{$wpdb->prefix}ubdwp_logs") ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Drop custom plugin table, in this case cache is not needed and we only delete custom table for this plugin.

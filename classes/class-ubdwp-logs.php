@@ -133,15 +133,16 @@ if ( ! class_exists( 'UBDWPLogs' ) ) {
 
 			$query = $wpdb->prepare(
 				"SELECT t.ID, t.user_id, u.display_name, t.user_deleted_data, t.deletion_time 
-                FROM $this->table_name t
+                FROM %i t
                 INNER JOIN {$wpdb->prefix}users u ON t.user_id = u.ID
                 WHERE 1=1 {$where}
                 LIMIT %d OFFSET %d",
+				$this->table_name,
 				$limit,
 				$offset
 			);
 
-			return $wpdb->get_results( $query ); // db call ok; no-cache ok.
+			return $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used above.
 		}
 
 		/**
@@ -166,11 +167,11 @@ if ( ! class_exists( 'UBDWPLogs' ) ) {
 			global $wpdb;
 
 			$query = "SELECT COUNT(*) 
-                      FROM $this->table_name t
+                      FROM %i t
                       INNER JOIN {$wpdb->prefix}users u ON t.user_id = u.ID
                       WHERE 1=1 {$where}";
 
-			return (int) $wpdb->get_var( $wpdb->prepare( $query ) ); // db call ok; no-cache ok.
+			return (int) $wpdb->get_var( $wpdb->prepare( $query , $this->table_name) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used here.
 		}
 
 		/**

@@ -157,7 +157,7 @@ if ( ! class_exists( 'UBDWP_Users_Bulk_Delete_With_Preview' ) ) {
 		 */
 		public function ubdwp_settings_page(): void {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( UBDWPHelperFacade::get_error_message( 'permission_error' ) ); // UBDWPHelperFacade will return escaped and translated string.
+				wp_die( UBDWPHelperFacade::get_error_message( 'permission_error' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --  UBDWPHelperFacade returns escaped and translated string.
 			}
 
 			$template_name = 'admin-page.php';
@@ -188,7 +188,7 @@ if ( ! class_exists( 'UBDWP_Users_Bulk_Delete_With_Preview' ) ) {
 		 */
 		public function ubdwp_logs_page(): void {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( UBDWPHelperFacade::get_error_message( 'permission_error' ) ); // UBDWPHelperFacade will return escaped and translated string.
+				wp_die( UBDWPHelperFacade::get_error_message( 'permission_error' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --  UBDWPHelperFacade returns escaped and translated string.
 			}
 
 			$template_name = 'logs-page.php';

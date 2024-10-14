@@ -48,11 +48,11 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 					'display_name',
 				),
 				'fields'         => array( 'ID', 'display_name', 'user_email' ),
-				'exclude'        => $this->current_user_id,
+				// Remove 'exclude' parameter
 			);
 
 			if ( $select_all ) {
-				$args['number'] = - 1; // Fetch all users.
+				$args['number'] = -1; // Fetch all users.
 			} else {
 				$args['search'] = '*' . esc_attr( $search_term ) . '*';
 			}
@@ -62,15 +62,19 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 
 			if ( ! empty( $user_query->results ) ) {
 				foreach ( $user_query->results as $user ) {
-					$results[] = array(
-						'id'   => intval( $user->ID ),
-						'text' => sprintf( '%s (%s)', $user->display_name, $user->user_email ),
-					);
+					// Manually exclude the current user
+					if ( intval( $user->ID ) !== intval( $this->current_user_id ) ) {
+						$results[] = array(
+							'id'   => intval( $user->ID ),
+							'text' => sprintf( '%s (%s)', $user->display_name, $user->user_email ),
+						);
+					}
 				}
 			}
 
 			return $results;
 		}
+
 
 		/**
 		 * Handle AJAX request to search user metadata.
@@ -129,8 +133,8 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 		 */
 		public function get_users_by_filters( array $request ): mixed {
 			$args = array(
-				'exclude'    => $this->current_user_id,
-				'meta_query' => array(),
+				'exclude'    => $this->current_user_id, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude --  In this case we need to exclude current user.
+				'meta_query' => array(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query --  DB call is OK.
 				'date_query' => array(),
 			);
 
