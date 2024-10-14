@@ -60,6 +60,14 @@ if ( ! class_exists( 'WPUBDPViews' ) ) {
 			return $output;
 		}
 
+		/**
+		 * Includes a template with the given data.
+		 *
+		 * @param  string  $template_name
+		 * @param  array   $data
+		 *
+		 * @return string|void
+		 */
 		public function include_template( string $template_name, array $data = array() ) {
 			// Construct the full path to the template file.
 			$template_path = self::TEMPLATE_PATH . $template_name;
