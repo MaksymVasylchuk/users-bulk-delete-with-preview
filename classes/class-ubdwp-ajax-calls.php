@@ -301,13 +301,14 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 				);
 
 				$sanitized_users = array_filter( array_map( function ( $user ) {
-					return is_array( $user ) ? [
+					return ( is_array( $user ) && !empty( $user['value'] ) ) ? array(
+						'id' => intval( $user['value'] ?? 0 ),
 						'name'  => sanitize_text_field( $user['name'] ?? '' ),
 						'email' => sanitize_email( $user['email'] ?? '' ),
-					] : null;
+					) : null;
 				}, $_POST['users'] ?? array() ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", this filter is sanitizing the $_POST array.
 
-				$user_ids  = array_column( $sanitized_users, 'value' );
+				$user_ids  = array_column( $sanitized_users, 'id' );
 				$user_ids  = array_map( 'esc_attr', $user_ids );
 				$user_list = get_users( array( 'include' => $user_ids ) );
 
