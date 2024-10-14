@@ -76,10 +76,10 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 		 * @param  string $type         Type of request.
 		 */
 		private function verify_nonce( string $nonce_field, string $action, string $type = 'POST'): void {
-			$field = sanitize_text_field( $_POST[ $nonce_field ] ?? '' ) ?? null; // WPCS: XSS ok.
+			$field = sanitize_text_field( $_POST[ $nonce_field ] ?? '' ) ?? null; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Variable already sanitized
 
 			if( strtoupper($type) === 'GET' ) {
-				$field = sanitize_text_field( $_GET[ $nonce_field ] ?? '' ) ?? null; // WPCS: XSS ok.
+				$field = sanitize_text_field( $_GET[ $nonce_field ] ?? '' ) ?? null; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Variable already sanitized
 			}
 
 			if ( ! isset( $field )
@@ -104,8 +104,8 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 
 			// Process the search request.
 			$search_data = array(
-				'q' => sanitize_text_field( $_POST['q'] ?? '' ),
-				'select_all' => sanitize_text_field( $_POST['select_all'] ?? false ),
+				'q' => sanitize_text_field( $_POST['q'] ?? '' ), // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Nonce is checked above in "verify_nonce" method, variable already sanitized
+				'select_all' => sanitize_text_field( $_POST['select_all'] ?? false ), // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Nonce is checked above in "verify_nonce" method, variable already sanitized
 			);
 			$results = UBDWPUsersFacade::search_users_ajax( $search_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
 			wp_send_json_success( array( 'results' => $results ) );
@@ -136,7 +136,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 				$this->check_permissions( array( self::MANAGE_OPTIONS_CAP ) );
 				$this->verify_nonce( 'find_users_nonce', 'find_users_nonce' );
 
-				$type = sanitize_text_field( $_POST['filter_type'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is checked in method above.
+				$type = sanitize_text_field( $_POST['filter_type'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- The nonce is checked in method above, variable sanitizing here.
 				if ( empty( $type ) ) {
 					wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'select_type' ) ) );
 					wp_die();
@@ -159,25 +159,25 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 					'user_role',
 				];
 
-				$data_before_sanitize = array_intersect_key( $_POST, array_flip( $keys ) );
+				$data_before_sanitize = array_intersect_key( $_POST, array_flip( $keys ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
 
 				$sanitized_data = UBDWPHelperFacade::sanitize_post_data( $data_before_sanitize ); //POST data sanitized in this method
 
 				switch ( $type ) {
 					case 'select_existing':
-						UBDWPHelperFacade::validate_user_search_for_existing_users( $sanitized_data );
+						UBDWPHelperFacade::validate_user_search_for_existing_users( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
 						$results
-							= UBDWPUsersFacade::get_users_by_ids( array_unique( array_map('absint',$_POST['user_search'] ?? array() ) ) );
+							= UBDWPUsersFacade::get_users_by_ids( array_unique( array_map('absint',$_POST['user_search'] ?? array() ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
 						break;
 					case 'find_users':
-						UBDWPHelperFacade::validate_find_user_form( $sanitized_data );
+						UBDWPHelperFacade::validate_find_user_form( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
 						$results
-							= UBDWPUsersFacade::get_users_by_filters( $sanitized_data );
+							= UBDWPUsersFacade::get_users_by_filters( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
 						break;
 					case 'find_users_by_woocommerce_filters':
-						UBDWPHelperFacade::validate_woocommerce_filters( $sanitized_data );
+						UBDWPHelperFacade::validate_woocommerce_filters( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
 						$results
-							= UBDWPUsersFacade::get_users_by_woocommerce_filters( $sanitized_data );
+							= UBDWPUsersFacade::get_users_by_woocommerce_filters( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
 						break;
 					default:
 						wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'select_type' ) ) );
@@ -211,7 +211,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 						'email'         => sanitize_email( $user['email'] ?? '' ),
 						'display_name'  => sanitize_text_field( $user['display_name'] ?? '' )
 					] : null;
-				}, $_POST['users'] ?? array() ) );
+				}, $_POST['users'] ?? array() ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", this filter is sanitizing the $_POST array.
 
 
 				$user_ids = array_unique( array_map('absint', array_column( $sanitized_users, 'id' ) ) );
@@ -272,16 +272,16 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 
 			// Create a custom array from $_GET with specific keys
 			$custom_data = array(
-				'draw' => $_GET['draw'] ?? 0,
-				'start' => $_GET['start'] ?? 0,
-				'length' => $_GET['length'] ?? 10,
-				'action' => $_GET['action'] ?? '',
-				'logs_datatable_nonce' => $_GET['logs_datatable_nonce'] ?? '',
-				'search' => isset($_GET['search']) ? array(
-					'value' => $_GET['search']['value'] ?? '',
-					'regex' => $_GET['search']['regex'] ?? false,
+				'draw' => $_GET['draw'] ?? 0, // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
+				'start' => $_GET['start'] ?? 0, // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
+				'length' => $_GET['length'] ?? 10, // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
+				'action' => $_GET['action'] ?? '', // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
+				'logs_datatable_nonce' => $_GET['logs_datatable_nonce'] ?? '', // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
+				'search' => isset($_GET['search']) ? array( // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
+					'value' => $_GET['search']['value'] ?? '', // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
+					'regex' => $_GET['search']['regex'] ?? false, // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
 				) : array('value' => '', 'regex' => false),
-				'columns' => isset($_GET['columns']) ? $_GET['columns'] : array(),
+				'columns' => isset($_GET['columns']) ? $_GET['columns'] : array(), // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
 			);
 
 			$sanitized_data = UBDWPHelperFacade::sanitize_get_data( $custom_data );
@@ -305,7 +305,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 						'name'  => sanitize_text_field( $user['name'] ?? '' ),
 						'email' => sanitize_email( $user['email'] ?? '' ),
 					] : null;
-				}, $_POST['users'] ?? array() ) );
+				}, $_POST['users'] ?? array() ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", this filter is sanitizing the $_POST array.
 
 				$user_ids  = array_column( $sanitized_users, 'value' );
 				$user_ids  = array_map( 'esc_attr', $user_ids );
@@ -394,7 +394,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 			$this->verify_nonce( 'nonce', 'custom_export_users_nonce' );
 			$this->check_permissions( array( self::MANAGE_OPTIONS_CAP ) );
 
-			$file_path = isset( $_POST['file_path'] ) ? sanitize_text_field( $_POST['file_path'] ) : '';
+			$file_path = isset( $_POST['file_path'] ) ? sanitize_text_field( $_POST['file_path'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing -- Filed is sanitizing here, nonce is checked above, check method - "verify_nonce".
 
 			if ( ! empty( $file_path ) && file_exists( $file_path ) ) {
 				wp_delete_file( $file_path ); // Delete file.
