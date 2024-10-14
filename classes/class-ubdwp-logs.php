@@ -50,7 +50,7 @@ if ( ! class_exists( 'UBDWPLogs' ) ) {
 			$user_data_json = wp_json_encode( $user_data );
 
 			// Prepare and execute the SQL query to insert a new log record.
-			$wpdb->insert(
+			$wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- It is OK, it is a custom table
 				$this->table_name,
 				array(
 					'user_id'           => $this->current_user_id,
@@ -135,9 +135,9 @@ if ( ! class_exists( 'UBDWPLogs' ) ) {
 				"SELECT t.ID, t.user_id, u.display_name, t.user_deleted_data, t.deletion_time 
                 FROM %i t
                 INNER JOIN {$wpdb->users} u ON t.user_id = u.ID
-                WHERE 1=1 {$where} LIMIT %d OFFSET %d", $this->table_name, $limit, $offset ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared	-- The "where" is prepared with escaped params, please see the "build where clause" method, we did it to avoid code duplication.
+                WHERE 1=1 {$where} LIMIT %d OFFSET %d", $this->table_name, $limit, $offset ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery	-- The "where" is prepared with escaped params, please see the "build where clause" method, we did it to avoid code duplication.
 
-			return $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used above.
+			return $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery --  "prepare" is used above, cache is no needed, and it is a custom table.
 		}
 
 		/**
@@ -148,7 +148,7 @@ if ( ! class_exists( 'UBDWPLogs' ) ) {
 		private function get_total_record_count(): int {
 			global $wpdb;
 
-			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i", $this->table_name ) ); // db call ok; no-cache ok.
+			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i", $this->table_name ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery --  "prepare" is used here, cache is no needed, and it is a custom table.
 		}
 
 		/**
@@ -166,7 +166,7 @@ if ( ! class_exists( 'UBDWPLogs' ) ) {
                       INNER JOIN {$wpdb->users} u ON t.user_id = u.ID
                       WHERE 1=1 {$where}"; // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared	-- The "where" is prepared with escaped params, please see the "build where clause" method, we did it to avoid code duplication.
 
-			return (int) $wpdb->get_var( $wpdb->prepare( $query , $this->table_name) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used here.
+			return (int) $wpdb->get_var( $wpdb->prepare( $query , $this->table_name) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery --  "prepare" is used here, cache is not needed, and it is a custom table.
 		}
 
 		/**

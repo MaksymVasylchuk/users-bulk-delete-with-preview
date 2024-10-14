@@ -91,7 +91,7 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 				"SELECT DISTINCT meta_key FROM {$wpdb->usermeta} WHERE meta_key LIKE %s LIMIT 10",
 				'%' . $wpdb->esc_like( $search ) . '%'
 			);
-			$results = $wpdb->get_results( $query ); // db call ok; no-cache ok.
+			$results = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used above.
 
 			return array_map( function ( $result ) {
 				return array(
@@ -159,7 +159,7 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 		 */
 		public function get_users_by_woocommerce_filters(): mixed {
 
-			$products = array_unique( array_map('absint', $_POST['products'] ?? array() ) );
+			$products = array_unique( array_map('absint', $_POST['products'] ?? array() ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing --  "nonce" is checked in search_users_for_delete_ajax method
 
 			$user_ids = array_merge(
 				$this->get_users_by_product_purchase( $products )
@@ -267,7 +267,7 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
                     WHERE user_email $compare %s 
                     AND ID != %d
                 ";
-				$user_ids = $wpdb->get_col( $wpdb->prepare( $sql,
+				$user_ids = $wpdb->get_col( $wpdb->prepare( $sql, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used here.
 					$email_search,
 					$this->current_user_id ) );
 
@@ -356,14 +356,11 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 			$order_items = $wpdb->get_col(
 				$wpdb->prepare(
 					"SELECT DISTINCT order_id 
-             FROM {$wpdb->prefix}woocommerce_order_items 
+             FROM %i 
              WHERE order_item_id IN (
                  SELECT order_item_id 
-                 FROM {$wpdb->prefix}woocommerce_order_itemmeta 
-                 WHERE meta_key = '_product_id' AND meta_value IN ($placeholders)
-             )",
-					...$products_ids
-				)
+                 FROM %i 
+                 WHERE meta_key = '_product_id' AND meta_value IN ($placeholders) )", "{$wpdb->prefix}woocommerce_order_items", "{$wpdb->prefix}woocommerce_order_items", ...$products_ids ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- "placeholders" in this case are generated placeholders for product IDs in format %d, see logic above
 			);
 
 
@@ -381,15 +378,7 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 			// Get user IDs who purchased the products.
 			return $wpdb->get_col(
 				$wpdb->prepare(
-					"
-            SELECT DISTINCT posts.post_author 
-            FROM {$wpdb->prefix}posts AS posts
-            WHERE posts.ID IN ($order_ids_placeholders)
-            AND posts.post_type IN ('shop_order', 'shop_order_placehold')
-            AND posts.post_status IN ('wc-completed', 'wc-processing', 'wc-on-hold')
-            ",
-					...$order_items
-				)
+					"SELECT DISTINCT posts.post_author FROM {$wpdb->posts} AS posts WHERE posts.ID IN ($order_ids_placeholders) AND posts.post_type IN ('shop_order', 'shop_order_placehold') AND posts.post_status IN ('wc-completed', 'wc-processing', 'wc-on-hold')", ...$order_items ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- "order_ids_placeholders" in this case are generated placeholders for order IDs in format %d, see logic above
 			);
 		}
 	}
