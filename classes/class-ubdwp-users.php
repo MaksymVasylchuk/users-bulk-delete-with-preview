@@ -310,6 +310,7 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 				$args['date_query'][] = array(
 					'column' => 'user_registered',
 					'after'  => sanitize_text_field( $request['registration_date'] ),
+					'inclusive' => true     // Include boundary times
 				);
 			}
 		}

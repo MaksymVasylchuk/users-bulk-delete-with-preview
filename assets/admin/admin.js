@@ -654,10 +654,6 @@
 
         // Trigger resize event
         $(window).trigger('resize');
-
-        $(window).resize(function() {
-            table.columns.adjust().responsive.recalc();
-        });
     }
 
     /**
