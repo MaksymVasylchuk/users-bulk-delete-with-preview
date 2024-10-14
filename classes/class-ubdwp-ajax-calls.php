@@ -167,7 +167,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 					case 'select_existing':
 						UBDWPHelperFacade::validate_user_search_for_existing_users( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
 						$results
-							= UBDWPUsersFacade::get_users_by_ids( array_unique( array_map('absint',$_POST['user_search'] ?? array() ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
+							= UBDWPUsersFacade::get_users_by_ids( array_unique( array_map('intval',$_POST['user_search'] ?? array() ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
 						break;
 					case 'find_users':
 						UBDWPHelperFacade::validate_find_user_form( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
@@ -205,17 +205,16 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 				);
 
 				$sanitized_users = array_filter( array_map( function ( $user ) {
-					return is_array( $user ) ? [
-						'id'            => absint( $user['id'] ?? 0 ),
+					return (is_array( $user ) && !empty($user['id']))  ? array(
+						'id'            => intval( $user['id'] ?? 0 ),
 						'reassign'      => sanitize_text_field( $user['reassign'] ?? '' ),
 						'email'         => sanitize_email( $user['email'] ?? '' ),
 						'display_name'  => sanitize_text_field( $user['display_name'] ?? '' )
-					] : null;
+					) : null;
 				}, $_POST['users'] ?? array() ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", this filter is sanitizing the $_POST array.
 
 
-				$user_ids = array_unique( array_map('absint', array_column( $sanitized_users, 'id' ) ) );
-
+				$user_ids = array_unique( array_map('intval', array_column( $sanitized_users, 'id' ) ) );
 
 				if ( empty( $user_ids ) ) {
 					wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'select_any_user' ) ) );
@@ -234,6 +233,7 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 						wp_delete_user( esc_attr( $user['id'] ), esc_attr( $user['reassign'] ) ?? null );
 					}
 				}
+
 
 				$template
 					= UBDWPViewsFacade::render_template(

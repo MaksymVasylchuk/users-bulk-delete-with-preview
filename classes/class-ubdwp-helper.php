@@ -100,7 +100,7 @@ if ( ! class_exists( 'UBDWPHelper' ) ) {
 		 * @param  array $request  The request data.
 		 */
 		public function validate_user_search_for_existing_users( array $request ): void {
-			$user_search = array_unique( array_map('absint',$request['user_search'] ?? array() ) ); // WPCS: XSS ok.
+			$user_search = array_unique( array_map('intval',$request['user_search'] ?? array() ) ); // WPCS: XSS ok.
 
 			if ( empty( $user_search ) ) {
 				$this->send_error_response( 'no_users_found' );
@@ -137,7 +137,7 @@ if ( ! class_exists( 'UBDWPHelper' ) ) {
 		 * @param  array $request  The request data.
 		 */
 		public function validate_woocommerce_filters( array $request ): void {
-			$products      = array_unique( array_map('absint',$request['products'] ?? array() ) ); // WPCS: XSS ok.
+			$products      = array_unique( array_map('intval',$request['products'] ?? array() ) ); // WPCS: XSS ok.
 
 			if ( empty( $products ) ) {
 				$this->send_error_response( 'at_least_one_required' );
@@ -168,7 +168,7 @@ if ( ! class_exists( 'UBDWPHelper' ) ) {
 				return array();
 			}
 
-			$user_ids       = array_unique( array_map('absint', array_map( fn( $user ) => $user->ID, $users ) ) );
+			$user_ids       = array_unique( array_map('intval', array_map( fn( $user ) => $user->ID, $users ) ) );
 			$all_users
 			                = UBDWPUsersFacade::get_users_exclude_ids( $user_ids );
 			$select_options = $this->build_select_options( $all_users );

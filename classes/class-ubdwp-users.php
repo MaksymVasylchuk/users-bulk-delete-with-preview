@@ -113,7 +113,7 @@ if ( ! class_exists( 'UBDWPUsers' ) ) {
 				return new WP_Error( 'invalid_input', UBDWPHelperFacade::get_error_message( 'invalid_input' ) );
 			}
 
-			$user_ids = array_unique( array_map('absint', $user_ids ) );
+			$user_ids = array_unique( array_map('intval', $user_ids ) );
 
 			$users = get_users( array( 'include' => $user_ids ) );
 
