@@ -73,7 +73,7 @@ if ( ! class_exists( 'UBDWP_Users_Bulk_Delete_With_Preview' ) ) {
 				define( 'WPUBDP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 			}
 			if ( ! defined( 'WPUBDP_PLUGIN_VERSION' ) ) {
-				define( 'WPUBDP_PLUGIN_VERSION', time() );
+				define( 'WPUBDP_PLUGIN_VERSION', '1.1.0' );
 			}
 			if ( ! defined( 'WPUBDP_BASE_NAME' ) ) {
 				define(
