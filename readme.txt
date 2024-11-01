@@ -1,6 +1,6 @@
 === Users Bulk Delete With Preview ===
 Contributors: maksymvasylchuk
-Tags: bulk delete, users delete with preview, users bulk delete with preview, users bulk clean with preview
+Tags: bulk delete, user management, delete users, preview delete, bulk clean
 Requires at least: 6.2
 Tested up to: 6.6.2
 Stable tag: 1.1.0
@@ -80,6 +80,9 @@ No, once users are deleted, they cannot be restored. Please make sure to verify 
 Yes, the plugin is compatible with WooCommerce and allows filtering users who have placed orders.
 
 == Upgrade Notice ==
+
+= 1.1.1 =
+Updated links and uk translation.
 
 = 1.1.0 =
 Updated Libraries, Bug Fixes, Code Improvements. No upgrade steps required for this version.
