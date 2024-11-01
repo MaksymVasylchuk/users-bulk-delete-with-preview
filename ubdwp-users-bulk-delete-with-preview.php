@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Users Bulk Delete With Preview
- * Plugin URI: https://google.com
+ * Plugin URI: https://github.com/MaksymVasylchuk/users-bulk-delete-with-preview
  * Description: Effortlessly delete multiple WordPress users with our Users Bulk Delete With Preview plugin. View and confirm user details before removal to ensure accuracy and avoid mistakes. Streamline your user management process with ease and confidence!
  * Version: 1.1.0
  * Requires at least 5.6
