@@ -615,18 +615,29 @@
                         orderable: false,
                         searchable: false
                     },
-                    {title: __( 'ID', 'users-bulk-delete-with-preview' ), data: 'ID'},
-                    {title: __( 'Username', 'users-bulk-delete-with-preview' ), data: 'user_login'},
-                    {title: __( 'Email', 'users-bulk-delete-with-preview' ), data: 'user_email'},
-                    {title: __( 'Registered', 'users-bulk-delete-with-preview' ), data: 'user_registered'},
-                    {title: __( 'Role', 'users-bulk-delete-with-preview' ), data: 'user_role'},
+                    {title: dataTableLang.id, data: 'ID'},
+                    {title: dataTableLang.username, data: 'user_login'},
+                    {title: dataTableLang.email, data: 'user_email'},
+                    {title: dataTableLang.registered, data: 'user_registered'},
+                    {title: dataTableLang.role, data: 'user_role'},
                     {
-                        title: __( 'Assign related content to user', 'users-bulk-delete-with-preview' ),
+                        title: dataTableLang.assignContent,
                         data: 'select',
                         orderable: false,
                         searchable: false
                     }
                 ],
+                language: {
+                    emptyTable: dataTableLang.emptyTable,
+                    info: dataTableLang.info,
+                    infoEmpty: dataTableLang.infoEmpty,
+                    infoFiltered: dataTableLang.infoFiltered,
+                    lengthMenu: dataTableLang.lengthMenu,
+                    loadingRecords: dataTableLang.loadingRecords,
+                    processing: dataTableLang.processing,
+                    search: dataTableLang.search,
+                    zeroRecords: dataTableLang.zeroRecords
+                },
                 order: [[1, 'asc']],
                 lengthMenu: [
                     [10, 25, 50, 75, 100, 250, 500, -1],

@@ -315,7 +315,7 @@ if ( ! class_exists( 'UBDWPHelper' ) ) {
 					case 'search':
 						$sanitized_data[ $key ] = array(
 							'value' => sanitize_text_field( $value['value'] ?? '' ),
-							'regex' => filter_var( $value['regex'] ?? 'false', FILTER_VALIDATE_BOOLEAN )
+							'regex' => filter_var( $value['regex'] ?? 'false', FILTER_VALIDATE_BOOLEAN ),
 						);
 						break;
 
@@ -328,8 +328,8 @@ if ( ! class_exists( 'UBDWPHelper' ) ) {
 								'orderable'  => filter_var( $column['orderable'] ?? 'false', FILTER_VALIDATE_BOOLEAN ),
 								'search'     => array(
 									'value' => sanitize_text_field( $column['search']['value'] ?? '' ),
-									'regex' => filter_var( $column['search']['regex'] ?? 'false', FILTER_VALIDATE_BOOLEAN )
-								)
+									'regex' => filter_var( $column['search']['regex'] ?? 'false', FILTER_VALIDATE_BOOLEAN ),
+								),
 							);
 						}, $value );
 						break;
@@ -342,6 +342,41 @@ if ( ! class_exists( 'UBDWPHelper' ) ) {
 			}
 
 			return $sanitized_data;
+		}
+
+		/**
+		 * Get translation for DataTables
+		 *
+		 * @return array
+		 */
+		public function getDataTableTranslation() {
+			return array(
+				'emptyTable'     => __( 'No data available in table', 'users-bulk-delete-with-preview' ),
+				'info'           => __( 'Showing _START_ to _END_ of _TOTAL_ entries', 'users-bulk-delete-with-preview' ),
+				'infoEmpty'      => __( 'Showing 0 to 0 of 0 entries', 'users-bulk-delete-with-preview' ),
+				'infoFiltered'   => __( '(filtered from _MAX_ total entries)', 'users-bulk-delete-with-preview' ),
+				'lengthMenu'     => __( 'Show _MENU_ entries', 'users-bulk-delete-with-preview' ),
+				'loadingRecords' => __( 'Loading...', 'users-bulk-delete-with-preview' ),
+				'processing'     => __( 'Processing...', 'users-bulk-delete-with-preview' ),
+				'search'         => __( 'Search', 'users-bulk-delete-with-preview' ),
+				'zeroRecords'    => __( 'No matching records found', 'users-bulk-delete-with-preview' )
+			);
+		}
+
+		/**
+		 * Get translation for User table
+		 *
+		 * @return array
+		 */
+		public function getUserTableTranslation() {
+			return array(
+				'id' => __( 'ID', 'users-bulk-delete-with-preview' ),
+				'username' => __( 'Username', 'users-bulk-delete-with-preview' ),
+				'email' => __( 'Email', 'users-bulk-delete-with-preview' ),
+				'registered' => __( 'Registered', 'users-bulk-delete-with-preview' ),
+				'role' => __( 'Role', 'users-bulk-delete-with-preview' ),
+				'assignContent' => __( 'Assign related content to user', 'users-bulk-delete-with-preview' ),
+			);
 		}
 
 

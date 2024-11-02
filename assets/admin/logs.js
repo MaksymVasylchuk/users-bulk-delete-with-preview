@@ -17,6 +17,17 @@
                     "logs_datatable_nonce": $('#logs_datatable_nonce').val()
                 }
             },
+            "language": {
+                "emptyTable": dataTableLang.emptyTable,
+                "info": dataTableLang.info,
+                "infoEmpty": dataTableLang.infoEmpty,
+                "infoFiltered": dataTableLang.infoFiltered,
+                "lengthMenu": dataTableLang.lengthMenu,
+                "loadingRecords": dataTableLang.loadingRecords,
+                "processing": dataTableLang.processing,
+                "search": dataTableLang.search,
+                "zeroRecords": dataTableLang.zeroRecords
+            },
 
             // Define columns in the DataTable
             "columns": [

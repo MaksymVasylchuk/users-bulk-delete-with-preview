@@ -12,7 +12,7 @@ msgstr ""
 "<translations@example."
 "com>\n"
 "POT-Creation-Date: "
-"2024-11-01 14:54+0100\n"
+"2024-11-02 10:46+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Your "
 "Name <you@example.com>\n"
@@ -79,40 +79,6 @@ msgstr ""
 msgid ""
 "An unexpected error "
 "occurred."
-msgstr ""
-
-#: assets/admin/admin.js:618
-#: templates/logs-page.php:31
-#: templates/partials/_users_table.php:32
-msgid "ID"
-msgstr ""
-
-#: assets/admin/admin.js:619
-#: templates/partials/_users_table.php:33
-msgid "Username"
-msgstr ""
-
-#: assets/admin/admin.js:620
-#: templates/partials/_users_table.php:34
-msgid "Email"
-msgstr ""
-
-#: assets/admin/admin.js:621
-#: templates/partials/_users_table.php:35
-msgid "Registered"
-msgstr ""
-
-#: assets/admin/admin.js:622
-#: templates/partials/_users_table.php:36
-msgid "Role"
-msgstr ""
-
-#: assets/admin/admin.js:624
-#: templates/partials/_users_table.php:16
-#: templates/partials/_users_table.php:37
-msgid ""
-"Assign related content "
-"to user"
 msgstr ""
 
 #: assets/dataTables/datatables.min.js:16
@@ -207,6 +173,85 @@ msgstr ""
 
 #: classes/class-ubdwp-helper.php:187
 msgid "Select a user"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:354
+msgid ""
+"No data available in "
+"table"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:355
+msgid ""
+"Showing _START_ to _END_ "
+"of _TOTAL_ entries"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:356
+msgid ""
+"Showing 0 to 0 of 0 "
+"entries"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:357
+msgid ""
+"(filtered from _MAX_ "
+"total entries)"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:358
+msgid "Show _MENU_ entries"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:359
+msgid "Loading..."
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:360
+msgid "Processing..."
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:361
+msgid "Search"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:362
+msgid ""
+"No matching records found"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:373
+#: templates/logs-page.php:31
+#: templates/partials/_users_table.php:32
+msgid "ID"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:374
+#: templates/partials/_users_table.php:33
+msgid "Username"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:375
+#: templates/partials/_users_table.php:34
+msgid "Email"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:376
+#: templates/partials/_users_table.php:35
+msgid "Registered"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:377
+#: templates/partials/_users_table.php:36
+msgid "Role"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:378
+#: templates/partials/_users_table.php:16
+#: templates/partials/_users_table.php:37
+msgid ""
+"Assign related content "
+"to user"
 msgstr ""
 
 #: classes/facades/abstract-ubdwp-facade.php:66
@@ -430,10 +475,10 @@ msgstr ""
 msgid "Logs page"
 msgstr ""
 
-#: ubdwp-users-bulk-delete-with-preview.php:371
+#: ubdwp-users-bulk-delete-with-preview.php:379
 msgid "Delete users"
 msgstr ""
 
-#: ubdwp-users-bulk-delete-with-preview.php:373
+#: ubdwp-users-bulk-delete-with-preview.php:381
 msgid "Logs"
 msgstr ""
