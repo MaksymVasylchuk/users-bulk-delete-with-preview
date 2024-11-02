@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin Name: Users Bulk Delete With Preview
- * Plugin URI: https://google.com
+ * Plugin URI: https://github.com/MaksymVasylchuk/users-bulk-delete-with-preview
  * Description: Effortlessly delete multiple WordPress users with our Users Bulk Delete With Preview plugin. View and confirm user details before removal to ensure accuracy and avoid mistakes. Streamline your user management process with ease and confidence!
- * Version: 1.1.0
- * Requires at least 5.6
+ * Version: 1.1.1
+ * Requires at least 6.2
  * Tested up to: 6.6.2
  * Author: maksymvasylchuk
  * Author URI: https://github.com/MaksymVasylchuk
@@ -39,7 +39,7 @@ if ( ! class_exists( 'UBDWP_Users_Bulk_Delete_With_Preview' ) ) {
 			// Include additional files.
 			$this->add_includes();
 			// Languages.
-			$this->load_text_domain();
+			add_action('init', array( $this, 'load_text_domain' ) );
 
 			// Hook functions.
 			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
@@ -73,7 +73,7 @@ if ( ! class_exists( 'UBDWP_Users_Bulk_Delete_With_Preview' ) ) {
 				define( 'WPUBDP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 			}
 			if ( ! defined( 'WPUBDP_PLUGIN_VERSION' ) ) {
-				define( 'WPUBDP_PLUGIN_VERSION', '1.1.0' );
+				define( 'WPUBDP_PLUGIN_VERSION', '1.1.1' );
 			}
 			if ( ! defined( 'WPUBDP_BASE_NAME' ) ) {
 				define(
@@ -325,6 +325,10 @@ if ( ! class_exists( 'UBDWP_Users_Bulk_Delete_With_Preview' ) ) {
 						'ajaxurl' => admin_url( 'admin-ajax.php' ),
 					)
 				);
+
+				// Localize DataTable language strings
+				$translation = array_merge(UBDWPHelperFacade::getDataTableTranslation(), UBDWPHelperFacade::getUserTableTranslation());
+				wp_localize_script('wpubdp-admin-js', 'dataTableLang', $translation);
 			}
 
 			if (isset($_GET['page']) && $_GET['page'] == 'ubdwp_admin_logs') { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce verification is not required here.
@@ -356,6 +360,10 @@ if ( ! class_exists( 'UBDWP_Users_Bulk_Delete_With_Preview' ) ) {
 						'ajaxurl' => admin_url( 'admin-ajax.php' ),
 					)
 				);
+
+				// Localize DataTable language strings
+				$translation = UBDWPHelperFacade::getDataTableTranslation();
+				wp_localize_script('wpubdp-logs-js', 'dataTableLang', $translation);
 			}
 		}
 
@@ -381,6 +389,8 @@ if ( ! class_exists( 'UBDWP_Users_Bulk_Delete_With_Preview' ) ) {
 		 * Load text domain (translations).
 		 */
 		public function load_text_domain(): void {
+			unload_textdomain( 'users-bulk-delete-with-preview' );
+
 			load_plugin_textdomain(
 				'users-bulk-delete-with-preview',
 				false,

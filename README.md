@@ -8,7 +8,7 @@
 **Tags**: bulk delete, users delete with preview, users bulk delete with preview, users bulk clean with preview  
 **Requires at least**: 6.2  
 **Tested up to**: 6.6.2  
-**Stable tag**: 1.1.0  
+**Stable tag**: 1.1.1  
 **Requires PHP**: 8.0  
 **License**: GPLv2 or later  
 **License URI**: [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -84,6 +84,8 @@ Yes, the plugin is compatible with WooCommerce and allows filtering users who ha
 
 ## Upgrade Notice
 
+### 1.1.1
+Updated links, tags and uk translation. No upgrade steps required for this version.
 ### 1.1.0
 Updated Libraries, Bug Fixes, Code Improvements. No upgrade steps required for this version.
 ### 1.0.0
@@ -106,6 +108,12 @@ This plugin uses the following third-party libraries:
 - [Select2](https://select2.org/) – Licensed under MIT License.
 
 ## Changelog
+### 1.1.1
+*Release Date - 02 November 2024*
+* Updated links
+* Updated tags
+* Updated uk translation
+
 ### 1.1.0
 *Release Date - 14 October 2024*
 * Updated Libraries: All core libraries have been updated to their latest versions for enhanced performance, security, and compatibility.

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2024-10-10 12:03+0200\n"
+"POT-Creation-Date: 2024-11-02 10:46+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -14,75 +14,172 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
+"_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Generator: Poedit 3.4.4\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: classes/class-wpubdp-helper.php:29
+#: assets/admin/admin.js:30
+msgid "Search for users"
+msgstr "Пошук користувачів"
+
+#: assets/admin/admin.js:81
+msgid "Select meta field"
+msgstr "Виберіть метаполе"
+
+#: assets/admin/admin.js:86
+msgid "Select user roles"
+msgstr "Виберіть ролі користувачів"
+
+#: assets/admin/admin.js:87 templates/partials/_woocommerce_filters_form.php:19
+msgid "Select products that bought user"
+msgstr "Виберіть продукти, які купив користувач"
+
+#: assets/admin/admin.js:98
+msgid "Select registration date"
+msgstr "Виберіть дату реєстрації"
+
+#: assets/admin/admin.js:520
+msgid "An unexpected error occurred."
+msgstr "Виникла непередбачувана помилка."
+
+#: assets/dataTables/datatables.min.js:16
+msgid "0000-01-01 00:00:00"
+msgstr "0000-01-01 00:00:00"
+
+#: classes/class-ubdwp-ajax-calls.php:385
+msgid "Failed to write the CSV file."
+msgstr "Не вдалося записати файл CSV."
+
+#: classes/class-ubdwp-helper.php:29
 msgid "An unknown error occurred."
 msgstr "Сталася невідома помилка."
 
-#: classes/class-wpubdp-helper.php:39
+#: classes/class-ubdwp-helper.php:39
 msgid "You do not have sufficient permissions to perform this action."
 msgstr "У вас недостатньо прав для виконання цієї дії."
 
-#: classes/class-wpubdp-helper.php:40
+#: classes/class-ubdwp-helper.php:40
 msgid "Invalid nonce"
 msgstr "Недійсний nonce"
 
-#: classes/class-wpubdp-helper.php:41
+#: classes/class-ubdwp-helper.php:41
 msgid "Select type"
 msgstr "Виберіть тип"
 
-#: classes/class-wpubdp-helper.php:42
+#: classes/class-ubdwp-helper.php:42
 msgid "Invalid security token"
 msgstr "Недійсний маркер безпеки"
 
-#: classes/class-wpubdp-helper.php:43
+#: classes/class-ubdwp-helper.php:43
 msgid "Something went wrong. Please try again."
 msgstr "Щось пішло не так. Спробуйте ще раз."
 
-#: classes/class-wpubdp-helper.php:44
+#: classes/class-ubdwp-helper.php:44
 msgid "User IDs should be an array."
 msgstr "Ідентифікатори користувачів мають бути масивом."
 
-#: classes/class-wpubdp-helper.php:45
+#: classes/class-ubdwp-helper.php:45
 msgid "At least one required field."
 msgstr "Принаймні одне обов’язкове поле."
 
-#: classes/class-wpubdp-helper.php:46
+#: classes/class-ubdwp-helper.php:46
 msgid "No users found with the given filters"
 msgstr "Користувачів із заданими фільтрами не знайдено"
 
-#: classes/class-wpubdp-helper.php:47
+#: classes/class-ubdwp-helper.php:47
 msgid "No users found for the provided IDs."
 msgstr "Не знайдено користувачів для наданих ідентифікаторів."
 
-#: classes/class-wpubdp-helper.php:48
+#: classes/class-ubdwp-helper.php:48
 msgid "Please select at least one user for deletion."
 msgstr "Будь ласка, виберіть принаймні одного користувача для видалення."
 
-#: classes/class-wpubdp-helper.php:72
+#: classes/class-ubdwp-helper.php:72
 msgid "Choose from existing users"
 msgstr "Виберіть з існуючих користувачів"
 
-#: classes/class-wpubdp-helper.php:73
+#: classes/class-ubdwp-helper.php:73
 msgid "Find users according to certain criteria"
 msgstr "Знайти користувачів за певними критеріями"
 
-#: classes/class-wpubdp-helper.php:78
+#: classes/class-ubdwp-helper.php:78
 msgid "Find users using WooCommerce filters"
 msgstr "Знайдіть користувачів за допомогою фільтрів WooCommerce"
 
-#: classes/class-wpubdp-helper.php:187
+#: classes/class-ubdwp-helper.php:187
 msgid "Select a user"
 msgstr "Виберіть користувача"
 
-#: classes/facades/abstract-wpubdp-facade.php:66
+#: classes/class-ubdwp-helper.php:354
+msgid "No data available in table"
+msgstr "У таблиці немає даних"
+
+#: classes/class-ubdwp-helper.php:355
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Відображення від _START_ до _END_ _TOTAL_ записів"
+
+#: classes/class-ubdwp-helper.php:356
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Показано від 0 до 0 з 0 записів"
+
+#: classes/class-ubdwp-helper.php:357
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(відфільтровано з _MAX_ всіх записів)"
+
+#: classes/class-ubdwp-helper.php:358
+msgid "Show _MENU_ entries"
+msgstr "Показати _MENU_ записів"
+
+#: classes/class-ubdwp-helper.php:359
+msgid "Loading..."
+msgstr "Завантаження…"
+
+#: classes/class-ubdwp-helper.php:360
+msgid "Processing..."
+msgstr "Обробка…"
+
+#: classes/class-ubdwp-helper.php:361
+msgid "Search"
+msgstr "Пошук"
+
+#: classes/class-ubdwp-helper.php:362
+msgid "No matching records found"
+msgstr "Відповідних записів не знайдено"
+
+#: classes/class-ubdwp-helper.php:373 templates/logs-page.php:31
+#: templates/partials/_users_table.php:32
+msgid "ID"
+msgstr "ID"
+
+#: classes/class-ubdwp-helper.php:374 templates/partials/_users_table.php:33
+msgid "Username"
+msgstr "Ім’я користувача"
+
+#: classes/class-ubdwp-helper.php:375 templates/partials/_users_table.php:34
+msgid "Email"
+msgstr "Електронна пошта"
+
+#: classes/class-ubdwp-helper.php:376 templates/partials/_users_table.php:35
+msgid "Registered"
+msgstr "Зареєстрований"
+
+#: classes/class-ubdwp-helper.php:377 templates/partials/_users_table.php:36
+msgid "Role"
+msgstr "Роль"
+
+#: classes/class-ubdwp-helper.php:378 templates/partials/_users_table.php:16
+#: templates/partials/_users_table.php:37
+msgid "Assign related content to user"
+msgstr "Призначте пов’язаний вміст користувачу"
+
+#: classes/facades/abstract-ubdwp-facade.php:66
 #, php-format
 msgid "Method %1$s does not exist in class %2$s."
 msgstr "Метод %1$s не існує в класі %2$s."
@@ -91,224 +188,207 @@ msgstr "Метод %1$s не існує в класі %2$s."
 msgid "You must update WordPress to use the plugin."
 msgstr "Ви повинні оновити WordPress, щоб використовувати плагін."
 
-#: templates/logs-page.php:24 templates/partials/_users_table.php:27
-msgid "ID"
-msgstr "ID"
-
-#: templates/logs-page.php:25
+#: templates/logs-page.php:32
 msgid "User"
 msgstr "Користувач"
 
-#: templates/logs-page.php:26
+#: templates/logs-page.php:33
 msgid "Deleted Users Count"
 msgstr "Кількість видалених користувачів"
 
-#: templates/logs-page.php:27
+#: templates/logs-page.php:34
 msgid "Deleted User Data"
 msgstr "Видалені дані користувача"
 
-#: templates/logs-page.php:28
+#: templates/logs-page.php:35
 msgid "Deletion Time"
 msgstr "Час видалення"
 
-#: templates/partials/_confirmation-popup.php:14
+#: templates/partials/_confirmation-popup.php:19
 msgid "Confirm Deletion"
 msgstr "Підтвердити видалення"
 
-#: templates/partials/_confirmation-popup.php:15
+#: templates/partials/_confirmation-popup.php:20
 msgid "Close"
 msgstr "Закрити"
 
-#: templates/partials/_confirmation-popup.php:20
+#: templates/partials/_confirmation-popup.php:23
 msgid "Are you sure you want to delete this(these) user(s)?"
 msgstr "Ви впевнені, що хочете видалити цього(их) користувача(ів)?"
 
-#: templates/partials/_confirmation-popup.php:23
+#: templates/partials/_confirmation-popup.php:26
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: templates/partials/_confirmation-popup.php:24
+#: templates/partials/_confirmation-popup.php:27
 msgid "Delete"
 msgstr "Видалити"
 
-#: templates/partials/_existing_user_form.php:13
+#: templates/partials/_existing_user_form.php:18
 msgid "Select existing users"
 msgstr "Виберіть існуючих користувачів"
 
-#: templates/partials/_existing_user_form.php:21
-#: templates/partials/_woocommerce_filters_form.php:25
+#: templates/partials/_existing_user_form.php:26
+#: templates/partials/_woocommerce_filters_form.php:30
 msgid "Select All"
 msgstr "Виберати усі"
 
-#: templates/partials/_find_user_form.php:14
+#: templates/partials/_find_user_form.php:19
 msgid "User Role"
 msgstr "Роль користувача"
 
-#: templates/partials/_find_user_form.php:29
+#: templates/partials/_find_user_form.php:34
 msgid "User Email"
 msgstr "Електронна пошта користувача"
 
-#: templates/partials/_find_user_form.php:33
-#: templates/partials/_find_user_form.php:61
+#: templates/partials/_find_user_form.php:38
+#: templates/partials/_find_user_form.php:66
 msgid "Equal to (string)"
 msgstr "Equal to (string)"
 
-#: templates/partials/_find_user_form.php:34
-#: templates/partials/_find_user_form.php:62
+#: templates/partials/_find_user_form.php:39
+#: templates/partials/_find_user_form.php:67
 msgid "Not equal to (string)"
 msgstr "Not equal to (string)"
 
-#: templates/partials/_find_user_form.php:35
-#: templates/partials/_find_user_form.php:63
+#: templates/partials/_find_user_form.php:40
+#: templates/partials/_find_user_form.php:68
 msgid "Like (string)"
 msgstr "Like (string)"
 
-#: templates/partials/_find_user_form.php:36
-#: templates/partials/_find_user_form.php:64
+#: templates/partials/_find_user_form.php:41
+#: templates/partials/_find_user_form.php:69
 msgid "Not like (string)"
 msgstr "Not like (string)"
 
-#: templates/partials/_find_user_form.php:38
+#: templates/partials/_find_user_form.php:43
 msgid "Enter user email..."
 msgstr "Введіть адресу електронної пошти користувача…"
 
-#: templates/partials/_find_user_form.php:45
+#: templates/partials/_find_user_form.php:50
 msgid "User Registration Date"
 msgstr "Дата реєстрації користувача"
 
-#: templates/partials/_find_user_form.php:55
+#: templates/partials/_find_user_form.php:60
 msgid "User Meta"
 msgstr "Мета користувача"
 
-#: templates/partials/_find_user_form.php:65
+#: templates/partials/_find_user_form.php:70
 msgid "Equal to (date)"
 msgstr "Equal to (date)"
 
-#: templates/partials/_find_user_form.php:66
+#: templates/partials/_find_user_form.php:71
 msgid "Not equal to (date)"
 msgstr "Not equal to (date)"
 
-#: templates/partials/_find_user_form.php:67
+#: templates/partials/_find_user_form.php:72
 msgid "Less than (date)"
 msgstr "Less than (date)"
 
-#: templates/partials/_find_user_form.php:68
+#: templates/partials/_find_user_form.php:73
 msgid "Less than or equal to (date)"
 msgstr "Less than or equal to (date)"
 
-#: templates/partials/_find_user_form.php:69
+#: templates/partials/_find_user_form.php:74
 msgid "Greater than (date)"
 msgstr "Greater than (date)"
 
-#: templates/partials/_find_user_form.php:70
+#: templates/partials/_find_user_form.php:75
 msgid "Greater than or equal to (date)"
 msgstr "Greater than or equal to (date)"
 
-#: templates/partials/_find_user_form.php:71
+#: templates/partials/_find_user_form.php:76
 msgid "Equal to (number)"
 msgstr "Equal to (number)"
 
-#: templates/partials/_find_user_form.php:72
+#: templates/partials/_find_user_form.php:77
 msgid "Not equal to (number)"
 msgstr "Not equal to (number)"
 
-#: templates/partials/_find_user_form.php:73
+#: templates/partials/_find_user_form.php:78
 msgid "Less than (number)"
 msgstr "Less than (number)"
 
-#: templates/partials/_find_user_form.php:74
+#: templates/partials/_find_user_form.php:79
 msgid "Less than or equal to (number)"
 msgstr "Less than or equal to (number)"
 
-#: templates/partials/_find_user_form.php:75
+#: templates/partials/_find_user_form.php:80
 msgid "Greater than (number)"
 msgstr "Greater than (number)"
 
-#: templates/partials/_find_user_form.php:76
+#: templates/partials/_find_user_form.php:81
 msgid "Greater than or equal to (number)"
 msgstr "Greater than or equal to (number)"
 
-#: templates/partials/_find_user_form.php:78
+#: templates/partials/_find_user_form.php:83
 msgid "Enter user meta value"
 msgstr "Введіть мета-значення користувача"
 
-#: templates/partials/_step-2-buttons.php:3
+#: templates/partials/_step-2-buttons.php:16
 msgid "Previous step"
 msgstr "Попередній крок"
 
-#: templates/partials/_step-2-buttons.php:6
+#: templates/partials/_step-2-buttons.php:19
 msgid "Export Selected Users"
 msgstr "Експорт вибраних користувачів"
 
-#: templates/partials/_step-2-buttons.php:9
+#: templates/partials/_step-2-buttons.php:22
 msgid "Delete selected users"
 msgstr "Видалити вибраних користувачів"
 
-#: templates/partials/_step-wizard.php:14
-#: templates/partials/_step-wizard.php:18
-#: templates/partials/_step-wizard.php:22
+#: templates/partials/_step-wizard.php:19
+#: templates/partials/_step-wizard.php:23
+#: templates/partials/_step-wizard.php:27
 msgid "Step"
 msgstr "Крок"
 
-#: templates/partials/_users_table.php:11
-#: templates/partials/_users_table.php:32
-msgid "Assign related content to user"
-msgstr "Призначте пов’язаний вміст користувачу"
-
-#: templates/partials/_users_table.php:26
+#: templates/partials/_users_table.php:31
 msgid "Select"
 msgstr "Виберіть"
 
-#: templates/partials/_users_table.php:28
-msgid "Username"
-msgstr "Ім’я користувача"
-
-#: templates/partials/_users_table.php:29
-msgid "Email"
-msgstr "Електронна пошта"
-
-#: templates/partials/_users_table.php:30
-msgid "Registered"
-msgstr "Зареєстрований"
-
-#: templates/partials/_users_table.php:31
-msgid "Role"
-msgstr "Роль"
-
-#: templates/partials/_woocommerce_filters_form.php:14
-msgid "Select products that bought user"
-msgstr "Виберіть продукти, які купив користувач"
-
-#: templates/steps/step-1.php:21
+#: templates/steps/step-1.php:26
 msgid "Choose filter type"
 msgstr "Виберіть тип фільтра"
 
-#: templates/steps/step-1.php:46
+#: templates/steps/step-1.php:51
 msgid "Preview"
 msgstr "Попередній перегляд"
 
-#: users-bulk-delete-with-preview.php:131
-#: users-bulk-delete-with-preview.php:132
+#: ubdwp-users-bulk-delete-with-preview.php:131
+#: ubdwp-users-bulk-delete-with-preview.php:132
 msgid "Bulk Users Delete"
 msgstr "Масове видалення користувачів"
 
-#: users-bulk-delete-with-preview.php:142
-#: users-bulk-delete-with-preview.php:146
+#: ubdwp-users-bulk-delete-with-preview.php:142
+#: ubdwp-users-bulk-delete-with-preview.php:146
 msgid "Bulk Users Delete Logs"
 msgstr "Журнал масового видалення користувачів"
 
-#: users-bulk-delete-with-preview.php:175
+#: ubdwp-users-bulk-delete-with-preview.php:175
 msgid "Users Bulk Delete With Preview"
 msgstr "Масове видалення користувачів із попереднім переглядом"
 
-#: users-bulk-delete-with-preview.php:198
+#: ubdwp-users-bulk-delete-with-preview.php:198
 msgid "Logs page"
 msgstr "Сторінка журналів"
 
-#: users-bulk-delete-with-preview.php:371
+#: ubdwp-users-bulk-delete-with-preview.php:379
 msgid "Delete users"
 msgstr "Видалити користувачів"
 
-#: users-bulk-delete-with-preview.php:373
+#: ubdwp-users-bulk-delete-with-preview.php:381
 msgid "Logs"
 msgstr "Журнали"
+
+#~ msgid "First"
+#~ msgstr "Перша"
+
+#~ msgid "Last"
+#~ msgstr "Остання"
+
+#~ msgid "Next"
+#~ msgstr "Наступна"
+
+#~ msgid "Previous"
+#~ msgstr "Попередня"

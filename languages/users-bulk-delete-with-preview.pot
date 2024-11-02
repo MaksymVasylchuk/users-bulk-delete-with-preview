@@ -12,7 +12,7 @@ msgstr ""
 "<translations@example."
 "com>\n"
 "POT-Creation-Date: "
-"2024-10-10 12:03+0200\n"
+"2024-11-02 10:46+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Your "
 "Name <you@example.com>\n"
@@ -51,91 +51,210 @@ msgstr ""
 "X-Poedit-"
 "SearchPath-0: .\n"
 
-#: classes/class-wpubdp-helper.php:29
+#: assets/admin/admin.js:30
+msgid "Search for users"
+msgstr ""
+
+#: assets/admin/admin.js:81
+msgid "Select meta field"
+msgstr ""
+
+#: assets/admin/admin.js:86
+msgid "Select user roles"
+msgstr ""
+
+#: assets/admin/admin.js:87
+#: templates/partials/_woocommerce_filters_form.php:19
+msgid ""
+"Select products that "
+"bought user"
+msgstr ""
+
+#: assets/admin/admin.js:98
+msgid ""
+"Select registration date"
+msgstr ""
+
+#: assets/admin/admin.js:520
+msgid ""
+"An unexpected error "
+"occurred."
+msgstr ""
+
+#: assets/dataTables/datatables.min.js:16
+msgid "0000-01-01 00:00:00"
+msgstr ""
+
+#: classes/class-ubdwp-ajax-calls.php:385
+msgid ""
+"Failed to write the CSV "
+"file."
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:29
 msgid ""
 "An unknown error "
 "occurred."
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:39
+#: classes/class-ubdwp-helper.php:39
 msgid ""
 "You do not have "
 "sufficient permissions "
 "to perform this action."
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:40
+#: classes/class-ubdwp-helper.php:40
 msgid "Invalid nonce"
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:41
+#: classes/class-ubdwp-helper.php:41
 msgid "Select type"
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:42
+#: classes/class-ubdwp-helper.php:42
 msgid ""
 "Invalid security token"
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:43
+#: classes/class-ubdwp-helper.php:43
 msgid ""
 "Something went wrong. "
 "Please try again."
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:44
+#: classes/class-ubdwp-helper.php:44
 msgid ""
 "User IDs should be an "
 "array."
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:45
+#: classes/class-ubdwp-helper.php:45
 msgid ""
 "At least one required "
 "field."
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:46
+#: classes/class-ubdwp-helper.php:46
 msgid ""
 "No users found with the "
 "given filters"
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:47
+#: classes/class-ubdwp-helper.php:47
 msgid ""
 "No users found for the "
 "provided IDs."
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:48
+#: classes/class-ubdwp-helper.php:48
 msgid ""
 "Please select at least "
 "one user for deletion."
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:72
+#: classes/class-ubdwp-helper.php:72
 msgid ""
 "Choose from existing "
 "users"
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:73
+#: classes/class-ubdwp-helper.php:73
 msgid ""
 "Find users according to "
 "certain criteria"
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:78
+#: classes/class-ubdwp-helper.php:78
 msgid ""
 "Find users using "
 "WooCommerce filters"
 msgstr ""
 
-#: classes/class-wpubdp-helper.php:187
+#: classes/class-ubdwp-helper.php:187
 msgid "Select a user"
 msgstr ""
 
-#: classes/facades/abstract-wpubdp-facade.php:66
+#: classes/class-ubdwp-helper.php:354
+msgid ""
+"No data available in "
+"table"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:355
+msgid ""
+"Showing _START_ to _END_ "
+"of _TOTAL_ entries"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:356
+msgid ""
+"Showing 0 to 0 of 0 "
+"entries"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:357
+msgid ""
+"(filtered from _MAX_ "
+"total entries)"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:358
+msgid "Show _MENU_ entries"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:359
+msgid "Loading..."
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:360
+msgid "Processing..."
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:361
+msgid "Search"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:362
+msgid ""
+"No matching records found"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:373
+#: templates/logs-page.php:31
+#: templates/partials/_users_table.php:32
+msgid "ID"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:374
+#: templates/partials/_users_table.php:33
+msgid "Username"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:375
+#: templates/partials/_users_table.php:34
+msgid "Email"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:376
+#: templates/partials/_users_table.php:35
+msgid "Registered"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:377
+#: templates/partials/_users_table.php:36
+msgid "Role"
+msgstr ""
+
+#: classes/class-ubdwp-helper.php:378
+#: templates/partials/_users_table.php:16
+#: templates/partials/_users_table.php:37
+msgid ""
+"Assign related content "
+"to user"
+msgstr ""
+
+#: classes/facades/abstract-ubdwp-facade.php:66
 #, php-format
 msgid ""
 "Method %1$s does not "
@@ -149,251 +268,217 @@ msgid ""
 "plugin."
 msgstr ""
 
-#: templates/logs-page.php:24
-#: templates/partials/_users_table.php:27
-msgid "ID"
-msgstr ""
-
-#: templates/logs-page.php:25
+#: templates/logs-page.php:32
 msgid "User"
 msgstr ""
 
-#: templates/logs-page.php:26
+#: templates/logs-page.php:33
 msgid "Deleted Users Count"
 msgstr ""
 
-#: templates/logs-page.php:27
+#: templates/logs-page.php:34
 msgid "Deleted User Data"
 msgstr ""
 
-#: templates/logs-page.php:28
+#: templates/logs-page.php:35
 msgid "Deletion Time"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:14
+#: templates/partials/_confirmation-popup.php:19
 msgid "Confirm Deletion"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:15
+#: templates/partials/_confirmation-popup.php:20
 msgid "Close"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:20
+#: templates/partials/_confirmation-popup.php:23
 msgid ""
 "Are you sure you want to "
 "delete this(these) "
 "user(s)?"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:23
+#: templates/partials/_confirmation-popup.php:26
 msgid "Cancel"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:24
+#: templates/partials/_confirmation-popup.php:27
 msgid "Delete"
 msgstr ""
 
-#: templates/partials/_existing_user_form.php:13
+#: templates/partials/_existing_user_form.php:18
 msgid ""
 "Select existing users"
 msgstr ""
 
-#: templates/partials/_existing_user_form.php:21
-#: templates/partials/_woocommerce_filters_form.php:25
+#: templates/partials/_existing_user_form.php:26
+#: templates/partials/_woocommerce_filters_form.php:30
 msgid "Select All"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:14
+#: templates/partials/_find_user_form.php:19
 msgid "User Role"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:29
+#: templates/partials/_find_user_form.php:34
 msgid "User Email"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:33
-#: templates/partials/_find_user_form.php:61
+#: templates/partials/_find_user_form.php:38
+#: templates/partials/_find_user_form.php:66
 msgid "Equal to (string)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:34
-#: templates/partials/_find_user_form.php:62
+#: templates/partials/_find_user_form.php:39
+#: templates/partials/_find_user_form.php:67
 msgid ""
 "Not equal to (string)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:35
-#: templates/partials/_find_user_form.php:63
+#: templates/partials/_find_user_form.php:40
+#: templates/partials/_find_user_form.php:68
 msgid "Like (string)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:36
-#: templates/partials/_find_user_form.php:64
+#: templates/partials/_find_user_form.php:41
+#: templates/partials/_find_user_form.php:69
 msgid "Not like (string)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:38
+#: templates/partials/_find_user_form.php:43
 msgid "Enter user email..."
 msgstr ""
 
-#: templates/partials/_find_user_form.php:45
+#: templates/partials/_find_user_form.php:50
 msgid ""
 "User Registration Date"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:55
+#: templates/partials/_find_user_form.php:60
 msgid "User Meta"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:65
+#: templates/partials/_find_user_form.php:70
 msgid "Equal to (date)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:66
+#: templates/partials/_find_user_form.php:71
 msgid "Not equal to (date)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:67
+#: templates/partials/_find_user_form.php:72
 msgid "Less than (date)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:68
+#: templates/partials/_find_user_form.php:73
 msgid ""
 "Less than or equal to "
 "(date)"
-msgstr ""
-
-#: templates/partials/_find_user_form.php:69
-msgid "Greater than (date)"
-msgstr ""
-
-#: templates/partials/_find_user_form.php:70
-msgid ""
-"Greater than or equal to "
-"(date)"
-msgstr ""
-
-#: templates/partials/_find_user_form.php:71
-msgid "Equal to (number)"
-msgstr ""
-
-#: templates/partials/_find_user_form.php:72
-msgid ""
-"Not equal to (number)"
-msgstr ""
-
-#: templates/partials/_find_user_form.php:73
-msgid "Less than (number)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:74
-msgid ""
-"Less than or equal to "
-"(number)"
+msgid "Greater than (date)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:75
 msgid ""
-"Greater than (number)"
+"Greater than or equal to "
+"(date)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:76
+msgid "Equal to (number)"
+msgstr ""
+
+#: templates/partials/_find_user_form.php:77
+msgid ""
+"Not equal to (number)"
+msgstr ""
+
+#: templates/partials/_find_user_form.php:78
+msgid "Less than (number)"
+msgstr ""
+
+#: templates/partials/_find_user_form.php:79
+msgid ""
+"Less than or equal to "
+"(number)"
+msgstr ""
+
+#: templates/partials/_find_user_form.php:80
+msgid ""
+"Greater than (number)"
+msgstr ""
+
+#: templates/partials/_find_user_form.php:81
 msgid ""
 "Greater than or equal to "
 "(number)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:78
+#: templates/partials/_find_user_form.php:83
 msgid ""
 "Enter user meta value"
 msgstr ""
 
-#: templates/partials/_step-2-buttons.php:3
+#: templates/partials/_step-2-buttons.php:16
 msgid "Previous step"
 msgstr ""
 
-#: templates/partials/_step-2-buttons.php:6
+#: templates/partials/_step-2-buttons.php:19
 msgid ""
 "Export Selected Users"
 msgstr ""
 
-#: templates/partials/_step-2-buttons.php:9
+#: templates/partials/_step-2-buttons.php:22
 msgid ""
 "Delete selected users"
 msgstr ""
 
-#: templates/partials/_step-wizard.php:14
-#: templates/partials/_step-wizard.php:18
-#: templates/partials/_step-wizard.php:22
+#: templates/partials/_step-wizard.php:19
+#: templates/partials/_step-wizard.php:23
+#: templates/partials/_step-wizard.php:27
 msgid "Step"
 msgstr ""
 
-#: templates/partials/_users_table.php:11
-#: templates/partials/_users_table.php:32
-msgid ""
-"Assign related content "
-"to user"
-msgstr ""
-
-#: templates/partials/_users_table.php:26
+#: templates/partials/_users_table.php:31
 msgid "Select"
 msgstr ""
 
-#: templates/partials/_users_table.php:28
-msgid "Username"
-msgstr ""
-
-#: templates/partials/_users_table.php:29
-msgid "Email"
-msgstr ""
-
-#: templates/partials/_users_table.php:30
-msgid "Registered"
-msgstr ""
-
-#: templates/partials/_users_table.php:31
-msgid "Role"
-msgstr ""
-
-#: templates/partials/_woocommerce_filters_form.php:14
-msgid ""
-"Select products that "
-"bought user"
-msgstr ""
-
-#: templates/steps/step-1.php:21
+#: templates/steps/step-1.php:26
 msgid "Choose filter type"
 msgstr ""
 
-#: templates/steps/step-1.php:46
+#: templates/steps/step-1.php:51
 msgid "Preview"
 msgstr ""
 
-#: users-bulk-delete-with-preview.php:131
-#: users-bulk-delete-with-preview.php:132
+#: ubdwp-users-bulk-delete-with-preview.php:131
+#: ubdwp-users-bulk-delete-with-preview.php:132
 msgid "Bulk Users Delete"
 msgstr ""
 
-#: users-bulk-delete-with-preview.php:142
-#: users-bulk-delete-with-preview.php:146
+#: ubdwp-users-bulk-delete-with-preview.php:142
+#: ubdwp-users-bulk-delete-with-preview.php:146
 msgid ""
 "Bulk Users Delete Logs"
 msgstr ""
 
-#: users-bulk-delete-with-preview.php:175
+#: ubdwp-users-bulk-delete-with-preview.php:175
 msgid ""
 "Users Bulk Delete With "
 "Preview"
 msgstr ""
 
-#: users-bulk-delete-with-preview.php:198
+#: ubdwp-users-bulk-delete-with-preview.php:198
 msgid "Logs page"
 msgstr ""
 
-#: users-bulk-delete-with-preview.php:371
+#: ubdwp-users-bulk-delete-with-preview.php:379
 msgid "Delete users"
 msgstr ""
 
-#: users-bulk-delete-with-preview.php:373
+#: ubdwp-users-bulk-delete-with-preview.php:381
 msgid "Logs"
 msgstr ""
