@@ -3,7 +3,7 @@ Contributors: maksymvasylchuk
 Tags: bulk delete, user management, delete users, preview delete, bulk clean
 Requires at least: 6.2
 Tested up to: 6.6.2
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -82,7 +82,7 @@ Yes, the plugin is compatible with WooCommerce and allows filtering users who ha
 == Upgrade Notice ==
 
 = 1.1.1 =
-Updated links and uk translation.
+Updated links, tags and uk translation.
 
 = 1.1.0 =
 Updated Libraries, Bug Fixes, Code Improvements. No upgrade steps required for this version.
