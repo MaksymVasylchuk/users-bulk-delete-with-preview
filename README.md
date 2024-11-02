@@ -108,7 +108,7 @@ This plugin uses the following third-party libraries:
 - [Select2](https://select2.org/) – Licensed under MIT License.
 
 ## Changelog
-### 1.1.0
+### 1.1.1
 *Release Date - 02 November 2024*
 * Updated links
 * Updated tags
