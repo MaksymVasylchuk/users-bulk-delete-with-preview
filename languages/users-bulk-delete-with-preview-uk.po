@@ -135,7 +135,7 @@ msgstr "(відфільтровано з _MAX_ всіх записів)"
 
 #: classes/class-ubdwp-helper.php:358
 msgid "Show _MENU_ entries"
-msgstr "Показати _MENU_ пункти"
+msgstr "Показати _MENU_ записів"
 
 #: classes/class-ubdwp-helper.php:359
 msgid "Loading..."
