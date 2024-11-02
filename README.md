@@ -109,6 +109,12 @@ This plugin uses the following third-party libraries:
 
 ## Changelog
 ### 1.1.0
+*Release Date - 02 November 2024*
+* Updated links
+* Updated tags
+* Updated uk translation
+
+### 1.1.0
 *Release Date - 14 October 2024*
 * Updated Libraries: All core libraries have been updated to their latest versions for enhanced performance, security, and compatibility.
 * Bug Fixes
