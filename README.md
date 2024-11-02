@@ -85,7 +85,7 @@ Yes, the plugin is compatible with WooCommerce and allows filtering users who ha
 ## Upgrade Notice
 
 ### 1.1.1
-Updated links, tags and uk translation.
+Updated links, tags and uk translation. No upgrade steps required for this version.
 ### 1.1.0
 Updated Libraries, Bug Fixes, Code Improvements. No upgrade steps required for this version.
 ### 1.0.0
