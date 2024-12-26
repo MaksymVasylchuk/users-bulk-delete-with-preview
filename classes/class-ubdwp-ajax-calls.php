@@ -40,10 +40,10 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 				'wp_ajax_delete_users_action',
 				array( $this, 'delete_users_action' )
 			);
-			add_action(
-				'wp_ajax_logs_datatables',
-				array( $this, 'logs_datatables_action' )
-			);
+//			add_action(
+//				'wp_ajax_logs_datatables',
+//				array( $this, 'logs_datatables_action' )
+//			);
 			add_action(
 				'wp_ajax_custom_export_users',
 				array( $this, 'custom_export_users_action' )
