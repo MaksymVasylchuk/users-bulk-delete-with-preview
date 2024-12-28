@@ -42,7 +42,7 @@ class UbdwpUsersHandler {
 	 * @return array List of matching users.
 	 */
 	public function search_users_ajax(array $request): array {
-		$search_term = sanitize_text_field($request['q']);
+		$search_term = sanitize_text_field($request['q'] ?? '');
 		$select_all = !empty($request['select_all']);
 
 		$args = array(
@@ -68,7 +68,7 @@ class UbdwpUsersHandler {
 				if (intval($user->ID) !== intval($this->current_user_id)) {
 					$results[] = array(
 						'id' => intval($user->ID),
-						'text' => sprintf('%s (%s)', $user->display_name, $user->user_email),
+						'text' => sprintf('%s (%s)', sanitize_text_field($user->display_name), sanitize_email($user->user_email)),
 					);
 				}
 			}
@@ -85,14 +85,14 @@ class UbdwpUsersHandler {
 	 * @return array List of matching meta keys.
 	 */
 	public function search_usermeta_ajax(array $request): array {
-		$search = sanitize_text_field($request['q']);
+		$search = sanitize_text_field($request['q'] ?? '');
 
 		$results = $this->repository->search_usermeta_ajax($search);
 
 		return array_map(function ($result) {
 			return array(
-				'id' => $result->meta_key,
-				'text' => $result->meta_key,
+				'id' => sanitize_key($result->meta_key),
+				'text' => sanitize_text_field($result->meta_key),
 			);
 		}, $results);
 	}

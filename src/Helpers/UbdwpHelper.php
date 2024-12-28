@@ -429,4 +429,17 @@ class UbdwpHelper {
 
 		return $map[ $comparison ] ?? '=';
 	}
+
+	/**
+	 * Validate and sanitize a positive integer value.
+	 *
+	 * @param mixed $value Input value to validate.
+	 * @param int   $default Default value if validation fails.
+	 *
+	 * @return int Validated positive integer.
+	 */
+	public function validate_positive_integer($value, int $default): int {
+		$value = intval($value);
+		return $value > 0 ? $value : $default;
+	}
 }

@@ -7,6 +7,7 @@
 
 namespace UsersBulkDeleteWithPreview\Handlers;
 
+use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
 use UsersBulkDeleteWithPreview\Repositories\UbdwpLogsRepository;
 
 // Exit if accessed directly.
@@ -38,6 +39,11 @@ class UbdwpLogsHandler {
 		// Convert the user data array to JSON format.
 		$user_data_json = wp_json_encode($user_data);
 
+		if (false === $user_data_json) {
+			error_log('Failed to encode user data for logging.');
+			return;
+		}
+
 		$this->repository->insert_log($user_data_json);
 	}
 
@@ -49,8 +55,8 @@ class UbdwpLogsHandler {
 	 * @return array Prepared logs data including metadata for DataTables.
 	 */
 	public function prepare_logs_data(array $request): array {
-		$limit = intval(sanitize_text_field($request['length']));
-		$offset = intval(sanitize_text_field($request['start']));
+		$limit = UbdwpHelperFacade::validate_positive_integer($request['length'] ?? 10, 10);
+		$offset = UbdwpHelperFacade::validate_positive_integer($request['start'] ?? 0, 0);
 		$search_value = sanitize_text_field($request['search']['value'] ?? '');
 
 		$where = $this->repository->build_where_clause($search_value);
@@ -60,9 +66,9 @@ class UbdwpLogsHandler {
 		$filtered_records = $this->repository->get_filtered_record_count($where);
 
 		return array(
-			'draw'            => intval(sanitize_text_field($request['draw'])),
-			'recordsTotal'    => intval($total_records),
-			'recordsFiltered' => intval($filtered_records),
+			'draw'            => UbdwpHelperFacade::validate_positive_integer($request['draw'] ?? 0, 0),
+			'recordsTotal'    => $total_records,
+			'recordsFiltered' => $filtered_records,
 			'data'            => $this->format_logs_data($logs),
 		);
 	}
@@ -79,6 +85,11 @@ class UbdwpLogsHandler {
 
 		foreach ($logs as $log) {
 			$deleted_user_data = json_decode($log->user_deleted_data, true);
+
+			if (json_last_error() !== JSON_ERROR_NONE) {
+				error_log('Failed to decode user_deleted_data for log ID: ' . intval($log->ID));
+				continue;
+			}
 
 			$data[] = array(
 				intval($log->ID),
