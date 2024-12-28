@@ -45,6 +45,7 @@ class UbdwpLoader
 		add_filter('plugin_action_links_' . WPUBDP_BASE_NAME, array($this, 'action_links'));
 
 		// Initialize page objects.
+
 		$this->pages['logs'] = new UbdwpLogsPage();
 		$this->pages['users'] = new UbdwpUsersPage();
 	}

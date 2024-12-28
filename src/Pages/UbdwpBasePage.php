@@ -21,15 +21,7 @@ abstract class UbdwpBasePage {
 	const MANAGE_OPTIONS_CAP = 'manage_options';
 	const LIST_USERS_CAP     = 'list_users';
 
-	/** @var int Current user ID. */
-	protected $current_user_id;
-
-	/**
-	 * Constructor to initialize the current user ID.
-	 */
-	public function __construct() {
-		$this->current_user_id = get_current_user_id();
-	}
+	public $current_user_id;
 
 	/**
 	 * Render the page using the provided template and data.
@@ -43,6 +35,13 @@ abstract class UbdwpBasePage {
 		}
 
 		UbdwpViewsFacade::include_template($template_name, $data); // Ensures secure template rendering.
+	}
+
+	public function get_current_user_id(): int {
+		if (is_null($this->current_user_id)) {
+			$this->current_user_id = get_current_user_id();
+		}
+		return $this->current_user_id;
 	}
 
 	/**

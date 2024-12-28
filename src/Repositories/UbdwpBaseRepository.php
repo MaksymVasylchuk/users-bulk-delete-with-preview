@@ -22,7 +22,7 @@ abstract class UbdwpBaseRepository {
 	protected $table_name;
 
 	/** @var int Current user ID. */
-	protected $current_user_id;
+	public $current_user_id;
 
 	/**
 	 * Constructor to initialize the repository.

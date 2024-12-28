@@ -25,8 +25,7 @@ class UbdwpLogsPage extends UbdwpBasePage {
 	 * Constructor to initialize the Logs Page.
 	 */
 	public function __construct() {
-		parent::__construct();
-		$this->handler = new UbdwpLogsHandler($this->current_user_id);
+		$this->handler = new UbdwpLogsHandler($this->get_current_user_id());
 		$this->register_ajax_call('logs_datatables', array($this, 'handle_ajax_requests'));
 	}
 

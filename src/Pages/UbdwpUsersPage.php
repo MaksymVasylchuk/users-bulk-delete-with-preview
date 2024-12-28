@@ -31,17 +31,17 @@ class UbdwpUsersPage extends UbdwpBasePage {
 	/** @var UbdwpLogsRepository Repository for logs data. */
 	private $logs_repository;
 	private $logs_handler;
-
+	public $current_user_id;
 	/**
 	 * Constructor to initialize the Users Page.
 	 */
 	public function __construct() {
-		parent::__construct();
+		$current_user_id = $this->get_current_user_id();
 
-		$this->handler = new UbdwpUsersHandler($this->current_user_id);
-		$this->repository = new UbdwpUsersRepository($this->current_user_id);
-		$this->logs_repository = new UbdwpLogsRepository($this->current_user_id);
-		$this->logs_handler = new UbdwpLogsHandler($this->current_user_id);
+		$this->handler = new UbdwpUsersHandler($current_user_id);
+		$this->repository = new UbdwpUsersRepository($current_user_id);
+		$this->logs_repository = new UbdwpLogsRepository($current_user_id);
+		$this->logs_handler = new UbdwpLogsHandler($current_user_id);
 
 		$this->register_ajax_call('search_users', array($this, 'search_existing_users_ajax'));
 		$this->register_ajax_call('search_usermeta', array($this, 'search_usermeta_ajax'));

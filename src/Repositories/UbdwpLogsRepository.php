@@ -32,7 +32,6 @@ class UbdwpLogsRepository extends UbdwpBaseRepository {
 	 * @param string $user_data User data to log.
 	 */
 	public function insert_log(string $user_data): void {
-
 		// Prepare and execute the SQL query to insert a new log record.
 		$this->insert(array(
 			'user_id'           => $this->current_user_id,
