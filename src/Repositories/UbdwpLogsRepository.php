@@ -1,33 +1,57 @@
 <?php
+/**
+ * Logs Repository
+ *
+ * @package     UsersBulkDeleteWithPreview\Repositories
+ */
 
 namespace UsersBulkDeleteWithPreview\Repositories;
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 use UsersBulkDeleteWithPreview\Repositories\UbdwpBaseRepository;
 
+/**
+ * Repository for managing log records in the Users Bulk Delete With Preview plugin.
+ */
 class UbdwpLogsRepository extends UbdwpBaseRepository {
 
-	public function __construct($current_user_id) {
+	/**
+	 * Constructor to initialize the Logs Repository.
+	 *
+	 * @param int $current_user_id Current user ID.
+	 */
+	public function __construct(int $current_user_id) {
 		parent::__construct('ubdwp_logs', $current_user_id);
 	}
 
-
-	public function insert_log($user_data): void {
+	/**
+	 * Insert a new log record into the logs table.
+	 *
+	 * @param array $user_data User data to log.
+	 */
+	public function insert_log(array $user_data): void {
 		// Convert the user data array to JSON format.
-		$user_data_json = wp_json_encode( $user_data );
+		$user_data_json = wp_json_encode($user_data);
 
 		// Prepare and execute the SQL query to insert a new log record.
-		$this->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- It is OK, it is a custom table
-			array(
-				'user_id'           => $this->current_user_id,
-				'user_deleted_data' => $user_data_json,
-				'deletion_time'     => current_time( 'mysql' ),
-			)
-		);
+		$this->insert(array(
+			'user_id'           => $this->current_user_id,
+			'user_deleted_data' => $user_data_json,
+			'deletion_time'     => current_time('mysql'),
+		));
 	}
 
+	/**
+	 * Retrieve logs with optional filters, pagination, and sorting.
+	 *
+	 * @param string $where  WHERE clause for filtering.
+	 * @param int    $limit  Maximum number of records to retrieve.
+	 * @param int    $offset Number of records to skip.
+	 *
+	 * @return array Logs as an array of results.
+	 */
 	public function get_logs(string $where, int $limit, int $offset): array {
 		$query = "
             SELECT t.ID, t.user_id, u.display_name, t.user_deleted_data, t.deletion_time
@@ -37,13 +61,25 @@ class UbdwpLogsRepository extends UbdwpBaseRepository {
             LIMIT %d OFFSET %d
         ";
 
-		return $this->select($query, [$limit, $offset]);
+		return $this->select($query, array($limit, $offset));
 	}
 
+	/**
+	 * Get the total number of log records.
+	 *
+	 * @return int Total log count.
+	 */
 	public function get_total_record_count(): int {
 		return $this->count();
 	}
 
+	/**
+	 * Get the number of filtered log records based on a WHERE clause.
+	 *
+	 * @param string $where WHERE clause for filtering.
+	 *
+	 * @return int Filtered log count.
+	 */
 	public function get_filtered_record_count(string $where): int {
 		$query = "
             SELECT COUNT(*)
@@ -55,6 +91,13 @@ class UbdwpLogsRepository extends UbdwpBaseRepository {
 		return (int) $this->get_var($query);
 	}
 
+	/**
+	 * Build a WHERE clause for filtering log records based on a search value.
+	 *
+	 * @param string $search_value Search term to filter logs.
+	 *
+	 * @return string WHERE clause for the search term.
+	 */
 	public function build_where_clause(string $search_value): string {
 		if (empty($search_value)) {
 			return '';
@@ -66,5 +109,4 @@ class UbdwpLogsRepository extends UbdwpBaseRepository {
 			'%' . $this->wpdb->esc_like($search_value) . '%'
 		);
 	}
-
 }

@@ -1,16 +1,36 @@
 <?php
+/**
+ * Base Repository
+ *
+ * @package     UsersBulkDeleteWithPreview\Repositories
+ */
 
 namespace UsersBulkDeleteWithPreview\Repositories;
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
+/**
+ * Base repository class for database operations.
+ */
 abstract class UbdwpBaseRepository {
+
+	/** @var \wpdb WordPress database object. */
 	protected $wpdb;
+
+	/** @var string Table name. */
 	protected $table_name;
+
+	/** @var int Current user ID. */
 	protected $current_user_id;
 
-	public function __construct(string $table_name, $current_user_id) {
+	/**
+	 * Constructor to initialize the repository.
+	 *
+	 * @param string $table_name       The table name without the WordPress prefix.
+	 * @param int    $current_user_id  The current user ID.
+	 */
+	public function __construct(string $table_name, int $current_user_id) {
 		global $wpdb;
 		$this->wpdb = $wpdb;
 		$this->table_name = esc_sql($wpdb->prefix . $table_name);
@@ -34,12 +54,20 @@ abstract class UbdwpBaseRepository {
 	 *
 	 * @return array Results as objects.
 	 */
-	protected function select(string $query, array $params = []): array {
+	protected function select(string $query, array $params = array()): array {
 		return $this->wpdb->get_results($this->wpdb->prepare($query, $params));
 	}
 
-	protected function get_col($query, $params = []): array {
-		return $this->wpdb->get_col( $this->wpdb->prepare( $query, $params ) );
+	/**
+	 * Execute a prepared query to fetch a single column.
+	 *
+	 * @param string $query  SQL query with placeholders.
+	 * @param array  $params Parameters to bind to the query.
+	 *
+	 * @return array Results as a single column array.
+	 */
+	protected function get_col(string $query, array $params = array()): array {
+		return $this->wpdb->get_col($this->wpdb->prepare($query, $params));
 	}
 
 	/**
@@ -50,7 +78,7 @@ abstract class UbdwpBaseRepository {
 	 *
 	 * @return mixed Single value result.
 	 */
-	protected function get_var(string $query, array $params = []) {
+	protected function get_var(string $query, array $params = array()) {
 		return $this->wpdb->get_var($this->wpdb->prepare($query, $params));
 	}
 
@@ -65,4 +93,3 @@ abstract class UbdwpBaseRepository {
 		return (int) $this->wpdb->get_var("SELECT COUNT(*) FROM {$this->table_name} {$where}");
 	}
 }
-
