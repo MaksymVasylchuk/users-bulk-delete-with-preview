@@ -120,7 +120,7 @@ class UbdwpUsersPage extends UbdwpBasePage {
 	 * Handle AJAX request to search user metadata.
 	 */
 	public function search_usermeta_ajax(): void {
-		$this->check_permissions(array(self::MANAGE_OPTIONS_CAP));
+		$this->check_permissions(array(self::MANAGE_OPTIONS_CAP, self::LIST_USERS_CAP));
 		$this->verify_nonce('nonce', 'search_user_meta_nonce');
 
 		$sanitized_data = array(
@@ -137,7 +137,7 @@ class UbdwpUsersPage extends UbdwpBasePage {
 	 */
 	public function search_users_for_delete_ajax(): void {
 		try {
-			$this->check_permissions(array(self::MANAGE_OPTIONS_CAP));
+			$this->check_permissions(array(self::MANAGE_OPTIONS_CAP, self::LIST_USERS_CAP));
 			$this->verify_nonce('find_users_nonce', 'find_users_nonce');
 
 			$type = sanitize_text_field($_POST['filter_type'] ?? '');
@@ -195,7 +195,7 @@ class UbdwpUsersPage extends UbdwpBasePage {
 	 */
 	public function delete_users_action(): void {
 		try {
-			$this->check_permissions(array(self::MANAGE_OPTIONS_CAP));
+			$this->check_permissions(array(self::MANAGE_OPTIONS_CAP, self::LIST_USERS_CAP));
 			$this->verify_nonce('delete_users_nonce', 'delete_users_nonce');
 
 			$sanitized_users = array_filter(array_map(function ($user) {
@@ -257,7 +257,7 @@ class UbdwpUsersPage extends UbdwpBasePage {
 	 */
 	public function custom_export_users_action(): void {
 		try {
-			$this->check_permissions( array( self::MANAGE_OPTIONS_CAP ) );
+			$this->check_permissions( array(self::MANAGE_OPTIONS_CAP, self::LIST_USERS_CAP) );
 			$this->verify_nonce(
 				'export_users_nonce',
 				'export_users_nonce'
@@ -356,7 +356,7 @@ class UbdwpUsersPage extends UbdwpBasePage {
 	 */
 	public function delete_exported_files_action() {
 		$this->verify_nonce( 'nonce', 'custom_export_users_nonce' );
-		$this->check_permissions( array( self::MANAGE_OPTIONS_CAP ) );
+		$this->check_permissions( array(self::MANAGE_OPTIONS_CAP, self::LIST_USERS_CAP) );
 
 		$file_path = isset( $_POST['file_path'] ) ? sanitize_text_field( $_POST['file_path'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing -- Filed is sanitizing here, nonce is checked above, check method - "verify_nonce".
 

@@ -31,7 +31,7 @@ abstract class UbdwpBasePage {
 	 */
 	protected function render_template(string $template_name, array $data = array()): void {
 		if (!current_user_can(self::MANAGE_OPTIONS_CAP)) {
-			wp_die(__('You do not have permission to access this page.', 'users-bulk-delete-with-preview'));
+			wp_die(UbdwpHelperFacade::get_error_message('permission_error'));
 		}
 
 		UbdwpViewsFacade::include_template($template_name, $data); // Ensures secure template rendering.
