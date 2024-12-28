@@ -11,22 +11,22 @@
             "responsive": true,          // Make the table responsive to different screen sizes
             "ordering": false,           // Disable column ordering
             "ajax": {
-                "url": myAjax.ajaxurl,   // URL to fetch data from
+                "url": localizedData.ajaxurl,   // URL to fetch data from
                 "data": {
                     "action": 'logs_datatables', // Action to be handled by the server-side script
                     "logs_datatable_nonce": $('#logs_datatable_nonce').val()
                 }
             },
             "language": {
-                "emptyTable": dataTableLang.emptyTable,
-                "info": dataTableLang.info,
-                "infoEmpty": dataTableLang.infoEmpty,
-                "infoFiltered": dataTableLang.infoFiltered,
-                "lengthMenu": dataTableLang.lengthMenu,
-                "loadingRecords": dataTableLang.loadingRecords,
-                "processing": dataTableLang.processing,
-                "search": dataTableLang.search,
-                "zeroRecords": dataTableLang.zeroRecords
+                "emptyTable": localizedData.emptyTable,
+                "info": localizedData.info,
+                "infoEmpty": localizedData.infoEmpty,
+                "infoFiltered": localizedData.infoFiltered,
+                "lengthMenu": localizedData.lengthMenu,
+                "loadingRecords": localizedData.loadingRecords,
+                "processing": localizedData.processing,
+                "search": localizedData.search,
+                "zeroRecords": localizedData.zeroRecords
             },
 
             // Define columns in the DataTable

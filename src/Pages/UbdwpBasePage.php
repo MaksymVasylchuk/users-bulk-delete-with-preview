@@ -89,4 +89,22 @@ abstract class UbdwpBasePage {
 			}
 		}
 	}
+
+	protected function register_common_scripts(array $scripts): void {
+		foreach ($scripts as $handle => $script) {
+			wp_register_script(
+				$handle,
+				WPUBDP_PLUGIN_URL . $script['path'],
+				$script['deps'] ?? array('jquery'),
+				WPUBDP_PLUGIN_VERSION,
+				true
+			);
+			wp_enqueue_script($handle);
+		}
+	}
+
+	public function localize_scripts(string $script_handle, array $localizations): void {
+		wp_localize_script($script_handle, 'localizedData', $localizations);
+	}
+
 }

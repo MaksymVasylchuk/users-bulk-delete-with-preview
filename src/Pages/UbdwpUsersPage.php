@@ -80,22 +80,21 @@ class UbdwpUsersPage extends UbdwpBasePage {
 	 */
 	public function register_admin_scripts(string $hook_suffix): void {
 		if ($hook_suffix === 'toplevel_page_ubdwp_admin') {
-			wp_register_script('wpubdp-bootstrap-js', WPUBDP_PLUGIN_URL . 'assets/bootstrap/bootstrap.min.js', array('jquery'), WPUBDP_PLUGIN_VERSION, true);
-			wp_register_script('wpubdp-select2-js', WPUBDP_PLUGIN_URL . 'assets/select2/select2.min.js', array('jquery'), WPUBDP_PLUGIN_VERSION, true);
-			wp_register_script('wpubdp-datepicker-js', WPUBDP_PLUGIN_URL . 'assets/jquery-ui-datepicker/jquery-ui-timepicker-addon.min.js', array('jquery', 'jquery-ui-core', 'jquery-ui-datepicker'), WPUBDP_PLUGIN_VERSION, true);
-			wp_register_script('wpubdp-admin-js', WPUBDP_PLUGIN_URL . 'assets/admin/admin.min.js', array('jquery', 'wpubdp-bootstrap-js', 'wpubdp-select2-js', 'wp-i18n'), WPUBDP_PLUGIN_VERSION, true);
-			wp_register_script('wpubdp-dataTables-js', WPUBDP_PLUGIN_URL . 'assets/dataTables/datatables.min.js', array('jquery'), WPUBDP_PLUGIN_VERSION, true);
 
-			wp_enqueue_script('wpubdp-bootstrap-js');
-			wp_enqueue_script('wpubdp-select2-js');
-			wp_enqueue_script('wpubdp-datepicker-js');
-			wp_enqueue_script('wpubdp-dataTables-js');
-			wp_enqueue_script('wpubdp-admin-js');
+			$this->register_common_scripts([
+				'wpubdp-bootstrap-js' => ['path' => 'assets/bootstrap/bootstrap.min.js', 'deps' => ['jquery']],
+				'wpubdp-select2-js' => ['path' => 'assets/select2/select2.min.js', 'deps' => ['jquery']],
+				'wpubdp-datepicker-js' => ['path' => 'assets/jquery-ui-datepicker/jquery-ui-timepicker-addon.min.js', 'deps' => ['jquery', 'jquery-ui-core', 'jquery-ui-datepicker']],
+				'wpubdp-admin-js' => ['path' => 'assets/admin/admin.min.js', 'deps' => ['jquery', 'wpubdp-bootstrap-js', 'wpubdp-select2-js', 'wpubdp-dataTables-js', 'wp-i18n']],
+			]);
 
-			wp_localize_script('wpubdp-admin-js', 'myAjax', array('ajaxurl' => admin_url('admin-ajax.php')));
-
-			$translation = array_merge(UbdwpHelperFacade::getDataTableTranslation(), UbdwpHelperFacade::getUserTableTranslation());
-			wp_localize_script('wpubdp-admin-js', 'dataTableLang', $translation);
+			$this->localize_scripts('wpubdp-admin-js', [
+				'ajaxurl' => admin_url('admin-ajax.php'),
+				'translations' => array_merge(
+					UbdwpHelperFacade::getDataTableTranslation(),
+					UbdwpHelperFacade::getUserTableTranslation()
+				),
+			]);
 		}
 	}
 
@@ -304,23 +303,26 @@ class UbdwpUsersPage extends UbdwpBasePage {
 	 *
 	 * @return string CSV content.
 	 */
-	private function generate_csv( array $users ): string {
-		$csv_output = 'ID,Username,Email,First Name,Last Name,Role' . "\n";
-		foreach ( $users as $user ) {
-			$csv_output .= implode(
-				               ',',
-				               array(
-					               intval( $user->ID ),
-					               sanitize_text_field( $user->user_login ),
-					               sanitize_email( $user->user_email ),
-					               sanitize_text_field( $user->first_name ),
-					               sanitize_text_field( $user->last_name ),
-					               implode( ', ', $user->roles ),
-				               )
-			               ) . "\n";
+	private function generate_csv(array $users): string {
+		$output = fopen('php://temp', 'w');
+		fputcsv($output, ['ID', 'Username', 'Email', 'First Name', 'Last Name', 'Role']);
+
+		foreach ($users as $user) {
+			fputcsv($output, [
+				intval($user->ID),
+				sanitize_text_field($user->user_login),
+				sanitize_email($user->user_email),
+				sanitize_text_field($user->first_name),
+				sanitize_text_field($user->last_name),
+				implode(', ', $user->roles),
+			]);
 		}
 
-		return $csv_output;
+		rewind($output);
+		$csv_content = stream_get_contents($output);
+		fclose($output);
+
+		return $csv_content;
 	}
 
 	/**

@@ -47,37 +47,17 @@ class UbdwpLogsPage extends UbdwpBasePage {
 	public function register_admin_scripts(string $hook_suffix): void {
 
 		if (isset($_GET['page']) && $_GET['page'] === 'ubdwp_admin_logs') { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce verification is not required here.
+			$this->register_common_scripts([
+				'wpubdp-logs-js' => ['path' => 'assets/admin/logs.min.js', 'deps' => ['jquery', 'wpubdp-dataTables-js']],
+			]);
 
-			wp_register_script(
-				'wpubdp-dataTables-js',
-				WPUBDP_PLUGIN_URL . 'assets/dataTables/datatables.min.js',
-				array('jquery'),
-				WPUBDP_PLUGIN_VERSION,
-				true
-			);
-
-			wp_register_script(
-				'wpubdp-logs-js',
-				WPUBDP_PLUGIN_URL . 'assets/admin/logs.min.js',
-				array('jquery', 'wpubdp-dataTables-js'),
-				WPUBDP_PLUGIN_VERSION,
-				true
-			);
-
-			wp_enqueue_script('wpubdp-dataTables-js');
-			wp_enqueue_script('wpubdp-logs-js');
-
-			wp_localize_script(
-				'wpubdp-logs-js',
-				'myAjax',
-				array(
-					'ajaxurl' => admin_url('admin-ajax.php'),
-				)
-			);
-
-			// Localize DataTable language strings
-			$translation = UbdwpHelperFacade::getDataTableTranslation();
-			wp_localize_script('wpubdp-logs-js', 'dataTableLang', $translation);
+			$this->localize_scripts('wpubdp-logs-js', [
+				'ajaxurl' => admin_url('admin-ajax.php'),
+				'translations' => array_merge(
+					UbdwpHelperFacade::getDataTableTranslation(),
+					UbdwpHelperFacade::getUserTableTranslation()
+				),
+			]);
 		}
 	}
 
