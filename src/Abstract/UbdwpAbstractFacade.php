@@ -57,7 +57,7 @@ abstract class UbdwpAbstractFacade {
 			);
 		}
 
-		throw new Exception(
+		throw new \Exception(
 			sprintf(
 			/* translators: %1$s is the method name; %2$s is the class name. */
 				esc_html__(
