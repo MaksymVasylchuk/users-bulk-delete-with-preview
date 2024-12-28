@@ -35,11 +35,10 @@ class UbdwpLogsHandler {
 	 * @param array $user_data Data of the user action to log.
 	 */
 	public function insert_log(array $user_data): void {
-		$user_id = get_current_user_id();
+		// Convert the user data array to JSON format.
 		$user_data_json = wp_json_encode($user_data);
-		$deletion_time = current_time('mysql');
 
-		$this->repository->insert_log($user_id, $user_data_json, $deletion_time);
+		$this->repository->insert_log($user_data_json);
 	}
 
 	/**

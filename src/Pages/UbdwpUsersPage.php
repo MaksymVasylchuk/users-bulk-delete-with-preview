@@ -11,9 +11,11 @@ namespace UsersBulkDeleteWithPreview\Pages;
 defined('ABSPATH') || exit;
 
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
+use UsersBulkDeleteWithPreview\Handlers\UbdwpLogsHandler;
 use UsersBulkDeleteWithPreview\Handlers\UbdwpUsersHandler;
 use UsersBulkDeleteWithPreview\Repositories\UbdwpLogsRepository;
 use UsersBulkDeleteWithPreview\Repositories\UbdwpUsersRepository;
+use UsersBulkDeleteWithPreview\Facades\UbdwpViewsFacade;
 
 /**
  * Class for managing the Users Page.
@@ -28,6 +30,7 @@ class UbdwpUsersPage extends UbdwpBasePage {
 
 	/** @var UbdwpLogsRepository Repository for logs data. */
 	private $logs_repository;
+	private $logs_handler;
 
 	/**
 	 * Constructor to initialize the Users Page.
@@ -38,6 +41,7 @@ class UbdwpUsersPage extends UbdwpBasePage {
 		$this->handler = new UbdwpUsersHandler($this->current_user_id);
 		$this->repository = new UbdwpUsersRepository($this->current_user_id);
 		$this->logs_repository = new UbdwpLogsRepository($this->current_user_id);
+		$this->logs_handler = new UbdwpLogsHandler($this->current_user_id);
 
 		$this->register_ajax_call('search_users', array($this, 'search_existing_users_ajax'));
 		$this->register_ajax_call('search_usermeta', array($this, 'search_usermeta_ajax'));
@@ -210,11 +214,37 @@ class UbdwpUsersPage extends UbdwpBasePage {
 				wp_die();
 			}
 
+			$deleted_users = array();
 			foreach ($sanitized_users as $user) {
-				wp_delete_user($user['id'], $user['reassign']);
+				if ( intval( $user['id'] ) > 0 ) {
+					$deleted_users[ $user['id'] ] = array(
+						'user_id'      => intval( $user['id'] ),
+						'email'        => $user['email'],
+						'display_name' => $user['display_name'],
+						'reassign'     => $user['reassign'] ?? '',
+					);
+					wp_delete_user( esc_attr( $user['id'] ), esc_attr( $user['reassign'] ) ?? null );
+				}
 			}
 
-			wp_send_json_success();
+			$template
+				= UbdwpViewsFacade::render_template(
+				'partials/_success_user_delete.php',
+				array(
+					'user_delete_count' => count( $deleted_users ),
+					'deleted_users'     => array_values( $deleted_users ),
+				)
+			);
+
+			$this->logs_handler->insert_log(
+				array(
+					'user_delete_count' => count( $deleted_users ),
+					'user_delete_data'  => array_values( $deleted_users ),
+				)
+			);
+
+			wp_send_json_success( array( 'template' => $template ) );
+
 			wp_die();
 		} catch (\Exception $e) {
 			wp_send_json_error(array('message' => UbdwpHelperFacade::get_error_message('generic_error')));

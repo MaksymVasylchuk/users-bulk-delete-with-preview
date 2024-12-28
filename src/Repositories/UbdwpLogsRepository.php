@@ -29,16 +29,14 @@ class UbdwpLogsRepository extends UbdwpBaseRepository {
 	/**
 	 * Insert a new log record into the logs table.
 	 *
-	 * @param array $user_data User data to log.
+	 * @param string $user_data User data to log.
 	 */
-	public function insert_log(array $user_data): void {
-		// Convert the user data array to JSON format.
-		$user_data_json = wp_json_encode($user_data);
+	public function insert_log(string $user_data): void {
 
 		// Prepare and execute the SQL query to insert a new log record.
 		$this->insert(array(
 			'user_id'           => $this->current_user_id,
-			'user_deleted_data' => $user_data_json,
+			'user_deleted_data' => $user_data,
 			'deletion_time'     => current_time('mysql'),
 		));
 	}
