@@ -1,4 +1,9 @@
 <?php
+/**
+ * Views utils
+ *
+ * @package     UsersBulkDeleteWithPreview\Traits
+ */
 
 namespace UsersBulkDeleteWithPreview\Utils;
 

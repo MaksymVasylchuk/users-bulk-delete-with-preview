@@ -1,4 +1,9 @@
 <?php
+/**
+ * Singleton trait
+ *
+ * @package     UsersBulkDeleteWithPreview\Traits
+ */
 
 namespace UsersBulkDeleteWithPreview\Traits;
 
