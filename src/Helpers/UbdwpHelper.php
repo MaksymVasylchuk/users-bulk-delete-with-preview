@@ -47,7 +47,7 @@ class UbdwpHelper {
 	 *
 	 * @param  WP_Error|array $results  The WP_Error object.
 	 */
-	public function handle_wp_error( WP_Error|array $results ): void {
+	public function handle_wp_error( \WP_Error|array $results ): void {
 		if ( ! is_wp_error( $results ) ) {
 			return;
 		}

@@ -177,10 +177,10 @@ class UbdwpUsersPage extends UbdwpBasePage {
 					wp_die();
 			}
 
+			UbdwpHelperFacade::handle_wp_error( $results );
 			wp_send_json_success($results);
 			wp_die();
 		} catch (\Exception $e) {
-			var_dump($e->getMessage()); exit;
 			wp_send_json_error(array('message' => UbdwpHelperFacade::get_error_message('generic_error')));
 			wp_die();
 		}

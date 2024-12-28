@@ -155,9 +155,49 @@ class UbdwpLoader
 	protected function register_common_admin_styles(string $hook_suffix): void
 	{
 		if (UbdwpHelperFacade::is_plugin_page($hook_suffix)) {
-			wp_enqueue_style('wpubdp-bootstrap-css', WPUBDP_PLUGIN_URL . 'assets/bootstrap/bootstrap.min.css', array(), WPUBDP_PLUGIN_VERSION);
-			wp_enqueue_style('wpubdp-select2-css', WPUBDP_PLUGIN_URL . 'assets/select2/select2.min.css', array(), WPUBDP_PLUGIN_VERSION);
-			wp_enqueue_style('wpubdp-admin-css', WPUBDP_PLUGIN_URL . 'assets/admin/admin.min.css', array(), WPUBDP_PLUGIN_VERSION);
+			wp_enqueue_style(
+				'wpubdp-bootstrap-css',
+				WPUBDP_PLUGIN_URL . 'assets/bootstrap/bootstrap.min.css',
+				array(),
+				WPUBDP_PLUGIN_VERSION
+			);
+
+			wp_enqueue_style(
+				'wpubdp-select2-css',
+				WPUBDP_PLUGIN_URL . 'assets/select2/select2.min.css',
+				array(),
+				WPUBDP_PLUGIN_VERSION
+			);
+
+			wp_enqueue_style(
+				'wpubdp-jquery-ui-css',
+				WPUBDP_PLUGIN_URL . 'assets/jquery-ui/jquery-ui.css',
+				array(),
+				WPUBDP_PLUGIN_VERSION
+			);
+
+			wp_enqueue_style(
+				'wpubdp-jquery-ui-timepicker-addon-css',
+				WPUBDP_PLUGIN_URL
+				. 'assets/jquery-ui-datepicker/jquery-ui-timepicker-addon.min.css',
+				array( 'wpubdp-jquery-ui-css' ),
+				WPUBDP_PLUGIN_VERSION
+			);
+
+			wp_enqueue_style(
+				'wpubdp-dataTables-css',
+				WPUBDP_PLUGIN_URL
+				. 'assets/dataTables/datatables.min.css',
+				array(),
+				WPUBDP_PLUGIN_VERSION
+			);
+
+			wp_enqueue_style(
+				'wpubdp-admin-css',
+				WPUBDP_PLUGIN_URL . 'assets/admin/admin.min.css',
+				array(),
+				WPUBDP_PLUGIN_VERSION
+			);
 		}
 	}
 
