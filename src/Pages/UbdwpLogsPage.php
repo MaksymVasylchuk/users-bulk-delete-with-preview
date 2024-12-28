@@ -45,7 +45,7 @@ class UbdwpLogsPage extends UbdwpBasePage {
 	 *
 	 * @param string $hook_suffix The hook suffix for the current admin page.
 	 */
-	public function register_admin_scripts($hook_suffix): void {
+	public function register_admin_scripts(string $hook_suffix): void {
 
 		if (isset($_GET['page']) && $_GET['page'] === 'ubdwp_admin_logs') { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce verification is not required here.
 

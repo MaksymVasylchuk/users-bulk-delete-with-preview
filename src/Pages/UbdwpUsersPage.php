@@ -74,7 +74,7 @@ class UbdwpUsersPage extends UbdwpBasePage {
 	 *
 	 * @param string $hook_suffix The hook suffix for the current admin page.
 	 */
-	public function register_admin_scripts($hook_suffix): void {
+	public function register_admin_scripts(string $hook_suffix): void {
 		if ($hook_suffix === 'toplevel_page_ubdwp_admin') {
 			wp_register_script('wpubdp-bootstrap-js', WPUBDP_PLUGIN_URL . 'assets/bootstrap/bootstrap.min.js', array('jquery'), WPUBDP_PLUGIN_VERSION, true);
 			wp_register_script('wpubdp-select2-js', WPUBDP_PLUGIN_URL . 'assets/select2/select2.min.js', array('jquery'), WPUBDP_PLUGIN_VERSION, true);
