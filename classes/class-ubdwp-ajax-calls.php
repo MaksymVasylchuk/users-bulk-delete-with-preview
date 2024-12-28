@@ -40,10 +40,6 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 				'wp_ajax_delete_users_action',
 				array( $this, 'delete_users_action' )
 			);
-//			add_action(
-//				'wp_ajax_logs_datatables',
-//				array( $this, 'logs_datatables_action' )
-//			);
 			add_action(
 				'wp_ajax_custom_export_users',
 				array( $this, 'custom_export_users_action' )
@@ -258,36 +254,6 @@ if ( ! class_exists( 'WPUBDPAjaxCalls' ) ) {
 				wp_send_json_error( array( 'message' => UBDWPHelperFacade::get_error_message( 'generic_error' ) ) );
 				wp_die();
 			}
-		}
-
-		/**
-		 * Handle AJAX request to retrieve logs for DataTables.
-		 */
-		public function logs_datatables_action(): void {
-			$this->check_permissions( array( self::MANAGE_OPTIONS_CAP ) );
-			$this->verify_nonce(
-				'logs_datatable_nonce',
-				'logs_datatable_nonce',
-				'GET'
-			);
-
-			// Create a custom array from $_GET with specific keys
-			$custom_data = array(
-				'draw' => $_GET['draw'] ?? 0, // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
-				'start' => $_GET['start'] ?? 0, // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
-				'length' => $_GET['length'] ?? 10, // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
-				'action' => $_GET['action'] ?? '', // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
-				'logs_datatable_nonce' => $_GET['logs_datatable_nonce'] ?? '', // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
-				'search' => isset($_GET['search']) ? array( // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
-					'value' => $_GET['search']['value'] ?? '', // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
-					'regex' => $_GET['search']['regex'] ?? false, // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
-				) : array('value' => '', 'regex' => false),
-				'columns' => isset($_GET['columns']) ? $_GET['columns'] : array(), // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked above, check method - "verify_nonce", data will sanitize later in "UBDWPHelperFacade::sanitize_get_data".
-			);
-
-			$sanitized_data = UBDWPHelperFacade::sanitize_get_data( $custom_data );
-			
-			UBDWPLogsFacade::logs_data_table( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce is checked in method above.
 		}
 
 		/**

@@ -9,8 +9,8 @@ defined( 'ABSPATH' ) || exit;
 class UbdwpLogsHandler {
 	public $repository;
 
-	public function __construct() {
-		$this->repository = new UbdwpLogsRepository();
+	public function __construct($current_user_id) {
+		$this->repository = new UbdwpLogsRepository($current_user_id);
 	}
 
 	public function insert_log(array $user_data): void {

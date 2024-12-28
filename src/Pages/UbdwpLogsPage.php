@@ -3,8 +3,9 @@
 namespace UsersBulkDeleteWithPreview\Pages;
 
 // Exit if accessed directly.
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
+use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
 use UsersBulkDeleteWithPreview\Repositories\UbdwpLogsRepository;
 use UsersBulkDeleteWithPreview\Handlers\UbdwpLogsHandler;
 
@@ -13,8 +14,10 @@ class UbdwpLogsPage extends UbdwpBasePage {
 	private $handler;
 
 	public function __construct() {
-		$this->handler = new UbdwpLogsHandler();
-		$this->register_ajax_call('logs_datatables', [$this, 'handle_ajax_requests']);
+		parent::__construct();
+		$this->handler = new UbdwpLogsHandler($this->current_user_id);
+		$this->register_ajax_call( 'logs_datatables',
+			[ $this, 'handle_ajax_requests' ] );
 	}
 
 	/**
@@ -22,9 +25,51 @@ class UbdwpLogsPage extends UbdwpBasePage {
 	 */
 	public function render(): void {
 		$data = [
-			'title' => __('Logs Page', 'users-bulk-delete-with-preview'),
+			'title' => __( 'Logs Page', 'users-bulk-delete-with-preview' ),
 		];
-		$this->render_template('logs-page.php', $data);
+		$this->render_template( 'logs-page.php', $data );
+	}
+
+	public function register_admin_scripts( $hook_suffix ): void {
+
+		if ( isset( $_GET['page'] )
+		     && $_GET['page'] == 'ubdwp_admin_logs'
+		) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce verification is not required here.
+
+			wp_register_script(
+				'wpubdp-dataTables-js',
+				WPUBDP_PLUGIN_URL
+				. 'assets/dataTables/datatables.min.js',
+				array( 'jquery' ),
+				WPUBDP_PLUGIN_VERSION,
+				true
+			);
+
+			wp_register_script(
+				'wpubdp-logs-js',
+				WPUBDP_PLUGIN_URL . 'assets/admin/logs.min.js',
+				array( 'jquery', 'wpubdp-dataTables-js' ),
+				WPUBDP_PLUGIN_VERSION,
+				true
+			);
+
+			wp_enqueue_script( 'wpubdp-dataTables-js' );
+			wp_enqueue_script( 'wpubdp-logs-js' );
+
+			wp_localize_script(
+				'wpubdp-logs-js',
+				'myAjax',
+				array(
+					'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				)
+			);
+
+			// Localize DataTable language strings
+			$translation = UbdwpHelperFacade::getDataTableTranslation();
+			wp_localize_script( 'wpubdp-logs-js',
+				'dataTableLang',
+				$translation );
+		}
 	}
 
 	/**
@@ -39,10 +84,10 @@ class UbdwpLogsPage extends UbdwpBasePage {
 		);
 
 		// Fetch and format logs data via the handler
-		$response = $this->handler->prepare_logs_data($_GET);
+		$response = $this->handler->prepare_logs_data( $_GET );
 
 		// Send JSON response
-		wp_send_json($response);
+		wp_send_json( $response );
 		wp_die();
 	}
 }

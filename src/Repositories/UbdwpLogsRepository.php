@@ -9,17 +9,23 @@ use UsersBulkDeleteWithPreview\Repositories\UbdwpBaseRepository;
 
 class UbdwpLogsRepository extends UbdwpBaseRepository {
 
-	public function __construct() {
-		parent::__construct('ubdwp_logs');
+	public function __construct($current_user_id) {
+		parent::__construct('ubdwp_logs', $current_user_id);
 	}
 
 
-	public function insert_log(int $user_id, string $user_deleted_data, string $deletion_time): void {
-		$this->insert([
-			'user_id'           => $user_id,
-			'user_deleted_data' => $user_deleted_data,
-			'deletion_time'     => $deletion_time,
-		]);
+	public function insert_log($user_data): void {
+		// Convert the user data array to JSON format.
+		$user_data_json = wp_json_encode( $user_data );
+
+		// Prepare and execute the SQL query to insert a new log record.
+		$this->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- It is OK, it is a custom table
+			array(
+				'user_id'           => $this->current_user_id,
+				'user_deleted_data' => $user_data_json,
+				'deletion_time'     => current_time( 'mysql' ),
+			)
+		);
 	}
 
 	public function get_logs(string $where, int $limit, int $offset): array {
@@ -54,12 +60,10 @@ class UbdwpLogsRepository extends UbdwpBaseRepository {
 			return '';
 		}
 
-		global $wpdb;
-
-		return $wpdb->prepare(
+		return $this->wpdb->prepare(
 			'AND (u.display_name LIKE %s OR t.user_deleted_data LIKE %s)',
-			'%' . $wpdb->esc_like($search_value) . '%',
-			'%' . $wpdb->esc_like($search_value) . '%'
+			'%' . $this->wpdb->esc_like($search_value) . '%',
+			'%' . $this->wpdb->esc_like($search_value) . '%'
 		);
 	}
 

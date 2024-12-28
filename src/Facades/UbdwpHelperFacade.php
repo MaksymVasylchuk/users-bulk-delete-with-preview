@@ -8,16 +8,16 @@
 namespace UsersBulkDeleteWithPreview\Facades;
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 use UsersBulkDeleteWithPreview\Abstract\UbdwpAbstractFacade;
 
-
 /**
- * Facade class for the UBDWPHelper functionality.
- * Extends the abstract class UBDWPFacadeAbstract.
+ * Facade class for the UbdwpHelper functionality.
+ * Extends the abstract class UbdwpAbstractFacade.
  */
 class UbdwpHelperFacade extends UbdwpAbstractFacade {
+
 	/**
 	 * Get the class name that this facade is representing.
 	 *
@@ -27,4 +27,3 @@ class UbdwpHelperFacade extends UbdwpAbstractFacade {
 		return 'UsersBulkDeleteWithPreview\Helpers\UbdwpHelper';
 	}
 }
-

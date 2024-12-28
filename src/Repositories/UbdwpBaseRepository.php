@@ -8,11 +8,13 @@ defined( 'ABSPATH' ) || exit;
 abstract class UbdwpBaseRepository {
 	protected $wpdb;
 	protected $table_name;
+	protected $current_user_id;
 
-	public function __construct(string $table_name) {
+	public function __construct(string $table_name, $current_user_id) {
 		global $wpdb;
 		$this->wpdb = $wpdb;
 		$this->table_name = esc_sql($wpdb->prefix . $table_name);
+		$this->current_user_id = $current_user_id;
 	}
 
 	/**
@@ -34,6 +36,10 @@ abstract class UbdwpBaseRepository {
 	 */
 	protected function select(string $query, array $params = []): array {
 		return $this->wpdb->get_results($this->wpdb->prepare($query, $params));
+	}
+
+	protected function get_col($query, $params = []): array {
+		return $this->wpdb->get_col( $this->wpdb->prepare( $query, $params ) );
 	}
 
 	/**

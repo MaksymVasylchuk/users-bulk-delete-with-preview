@@ -1,11 +1,19 @@
 <?php
+/**
+ * Class for handle plugin activation
+ *
+ * @package     UsersBulkDeleteWithPreview\Activators
+ */
 
 
 namespace UsersBulkDeleteWithPreview\Activators;
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
+/**
+ * Class for handling plugin activation logic.
+ */
 class UbdwpActivate {
 
 	/**
@@ -37,10 +45,10 @@ class UbdwpActivate {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
 		// Create or update the database table.
-		dbDelta( $sql );
+		dbDelta($sql);
 
 		// Set the plugin version in the options table.
-		add_option( 'ubdwp_plugin_db_version', WPUBDP_PLUGIN_VERSION );
+		add_option('ubdwp_plugin_db_version', WPUBDP_PLUGIN_VERSION);
 	}
 
 	/**
@@ -57,7 +65,7 @@ class UbdwpActivate {
 					'users-bulk-delete-with-preview'
 				),
 				esc_html__('Plugin Activation Error', 'users-bulk-delete-with-preview'),
-				['back_link' => true]
+				array('back_link' => true)
 			);
 		}
 
@@ -69,7 +77,7 @@ class UbdwpActivate {
 					'users-bulk-delete-with-preview'
 				),
 				esc_html__('Plugin Activation Error', 'users-bulk-delete-with-preview'),
-				['back_link' => true]
+				array('back_link' => true)
 			);
 		}
 	}

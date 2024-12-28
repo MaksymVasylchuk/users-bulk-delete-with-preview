@@ -12,6 +12,12 @@ abstract class UbdwpBasePage {
 	const MANAGE_OPTIONS_CAP = 'manage_options';
 	const LIST_USERS_CAP     = 'list_users';
 
+	protected $current_user_id;
+
+	public function __construct() {
+		$this->current_user_id = get_current_user_id();
+	}
+
 	/**
 	 * Render the page using the provided template and data.
 	 *
