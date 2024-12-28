@@ -1,4 +1,9 @@
 <?php
+/**
+ * Abstract class for facades
+ *
+ * @package     UsersBulkDeleteWithPreview\Abstract
+ */
 
 namespace UsersBulkDeleteWithPreview\Abstract;
 
