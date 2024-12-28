@@ -55,6 +55,7 @@ class UbdwpLogsRepository extends UbdwpBaseRepository {
             FROM {$this->table_name} t
             INNER JOIN {$this->wpdb->users} u ON t.user_id = u.ID
             WHERE 1=1 {$where}
+            ORDER BY t.deletion_time DESC
             LIMIT %d OFFSET %d
         ";
 
