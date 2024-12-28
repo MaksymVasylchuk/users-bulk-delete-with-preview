@@ -1,4 +1,9 @@
 <?php
+/**
+ * Helper class
+ *
+ * @package     UsersBulkDeleteWithPreview\Helpers
+ */
 
 namespace UsersBulkDeleteWithPreview\Helpers;
 
