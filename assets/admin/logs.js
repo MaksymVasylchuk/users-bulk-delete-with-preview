@@ -15,6 +15,14 @@
                 "data": {
                     "action": 'logs_datatables', // Action to be handled by the server-side script
                     "logs_datatable_nonce": $('#logs_datatable_nonce').val()
+                },
+                "dataSrc": function ( json ) {
+                  if(!json.success) {
+                      createWordpressError( json.data.message || __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );
+                  }
+                },
+                "error": function (xhr, error, code) {
+                    createWordpressError( error || __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );
                 }
             },
             "language": {
@@ -39,5 +47,26 @@
             ]
         }
     );
+
+    /**
+     * Create a WordPress styled error message
+     *
+     * @param {string} message - The error message
+     */
+    function createWordpressError(message) {
+        const errorDiv         = $( '<div>', {class: 'notice notice-error is-dismissible'} );
+        const messageParagraph = $( '<p>' ).text( message );
+        const dismissButton    = $(
+            '<button>',
+            {
+                class: 'notice-dismiss',
+                html: '<span class="screen-reader-text">Dismiss this notice.</span>',
+                click: () => errorDiv.hide()
+            }
+        );
+
+        errorDiv.append( messageParagraph, dismissButton );
+        $( '#notices' ).html( errorDiv );
+    }
 
 })( jQuery );
