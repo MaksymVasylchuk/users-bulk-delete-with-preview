@@ -1,4 +1,9 @@
 <?php
+/**
+ * Views facade
+ *
+ * @package     UsersBulkDeleteWithPreview\Helpers
+ */
 
 namespace UsersBulkDeleteWithPreview\Helpers;
 

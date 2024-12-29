@@ -19,20 +19,28 @@ use UsersBulkDeleteWithPreview\Handlers\UbdwpLogsHandler;
  */
 class UbdwpLogsPage extends UbdwpAbstractBasePage {
 
-	/** @var UbdwpLogsHandler Handler for managing logs data. */
-	private $handler;
+	/**
+	 * @var UbdwpLogsHandler $handler Handler for managing logs data.
+	 */
+	private UbdwpLogsHandler $handler;
 
 	/**
 	 * Constructor to initialize the Logs Page.
+	 *
+	 * @return void
 	 */
 	public function __construct() {
 		$this->handler = new UbdwpLogsHandler( $this->get_current_user_id() );
-		$this->register_ajax_call( 'logs_datatables',
-			array( $this, 'handle_ajax_requests' ) );
+		$this->register_ajax_call(
+			'logs_datatables',
+			array( $this, 'handle_ajax_requests' )
+		);
 	}
 
 	/**
 	 * Render the logs page.
+	 *
+	 * @return void
 	 */
 	public function render(): void {
 		$data = array(
@@ -44,19 +52,20 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 	/**
 	 * Register admin scripts for the logs page.
 	 *
-	 * @param  string  $hook_suffix  The hook suffix for the current admin page.
+	 * @param  string $hook_suffix The hook suffix for the current admin page.
+	 *
+	 * @return void
 	 */
 	public function register_admin_scripts( string $hook_suffix ): void {
-		if ( isset( $_GET['page'] )
-		     && $_GET['page'] === 'ubdwp_admin_logs'
-		) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce verification is not required here.
+		if ( isset( $_GET['page'] ) && $_GET['page'] === 'ubdwp_admin_logs' ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification not required here.
 			UbdwpHelperFacade::register_common_scripts( [
 				'wpubdp-logs-js' => [
 					'path' => 'assets/admin/logs.min.js',
 					'deps' => [
 						'jquery',
 						'wpubdp-dataTables-js',
-						'wp-i18n'
+						'wp-i18n',
 					],
 				],
 			] );
@@ -73,22 +82,28 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 
 	/**
 	 * Handle AJAX requests for logs.
+	 *
+	 * @return void
 	 */
 	public function handle_ajax_requests(): void {
 		try {
 			$this->check_permissions( array( self::MANAGE_OPTIONS_CAP ) );
-			$this->verify_nonce( 'logs_datatable_nonce',
+			$this->verify_nonce(
 				'logs_datatable_nonce',
-				'GET' );
+				'logs_datatable_nonce',
+				'GET'
+			);
 
-			// Fetch and format logs data via the handler
+			// Fetch and format logs data via the handler.
 			$response = $this->handler->prepare_logs_data( $_GET );
 
-			// Send JSON response
+			// Send JSON response.
 			wp_send_json( $response );
 			wp_die();
 		} catch ( \Exception $e ) {
-			wp_send_json_error( array( 'message' => UbdwpHelperFacade::get_error_message( 'generic_error' ) ) );
+			wp_send_json_error( array(
+				'message' => UbdwpHelperFacade::get_error_message( 'generic_error' ),
+			) );
 			wp_die();
 		}
 	}

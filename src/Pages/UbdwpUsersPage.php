@@ -26,11 +26,6 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 	/** @var UbdwpUsersHandler Handler for user actions. */
 	private $handler;
 
-	/** @var UbdwpAbstractUsersRepository Repository for user data. */
-	private $repository;
-
-	/** @var UbdwpAbstractLogsRepository Repository for logs data. */
-	private $logs_repository;
 	private $logs_handler;
 	/**
 	 * Constructor to initialize the Users Page.
@@ -39,8 +34,6 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 		$current_user_id = $this->get_current_user_id();
 
 		$this->handler = new UbdwpUsersHandler($current_user_id);
-		$this->repository = new UbdwpAbstractUsersRepository($current_user_id);
-		$this->logs_repository = new UbdwpAbstractLogsRepository($current_user_id);
 		$this->logs_handler = new UbdwpLogsHandler($current_user_id);
 
 		$this->register_ajax_call('search_users', array($this, 'search_existing_users_ajax'));
