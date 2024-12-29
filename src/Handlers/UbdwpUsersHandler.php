@@ -235,6 +235,36 @@ class UbdwpUsersHandler {
 					'display_name' => $user['display_name'],
 					'reassign'     => $user['reassign'] ?? '',
 				);
+
+				// Check if related content should be deleted
+				if (isset($user['reassign']) && $user['reassign'] === 'remove_all_related_content') {
+					$user_id = intval($user['id']);
+
+					// 1. Retrieve all posts by the user
+					$user_posts = get_posts(array(
+						'author'        => $user_id,
+						'post_type'     => 'any',
+						'post_status'   => 'any',
+						'numberposts'   => -1,
+						'fields'        => 'ids', // Retrieve only IDs for better performance
+					));
+
+					// Delete all posts by the user
+					foreach ($user_posts as $post_id) {
+						wp_delete_post($post_id, true); // Force delete
+					}
+
+					// 2. Delete comments by the user
+					$user_comments = get_comments(array(
+						'user_id' => $user_id,
+					));
+					foreach ($user_comments as $comment) {
+						wp_delete_comment($comment->comment_ID, true); // Force delete
+					}
+
+					$user['reassign'] = null;
+				}
+
 				wp_delete_user( esc_attr( $user['id'] ), esc_attr( $user['reassign'] ) ?? null );
 			}
 		}

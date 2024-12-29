@@ -77,6 +77,8 @@ class UbdwpHelper {
 	private function build_select_options( array $all_users ): string {
 		$options = '<option value="">' . __( 'Select a user', 'users-bulk-delete-with-preview' ) . '</option>';
 
+		$options .= '<option value="remove_all_related_content">' . __( 'Remove all related content', 'users-bulk-delete-with-preview' ) . '</option>';
+
 		foreach ( $all_users as $user ) {
 			$options .= '<option value="' . esc_attr( $user->ID ) . '">' . esc_html( $user->user_login ) . '</option>';
 		}
