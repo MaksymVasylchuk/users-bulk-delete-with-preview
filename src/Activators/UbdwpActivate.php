@@ -1,10 +1,9 @@
 <?php
 /**
- * Class for handle plugin activation
+ * Class for handling plugin activation
  *
  * @package     UsersBulkDeleteWithPreview\Activators
  */
-
 
 namespace UsersBulkDeleteWithPreview\Activators;
 
@@ -22,6 +21,7 @@ class UbdwpActivate {
 	 * @return void
 	 */
 	public static function ubdwp_activate_plugin(): void {
+		// Ensure the environment meets the plugin requirements.
 		self::check_environment();
 
 		global $wpdb;
@@ -35,7 +35,7 @@ class UbdwpActivate {
 		// SQL statement to create the new table.
 		$sql = "
         CREATE TABLE {$table_name} (
-            ID bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             user_id BIGINT(20) NOT NULL,
             user_deleted_data TEXT NOT NULL,
             deletion_time DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -57,27 +57,27 @@ class UbdwpActivate {
 	 * @return void
 	 */
 	private static function check_environment(): void {
-		// Check PHP version.
-		if (version_compare(PHP_VERSION, '7.4', '<')) {
+		// Check if the PHP version is at least 8.0.
+		if (version_compare(PHP_VERSION, '8.0', '<')) {
 			wp_die(
 				esc_html__(
-					'This plugin requires PHP version 7.4 or higher.',
+					'This plugin requires PHP version 8.0 or higher.',
 					'users-bulk-delete-with-preview'
 				),
 				esc_html__('Plugin Activation Error', 'users-bulk-delete-with-preview'),
-				array('back_link' => true)
+				['back_link' => true]
 			);
 		}
 
-		// Check WordPress version.
-		if (version_compare(get_bloginfo('version'), '6.0', '<')) {
+		// Check if the WordPress version is at least 6.2.
+		if (version_compare(get_bloginfo('version'), '6.2', '<')) {
 			wp_die(
 				esc_html__(
-					'You must update WordPress to version 6.0 or higher to use this plugin.',
+					'You must update WordPress to version 6.2 or higher to use this plugin.',
 					'users-bulk-delete-with-preview'
 				),
 				esc_html__('Plugin Activation Error', 'users-bulk-delete-with-preview'),
-				array('back_link' => true)
+				['back_link' => true]
 			);
 		}
 	}

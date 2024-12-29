@@ -2,7 +2,7 @@
 /**
  * Base Repository
  *
- * @package     UsersBulkDeleteWithPreview\Repositories
+ * @package     UsersBulkDeleteWithPreview\Abstract
  */
 
 namespace UsersBulkDeleteWithPreview\Abstract;
@@ -15,14 +15,26 @@ defined('ABSPATH') || exit;
  */
 abstract class UbdwpAbstractBaseRepository {
 
-	/** @var \wpdb WordPress database object. */
-	protected $wpdb;
+	/**
+	 * WordPress database object.
+	 *
+	 * @var \wpdb
+	 */
+	protected \wpdb $wpdb;
 
-	/** @var string Table name. */
-	protected $table_name;
+	/**
+	 * Table name with the WordPress prefix.
+	 *
+	 * @var string
+	 */
+	protected string $table_name;
 
-	/** @var int Current user ID. */
-	public $current_user_id;
+	/**
+	 * Current user ID.
+	 *
+	 * @var int
+	 */
+	public int $current_user_id;
 
 	/**
 	 * Constructor to initialize the repository.
@@ -41,6 +53,7 @@ abstract class UbdwpAbstractBaseRepository {
 	 * Insert a record into the table.
 	 *
 	 * @param array $data Key-value pairs for table columns and their values.
+	 * @return void
 	 */
 	protected function insert(array $data): void {
 		$this->wpdb->insert($this->table_name, $data);
@@ -51,10 +64,9 @@ abstract class UbdwpAbstractBaseRepository {
 	 *
 	 * @param string $query  SQL query with placeholders.
 	 * @param array  $params Parameters to bind to the query.
-	 *
 	 * @return array Results as objects.
 	 */
-	protected function select(string $query, array $params = array()): array {
+	protected function select(string $query, array $params = []): array {
 		return $this->wpdb->get_results($this->wpdb->prepare($query, $params));
 	}
 
@@ -63,10 +75,9 @@ abstract class UbdwpAbstractBaseRepository {
 	 *
 	 * @param string $query  SQL query with placeholders.
 	 * @param array  $params Parameters to bind to the query.
-	 *
 	 * @return array Results as a single column array.
 	 */
-	protected function get_col(string $query, array $params = array()): array {
+	protected function get_col(string $query, array $params = []): array {
 		return $this->wpdb->get_col($this->wpdb->prepare($query, $params));
 	}
 
@@ -75,10 +86,9 @@ abstract class UbdwpAbstractBaseRepository {
 	 *
 	 * @param string $query  SQL query with placeholders.
 	 * @param array  $params Parameters to bind to the query.
-	 *
 	 * @return mixed Single value result.
 	 */
-	protected function get_var(string $query, array $params = array()) {
+	protected function get_var(string $query, array $params = []): mixed {
 		return $this->wpdb->get_var($this->wpdb->prepare($query, $params));
 	}
 
@@ -86,7 +96,6 @@ abstract class UbdwpAbstractBaseRepository {
 	 * Count total rows in the table.
 	 *
 	 * @param string $where Optional WHERE clause for filtering.
-	 *
 	 * @return int Row count.
 	 */
 	protected function count(string $where = ''): int {
