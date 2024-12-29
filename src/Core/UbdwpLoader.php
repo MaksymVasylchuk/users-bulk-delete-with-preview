@@ -10,8 +10,6 @@ namespace UsersBulkDeleteWithPreview\Core;
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
-use UsersBulkDeleteWithPreview\Pages\UbdwpUsersPage;
-use UsersBulkDeleteWithPreview\Pages\UbdwpLogsPage;
 use UsersBulkDeleteWithPreview\Traits\UbdwpTraitSingleton;
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
 
@@ -25,6 +23,11 @@ class UbdwpLoader
 
 	/** @var array List of page objects. */
 	private array $pages = array();
+
+	private array $pages_for_init = array(
+		'users' => 'UsersBulkDeleteWithPreview\Pages\UbdwpUsersPage',
+		'logs' => 'UsersBulkDeleteWithPreview\Pages\UbdwpLogsPage',
+	);
 
 	/**
 	 * Initialize the plugin by defining constants, setting up hooks, and loading pages.
@@ -45,8 +48,16 @@ class UbdwpLoader
 		add_filter('plugin_action_links_' . WPUBDP_BASE_NAME, array($this, 'action_links'));
 
 		// Initialize page objects.
-		$this->pages['logs'] = new UbdwpLogsPage();
-		$this->pages['users'] = new UbdwpUsersPage();
+		$this->init_pages();
+	}
+
+
+	private function init_pages(): void {
+		if(!empty($this->pages_for_init) && empty($this->pages)) {
+			foreach ($this->pages_for_init as $page => $page_class) {
+				$this->pages[$page] = new $page_class();
+			}
+		}
 	}
 
 	/**
