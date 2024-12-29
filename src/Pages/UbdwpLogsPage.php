@@ -56,6 +56,7 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 					'deps' => [
 						'jquery',
 						'wpubdp-dataTables-js',
+						'wp-i18n'
 					],
 				],
 			] );

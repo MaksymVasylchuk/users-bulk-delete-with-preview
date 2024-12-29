@@ -1,6 +1,8 @@
 (function ($) {
     'use strict';
 
+    const {__, _x, _n, _nx} = wp.i18n;
+
     // Initialize DataTable for logs
     $( '#logs' ).DataTable(
         {
@@ -17,9 +19,10 @@
                     "logs_datatable_nonce": $('#logs_datatable_nonce').val()
                 },
                 "dataSrc": function ( json ) {
-                  if(!json.success) {
+                  if(typeof json.success !== 'undefined' && !json.success) {
                       createWordpressError( json.data.message || __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );
                   }
+                  return json.data;
                 },
                 "error": function (xhr, error, code) {
                     createWordpressError( error || __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );

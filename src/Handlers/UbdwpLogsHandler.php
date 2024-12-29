@@ -69,7 +69,7 @@ class UbdwpLogsHandler {
 			'draw'            => UbdwpHelperFacade::validate_positive_integer($request['draw'] ?? 0, 0),
 			'recordsTotal'    => $total_records,
 			'recordsFiltered' => $filtered_records,
-			'data'            => $this->format_logs_data($logs),
+			'data'            => $this->format_logs_data($logs)
 		);
 	}
 
