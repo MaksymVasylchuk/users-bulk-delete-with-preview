@@ -8,7 +8,7 @@
 namespace UsersBulkDeleteWithPreview\Facades;
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 use UsersBulkDeleteWithPreview\Abstract\UbdwpAbstractFacade;
 
