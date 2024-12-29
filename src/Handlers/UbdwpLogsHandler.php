@@ -7,7 +7,8 @@
 
 namespace UsersBulkDeleteWithPreview\Handlers;
 
-use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
+
+use UsersBulkDeleteWithPreview\Facades\UbdwpValidationFacade;
 use UsersBulkDeleteWithPreview\Repositories\UbdwpAbstractLogsRepository;
 
 // Exit if accessed directly.
@@ -61,8 +62,8 @@ class UbdwpLogsHandler {
 	 * @return array<string, mixed> Prepared logs data including metadata for DataTables.
 	 */
 	public function prepare_logs_data( array $request ): array {
-		$limit = UbdwpHelperFacade::validate_positive_integer( $request['length'] ?? 10, 10 );
-		$offset = UbdwpHelperFacade::validate_positive_integer( $request['start'] ?? 0, 0 );
+		$limit = UbdwpValidationFacade::validate_positive_integer( $request['length'] ?? 10, 10 );
+		$offset = UbdwpValidationFacade::validate_positive_integer( $request['start'] ?? 0, 0 );
 		$search_value = sanitize_text_field( $request['search']['value'] ?? '' );
 
 		$where = $this->repository->build_where_clause( $search_value );
@@ -72,7 +73,7 @@ class UbdwpLogsHandler {
 		$filtered_records = $this->repository->get_filtered_record_count( $where );
 
 		return array(
-			'draw'            => UbdwpHelperFacade::validate_positive_integer( $request['draw'] ?? 0, 0 ),
+			'draw'            => UbdwpValidationFacade::validate_positive_integer( $request['draw'] ?? 0, 0 ),
 			'recordsTotal'    => $total_records,
 			'recordsFiltered' => $filtered_records,
 			'data'            => $this->format_logs_data( $logs ),

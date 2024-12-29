@@ -10,8 +10,9 @@ namespace UsersBulkDeleteWithPreview\Abstract;
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
-use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
+
 use UsersBulkDeleteWithPreview\Facades\UbdwpViewsFacade;
+use UsersBulkDeleteWithPreview\Facades\UbdwpValidationFacade;
 
 /**
  * Base class for admin pages in the Users Bulk Delete With Preview plugin.
@@ -27,6 +28,8 @@ abstract class UbdwpAbstractBasePage {
 	 * Capability required to list users.
 	 */
 	public const LIST_USERS_CAP = 'list_users';
+
+	public const DELETE_USERS_CAP = 'delete_users';
 
 	/**
 	 * ID of the current user.
@@ -44,7 +47,7 @@ abstract class UbdwpAbstractBasePage {
 	 */
 	protected function render_template(string $template_name, array $data = []): void {
 		if (!current_user_can(self::MANAGE_OPTIONS_CAP)) {
-			wp_die(UbdwpHelperFacade::get_error_message('permission_error'));
+			wp_die(UbdwpValidationFacade::get_error_message('permission_error'));
 		}
 
 		// Includes and renders the specified template securely.
@@ -92,7 +95,7 @@ abstract class UbdwpAbstractBasePage {
 		}
 
 		if (!isset($field) || !wp_verify_nonce($field, $action)) {
-			wp_send_json_error(['message' => UbdwpHelperFacade::get_error_message('invalid_nonce')]);
+			wp_send_json_error(['message' => UbdwpValidationFacade::get_error_message('invalid_nonce')]);
 			wp_die();
 		}
 	}
@@ -106,10 +109,32 @@ abstract class UbdwpAbstractBasePage {
 	protected function check_permissions(array $caps): void {
 		foreach ($caps as $cap) {
 			if (!current_user_can($cap)) {
-				wp_send_json_error(['message' => UbdwpHelperFacade::get_error_message('permission_error')]);
+				wp_send_json_error(['message' => UbdwpValidationFacade::get_error_message('permission_error')]);
 				wp_die();
 			}
 		}
+	}
+
+	/**
+	 * General AJAX request handler.
+	 * @param  string  $nonce_field
+	 * @param  string    $nonce_action
+	 * @param  array     $capabilities
+	 * @param  callable  $callback
+	 *
+	 * @return void
+	 */
+	public function handle_ajax_request(string $nonce_field, string $nonce_action, array $capabilities, callable $callback,  string $request_type = 'POST'): void {
+		try {
+			$this->verify_nonce($nonce_field, $nonce_action, $request_type);
+			$this->check_permissions($capabilities);
+
+			$response = $callback();
+			wp_send_json_success($response);
+		} catch (\Exception $e) {
+			wp_send_json_error(['message' => UbdwpValidationFacade::get_error_message( 'generic_error' )]);
+		}
+		wp_die();
 	}
 
 }

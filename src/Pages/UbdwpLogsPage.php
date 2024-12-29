@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 use UsersBulkDeleteWithPreview\Abstract\UbdwpAbstractBasePage;
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
 use UsersBulkDeleteWithPreview\Handlers\UbdwpLogsHandler;
+use UsersBulkDeleteWithPreview\Facades\UbdwpValidationFacade;
 
 /**
  * Class for managing the Logs Page.
@@ -86,25 +87,11 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 	 * @return void
 	 */
 	public function handle_ajax_requests(): void {
-		try {
-			$this->check_permissions( array( self::MANAGE_OPTIONS_CAP ) );
-			$this->verify_nonce(
-				'logs_datatable_nonce',
-				'logs_datatable_nonce',
-				'GET'
-			);
 
-			// Fetch and format logs data via the handler.
-			$response = $this->handler->prepare_logs_data( $_GET );
+		$capabilities = array( self::MANAGE_OPTIONS_CAP );
 
-			// Send JSON response.
-			wp_send_json( $response );
-			wp_die();
-		} catch ( \Exception $e ) {
-			wp_send_json_error( array(
-				'message' => UbdwpHelperFacade::get_error_message( 'generic_error' ),
-			) );
-			wp_die();
-		}
+		$this->handle_ajax_request('logs_datatable_nonce', 'logs_datatable_nonce', $capabilities, function() {
+			return $this->handler->prepare_logs_data( $_GET );
+		},'GET');
 	}
 }

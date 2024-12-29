@@ -8,7 +8,9 @@
 namespace UsersBulkDeleteWithPreview\Handlers;
 
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
+use UsersBulkDeleteWithPreview\Facades\UbdwpViewsFacade;
 use UsersBulkDeleteWithPreview\Repositories\UbdwpAbstractUsersRepository;
+use UsersBulkDeleteWithPreview\Facades\UbdwpValidationFacade;
 
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
@@ -19,7 +21,7 @@ defined('ABSPATH') || exit;
 class UbdwpUsersHandler {
 
 	/** @var UbdwpAbstractUsersRepository Repository for managing users. */
-	private $repository;
+	public $repository;
 
 	/** @var int Current user ID. */
 	private $current_user_id;
@@ -42,7 +44,7 @@ class UbdwpUsersHandler {
 	 * @return array List of matching users.
 	 */
 	public function search_users_ajax(array $request): array {
-		$search_term = sanitize_text_field($request['q'] ?? '');
+		$search_term = $request['q'] ?? '';
 		$select_all = !empty($request['select_all']);
 
 		$args = array(
@@ -85,7 +87,7 @@ class UbdwpUsersHandler {
 	 * @return array List of matching meta keys.
 	 */
 	public function search_usermeta_ajax(array $request): array {
-		$search = sanitize_text_field($request['q'] ?? '');
+		$search = $request['q'] ?? '';
 
 		$results = $this->repository->search_usermeta_ajax($search);
 
@@ -106,7 +108,7 @@ class UbdwpUsersHandler {
 	 */
 	public function get_users_by_ids(array $user_ids) {
 		if (empty($user_ids) || !is_array($user_ids)) {
-			return new \WP_Error('invalid_input', UbdwpHelperFacade::get_error_message('invalid_input'));
+			return new \WP_Error('invalid_input', UbdwpValidationFacade::get_error_message('invalid_input'));
 		}
 
 		$user_ids = array_unique(array_map('intval', $user_ids));
@@ -116,7 +118,7 @@ class UbdwpUsersHandler {
 			return UbdwpHelperFacade::prepare_users_for_table($users, $this->repository);
 		}
 
-		return new \WP_Error('no_users_found', UbdwpHelperFacade::get_error_message('no_users_found'));
+		return new \WP_Error('no_users_found', UbdwpValidationFacade::get_error_message('no_users_found'));
 	}
 
 	/**
@@ -139,7 +141,7 @@ class UbdwpUsersHandler {
 			return UbdwpHelperFacade::prepare_users_for_table($user_query->get_results(), $this->repository);
 		}
 
-		return new \WP_Error('no_users_found_with_given_filters', UbdwpHelperFacade::get_error_message('no_users_found_with_given_filters'));
+		return new \WP_Error('no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message('no_users_found_with_given_filters'));
 	}
 
 	/**
@@ -163,6 +165,142 @@ class UbdwpUsersHandler {
 			return UbdwpHelperFacade::prepare_users_for_table($users, $this->repository);
 		}
 
-		return new \WP_Error('no_users_found_with_given_filters', UbdwpHelperFacade::get_error_message('no_users_found_with_given_filters'));
+		return new \WP_Error('no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message('no_users_found_with_given_filters'));
+	}
+
+	/**
+	 * Generate CSV content from the user list.
+	 *
+	 * @param  array $users  List of user objects.
+	 *
+	 * @return string CSV content.
+	 */
+	public function generate_csv(array $users): string {
+		$output = fopen('php://temp', 'w');
+		fputcsv($output, ['ID', 'Username', 'Email', 'First Name', 'Last Name', 'Role']);
+
+		foreach ($users as $user) {
+			fputcsv($output, [
+				intval($user->ID),
+				sanitize_text_field($user->user_login),
+				sanitize_email($user->user_email),
+				sanitize_text_field($user->first_name),
+				sanitize_text_field($user->last_name),
+				implode(', ', $user->roles),
+			]);
+		}
+
+		rewind($output);
+		$csv_content = stream_get_contents($output);
+		fclose($output);
+
+		return $csv_content;
+	}
+
+	/**
+	 * Save the generated CSV content to a file.
+	 *
+	 * @param  string $csv_output  The CSV content.
+	 * @return string URL of the saved file.
+	 */
+	public function save_csv_file( $csv_output ) {
+		// Initialize the WordPress filesystem API
+		global $wp_filesystem;
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		WP_Filesystem();
+
+		// Get the upload directory
+		$upload_dir = wp_upload_dir();
+		$file_path  = $upload_dir['path'] . '/users_export_' . time() . '.csv';
+
+		// Use WP_Filesystem's method to write the file
+		if ( ! $wp_filesystem->put_contents( $file_path, $csv_output, FS_CHMOD_FILE ) ) {
+			return new \WP_Error( 'file_write_error', __( 'Failed to write the CSV file.', 'users-bulk-delete-with-preview' ) );
+		}
+
+		// Return the URL of the saved file
+		return $upload_dir['url'] . '/' . basename( $file_path );
+	}
+
+	public function delete_users(array $sanitized_users) {
+		$deleted_users = array();
+		foreach ($sanitized_users as $user) {
+			if ( intval( $user['id'] ) > 0 ) {
+				$deleted_users[ $user['id'] ] = array(
+					'user_id'      => intval( $user['id'] ),
+					'email'        => $user['email'],
+					'display_name' => $user['display_name'],
+					'reassign'     => $user['reassign'] ?? '',
+				);
+				wp_delete_user( esc_attr( $user['id'] ), esc_attr( $user['reassign'] ) ?? null );
+			}
+		}
+
+
+		$template
+			= UbdwpViewsFacade::render_template(
+			'partials/_success_user_delete.php',
+			array(
+				'user_delete_count' => count( $deleted_users ),
+				'deleted_users'     => array_values( $deleted_users ),
+			)
+		);
+
+		return [
+			'deleted_users' => $deleted_users ?? array(),
+			'template'      => $template ?? '',
+		];
+	}
+
+	public function delete_csv_file($file_path) {
+		if ( ! empty( $file_path ) && file_exists( $file_path ) ) {
+			wp_delete_file( $file_path ); // Delete file.
+		}
+	}
+
+	public function search_users_for_delete_ajax($type, $request) {
+		// Define the keys that need to be extracted from $_POST.
+		$keys = [
+			'find_users_nonce',
+			'search_user_existing_nonce',
+			'search_user_meta_nonce',
+			'registration_date',
+			'user_meta_value',
+			'user_email',
+			'filter_type',
+			'action',
+			'user_email_equal',
+			'user_meta_equal',
+			'user_search',
+			'products',
+			'user_role',
+			'user_meta'
+		];
+		$data_before_sanitize = array_intersect_key($request, array_flip($keys));
+		$sanitized_data = UbdwpHelperFacade::sanitize_post_data($data_before_sanitize);
+
+		switch ($type) {
+			case 'select_existing':
+				UbdwpValidationFacade::validate_user_search_for_existing_users($sanitized_data);
+				$results = $this->get_users_by_ids(array_unique(array_map('intval', $request['user_search'] ?? array())));
+				break;
+			case 'find_users':
+				UbdwpValidationFacade::validate_find_user_form($sanitized_data);
+				$results = $this->get_users_by_filters($sanitized_data);
+				break;
+			case 'find_users_by_woocommerce_filters':
+				UbdwpValidationFacade::validate_woocommerce_filters( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
+				$results
+					= $this->get_users_by_woocommerce_filters( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
+				break;
+			default:
+				wp_send_json_error(array('message' => UbdwpValidationFacade::get_error_message('select_type')));
+				wp_die();
+		}
+
+		return $results;
 	}
 }

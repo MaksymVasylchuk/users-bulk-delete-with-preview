@@ -22,7 +22,12 @@
                   if(typeof json.success !== 'undefined' && !json.success) {
                       createWordpressError( json.data.message || __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );
                   }
-                  return json.data;
+
+                    json.draw = json.data.draw;
+                    json.recordsTotal = json.data.recordsTotal;
+                    json.recordsFiltered = json.data.recordsFiltered;
+
+                  return json.data.data || [];
                 },
                 "error": function (xhr, error, code) {
                     createWordpressError( error || __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );

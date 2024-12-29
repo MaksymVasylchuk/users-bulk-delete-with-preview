@@ -126,7 +126,7 @@ class UbdwpAbstractUsersRepository extends UbdwpAbstractBaseRepository {
 			if (!empty($user_ids)) {
 				$args['include'] = $user_ids;
 			} else {
-				return new \WP_Error('no_users_found_with_given_filters', UbdwpHelperFacade::get_error_message('no_users_found_with_given_filters'));
+				return new \WP_Error('no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message('no_users_found_with_given_filters'));
 			}
 		} else {
 			$args['search'] = '*' . $email_search . '*';
