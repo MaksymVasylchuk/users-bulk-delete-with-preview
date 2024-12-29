@@ -34,7 +34,7 @@ abstract class UbdwpAbstractBaseRepository {
 	 *
 	 * @var int
 	 */
-	public int $current_user_id;
+	protected int $current_user_id;
 
 	/**
 	 * Constructor to initialize the repository.

@@ -10,7 +10,6 @@ namespace UsersBulkDeleteWithPreview\Abstract;
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
-
 use UsersBulkDeleteWithPreview\Facades\UbdwpViewsFacade;
 use UsersBulkDeleteWithPreview\Facades\UbdwpValidationFacade;
 
@@ -29,6 +28,9 @@ abstract class UbdwpAbstractBasePage {
 	 */
 	public const LIST_USERS_CAP = 'list_users';
 
+	/**
+	 * Capability required to delete users.
+	 */
 	public const DELETE_USERS_CAP = 'delete_users';
 
 	/**
@@ -36,7 +38,19 @@ abstract class UbdwpAbstractBasePage {
 	 *
 	 * @var int|null
 	 */
-	public ?int $current_user_id = null;
+	protected ?int $current_user_id = null;
+
+	/**
+	 * Get the current user's ID.
+	 *
+	 * @return int Current user ID.
+	 */
+	public function get_current_user_id(): int {
+		if (is_null($this->current_user_id)) {
+			$this->current_user_id = get_current_user_id();
+		}
+		return $this->current_user_id;
+	}
 
 	/**
 	 * Render the page using the provided template and data.
@@ -52,18 +66,6 @@ abstract class UbdwpAbstractBasePage {
 
 		// Includes and renders the specified template securely.
 		UbdwpViewsFacade::include_template($template_name, $data);
-	}
-
-	/**
-	 * Get the current user's ID.
-	 *
-	 * @return int Current user ID.
-	 */
-	public function get_current_user_id(): int {
-		if (is_null($this->current_user_id)) {
-			$this->current_user_id = get_current_user_id();
-		}
-		return $this->current_user_id;
 	}
 
 	/**
@@ -117,14 +119,15 @@ abstract class UbdwpAbstractBasePage {
 
 	/**
 	 * General AJAX request handler.
-	 * @param  string  $nonce_field
-	 * @param  string    $nonce_action
-	 * @param  array     $capabilities
-	 * @param  callable  $callback
 	 *
+	 * @param string   $nonce_field Nonce field to verify.
+	 * @param string   $nonce_action Nonce action.
+	 * @param array    $capabilities Required capabilities.
+	 * @param callable $callback Callback function to handle the request.
+	 * @param string   $request_type Request type (POST or GET).
 	 * @return void
 	 */
-	public function handle_ajax_request(string $nonce_field, string $nonce_action, array $capabilities, callable $callback,  string $request_type = 'POST'): void {
+	public function handle_ajax_request(string $nonce_field, string $nonce_action, array $capabilities, callable $callback, string $request_type = 'POST'): void {
 		try {
 			$this->verify_nonce($nonce_field, $nonce_action, $request_type);
 			$this->check_permissions($capabilities);
@@ -132,9 +135,8 @@ abstract class UbdwpAbstractBasePage {
 			$response = $callback();
 			wp_send_json_success($response);
 		} catch (\Exception $e) {
-			wp_send_json_error(['message' => UbdwpValidationFacade::get_error_message( 'generic_error' )]);
+			wp_send_json_error(['message' => UbdwpValidationFacade::get_error_message('generic_error')]);
 		}
 		wp_die();
 	}
-
 }
