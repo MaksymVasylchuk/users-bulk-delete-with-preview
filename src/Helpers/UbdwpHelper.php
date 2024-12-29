@@ -352,7 +352,7 @@ class UbdwpHelper {
 			'loadingRecords' => __( 'Loading...', 'users-bulk-delete-with-preview' ),
 			'processing'     => __( 'Processing...', 'users-bulk-delete-with-preview' ),
 			'search'         => __( 'Search', 'users-bulk-delete-with-preview' ),
-			'zeroRecords'    => __( 'No matching records found', 'users-bulk-delete-with-preview' )
+			'zeroRecords'    => __( 'No matching records found', 'users-bulk-delete-with-preview' ),
 		);
 	}
 
@@ -441,5 +441,33 @@ class UbdwpHelper {
 	public function validate_positive_integer($value, int $default): int {
 		$value = intval($value);
 		return $value > 0 ? $value : $default;
+	}
+
+	public function register_common_scripts(array $scripts): void {
+		foreach ($scripts as $handle => $script) {
+			wp_register_script(
+				$handle,
+				WPUBDP_PLUGIN_URL . $script['path'],
+				$script['deps'] ?? array('jquery'),
+				WPUBDP_PLUGIN_VERSION,
+				true
+			);
+			wp_enqueue_script($handle);
+		}
+	}
+
+	public function register_common_styles(array $styles): void {
+		foreach ($styles as $handle => $style) {
+			wp_enqueue_style(
+				$handle,
+				WPUBDP_PLUGIN_URL . $style['path'],
+				$script['deps'] ?? array(),
+				WPUBDP_PLUGIN_VERSION
+			);
+		}
+	}
+
+	public function localize_scripts(string $script_handle, array $localizations): void {
+		wp_localize_script($script_handle, 'localizedData', $localizations);
 	}
 }

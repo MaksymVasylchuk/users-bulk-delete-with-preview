@@ -10,13 +10,14 @@ namespace UsersBulkDeleteWithPreview\Pages;
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
+use UsersBulkDeleteWithPreview\Abstract\UbdwpAbstractBasePage;
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
 use UsersBulkDeleteWithPreview\Handlers\UbdwpLogsHandler;
 
 /**
  * Class for managing the Logs Page.
  */
-class UbdwpLogsPage extends UbdwpBasePage {
+class UbdwpLogsPage extends UbdwpAbstractBasePage {
 
 	/** @var UbdwpLogsHandler Handler for managing logs data. */
 	private $handler;
@@ -47,11 +48,11 @@ class UbdwpLogsPage extends UbdwpBasePage {
 	public function register_admin_scripts(string $hook_suffix): void {
 
 		if (isset($_GET['page']) && $_GET['page'] === 'ubdwp_admin_logs') { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce verification is not required here.
-			$this->register_common_scripts([
+			UbdwpHelperFacade::register_common_scripts([
 				'wpubdp-logs-js' => ['path' => 'assets/admin/logs.min.js', 'deps' => ['jquery', 'wpubdp-dataTables-js']],
 			]);
 
-			$this->localize_scripts('wpubdp-logs-js', [
+			UbdwpHelperFacade::localize_scripts('wpubdp-logs-js', [
 				'ajaxurl' => admin_url('admin-ajax.php'),
 				'translations' => array_merge(
 					UbdwpHelperFacade::getDataTableTranslation(),

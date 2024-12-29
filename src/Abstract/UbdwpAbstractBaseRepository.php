@@ -5,7 +5,7 @@
  * @package     UsersBulkDeleteWithPreview\Repositories
  */
 
-namespace UsersBulkDeleteWithPreview\Repositories;
+namespace UsersBulkDeleteWithPreview\Abstract;
 
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
@@ -13,7 +13,7 @@ defined('ABSPATH') || exit;
 /**
  * Base repository class for database operations.
  */
-abstract class UbdwpBaseRepository {
+abstract class UbdwpAbstractBaseRepository {
 
 	/** @var \wpdb WordPress database object. */
 	protected $wpdb;

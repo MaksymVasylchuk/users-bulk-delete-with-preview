@@ -5,18 +5,18 @@
  * @package     UsersBulkDeleteWithPreview\Pages
  */
 
-namespace UsersBulkDeleteWithPreview\Pages;
+namespace UsersBulkDeleteWithPreview\Abstract;
 
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
-use UsersBulkDeleteWithPreview\Facades\UbdwpViewsFacade;
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
+use UsersBulkDeleteWithPreview\Facades\UbdwpViewsFacade;
 
 /**
  * Base class for admin pages in the Users Bulk Delete With Preview plugin.
  */
-abstract class UbdwpBasePage {
+abstract class UbdwpAbstractBasePage {
 
 	const MANAGE_OPTIONS_CAP = 'manage_options';
 	const LIST_USERS_CAP     = 'list_users';
@@ -88,23 +88,6 @@ abstract class UbdwpBasePage {
 				wp_die();
 			}
 		}
-	}
-
-	protected function register_common_scripts(array $scripts): void {
-		foreach ($scripts as $handle => $script) {
-			wp_register_script(
-				$handle,
-				WPUBDP_PLUGIN_URL . $script['path'],
-				$script['deps'] ?? array('jquery'),
-				WPUBDP_PLUGIN_VERSION,
-				true
-			);
-			wp_enqueue_script($handle);
-		}
-	}
-
-	public function localize_scripts(string $script_handle, array $localizations): void {
-		wp_localize_script($script_handle, 'localizedData', $localizations);
 	}
 
 }

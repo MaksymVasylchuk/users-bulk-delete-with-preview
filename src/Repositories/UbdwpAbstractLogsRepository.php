@@ -10,12 +10,12 @@ namespace UsersBulkDeleteWithPreview\Repositories;
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
-use UsersBulkDeleteWithPreview\Repositories\UbdwpBaseRepository;
+use UsersBulkDeleteWithPreview\Abstract\UbdwpAbstractBaseRepository;
 
 /**
  * Repository for managing log records in the Users Bulk Delete With Preview plugin.
  */
-class UbdwpLogsRepository extends UbdwpBaseRepository {
+class UbdwpAbstractLogsRepository extends UbdwpAbstractBaseRepository {
 
 	/**
 	 * Constructor to initialize the Logs Repository.

@@ -10,25 +10,26 @@ namespace UsersBulkDeleteWithPreview\Pages;
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
+use UsersBulkDeleteWithPreview\Abstract\UbdwpAbstractBasePage;
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
+use UsersBulkDeleteWithPreview\Facades\UbdwpViewsFacade;
 use UsersBulkDeleteWithPreview\Handlers\UbdwpLogsHandler;
 use UsersBulkDeleteWithPreview\Handlers\UbdwpUsersHandler;
-use UsersBulkDeleteWithPreview\Repositories\UbdwpLogsRepository;
-use UsersBulkDeleteWithPreview\Repositories\UbdwpUsersRepository;
-use UsersBulkDeleteWithPreview\Facades\UbdwpViewsFacade;
+use UsersBulkDeleteWithPreview\Repositories\UbdwpAbstractLogsRepository;
+use UsersBulkDeleteWithPreview\Repositories\UbdwpAbstractUsersRepository;
 
 /**
  * Class for managing the Users Page.
  */
-class UbdwpUsersPage extends UbdwpBasePage {
+class UbdwpUsersPage extends UbdwpAbstractBasePage {
 
 	/** @var UbdwpUsersHandler Handler for user actions. */
 	private $handler;
 
-	/** @var UbdwpUsersRepository Repository for user data. */
+	/** @var UbdwpAbstractUsersRepository Repository for user data. */
 	private $repository;
 
-	/** @var UbdwpLogsRepository Repository for logs data. */
+	/** @var UbdwpAbstractLogsRepository Repository for logs data. */
 	private $logs_repository;
 	private $logs_handler;
 	public $current_user_id;
@@ -39,8 +40,8 @@ class UbdwpUsersPage extends UbdwpBasePage {
 		$current_user_id = $this->get_current_user_id();
 
 		$this->handler = new UbdwpUsersHandler($current_user_id);
-		$this->repository = new UbdwpUsersRepository($current_user_id);
-		$this->logs_repository = new UbdwpLogsRepository($current_user_id);
+		$this->repository = new UbdwpAbstractUsersRepository($current_user_id);
+		$this->logs_repository = new UbdwpAbstractLogsRepository($current_user_id);
 		$this->logs_handler = new UbdwpLogsHandler($current_user_id);
 
 		$this->register_ajax_call('search_users', array($this, 'search_existing_users_ajax'));
@@ -81,14 +82,14 @@ class UbdwpUsersPage extends UbdwpBasePage {
 	public function register_admin_scripts(string $hook_suffix): void {
 		if ($hook_suffix === 'toplevel_page_ubdwp_admin') {
 
-			$this->register_common_scripts([
+			UbdwpHelperFacade::register_common_scripts([
 				'wpubdp-bootstrap-js' => ['path' => 'assets/bootstrap/bootstrap.min.js', 'deps' => ['jquery']],
 				'wpubdp-select2-js' => ['path' => 'assets/select2/select2.min.js', 'deps' => ['jquery']],
 				'wpubdp-datepicker-js' => ['path' => 'assets/jquery-ui-datepicker/jquery-ui-timepicker-addon.min.js', 'deps' => ['jquery', 'jquery-ui-core', 'jquery-ui-datepicker']],
 				'wpubdp-admin-js' => ['path' => 'assets/admin/admin.min.js', 'deps' => ['jquery', 'wpubdp-bootstrap-js', 'wpubdp-select2-js', 'wpubdp-dataTables-js', 'wp-i18n']],
 			]);
 
-			$this->localize_scripts('wpubdp-admin-js', [
+			UbdwpHelperFacade::localize_scripts('wpubdp-admin-js', [
 				'ajaxurl' => admin_url('admin-ajax.php'),
 				'translations' => array_merge(
 					UbdwpHelperFacade::getDataTableTranslation(),
@@ -174,6 +175,11 @@ class UbdwpUsersPage extends UbdwpBasePage {
 				case 'find_users':
 					UbdwpHelperFacade::validate_find_user_form($sanitized_data);
 					$results = $this->handler->get_users_by_filters($sanitized_data);
+					break;
+				case 'find_users_by_woocommerce_filters':
+					UbdwpHelperFacade::validate_woocommerce_filters( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
+					$results
+						= $this->handler->get_users_by_woocommerce_filters( $sanitized_data ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked above, check method - "verify_nonce".
 					break;
 				default:
 					wp_send_json_error(array('message' => UbdwpHelperFacade::get_error_message('select_type')));

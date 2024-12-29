@@ -45,7 +45,6 @@ class UbdwpLoader
 		add_filter('plugin_action_links_' . WPUBDP_BASE_NAME, array($this, 'action_links'));
 
 		// Initialize page objects.
-
 		$this->pages['logs'] = new UbdwpLogsPage();
 		$this->pages['users'] = new UbdwpUsersPage();
 	}
@@ -156,49 +155,14 @@ class UbdwpLoader
 	protected function register_common_admin_styles(string $hook_suffix): void
 	{
 		if (UbdwpHelperFacade::is_plugin_page($hook_suffix)) {
-			wp_enqueue_style(
-				'wpubdp-bootstrap-css',
-				WPUBDP_PLUGIN_URL . 'assets/bootstrap/bootstrap.min.css',
-				array(),
-				WPUBDP_PLUGIN_VERSION
-			);
-
-			wp_enqueue_style(
-				'wpubdp-select2-css',
-				WPUBDP_PLUGIN_URL . 'assets/select2/select2.min.css',
-				array(),
-				WPUBDP_PLUGIN_VERSION
-			);
-
-			wp_enqueue_style(
-				'wpubdp-jquery-ui-css',
-				WPUBDP_PLUGIN_URL . 'assets/jquery-ui/jquery-ui.css',
-				array(),
-				WPUBDP_PLUGIN_VERSION
-			);
-
-			wp_enqueue_style(
-				'wpubdp-jquery-ui-timepicker-addon-css',
-				WPUBDP_PLUGIN_URL
-				. 'assets/jquery-ui-datepicker/jquery-ui-timepicker-addon.min.css',
-				array( 'wpubdp-jquery-ui-css' ),
-				WPUBDP_PLUGIN_VERSION
-			);
-
-			wp_enqueue_style(
-				'wpubdp-dataTables-css',
-				WPUBDP_PLUGIN_URL
-				. 'assets/dataTables/datatables.min.css',
-				array(),
-				WPUBDP_PLUGIN_VERSION
-			);
-
-			wp_enqueue_style(
-				'wpubdp-admin-css',
-				WPUBDP_PLUGIN_URL . 'assets/admin/admin.min.css',
-				array(),
-				WPUBDP_PLUGIN_VERSION
-			);
+			UbdwpHelperFacade::register_common_styles([
+				'wpubdp-bootstrap-css' => ['path' => 'assets/bootstrap/bootstrap.min.css'],
+				'wpubdp-select2-css' => ['path' => 'assets/select2/select2.min.css'],
+				'wpubdp-jquery-ui-css' => ['path' => 'assets/jquery-ui/jquery-ui.css'],
+				'wpubdp-jquery-ui-timepicker-addon-css' => ['path' => 'assets/jquery-ui-datepicker/jquery-ui-timepicker-addon.min.css', array( 'wpubdp-jquery-ui-css' )],
+				'wpubdp-dataTables-css' => ['path' => 'assets/dataTables/datatables.min.css'],
+				'wpubdp-admin-css' => ['path' => 'assets/admin/admin.min.css'],
+			]);
 		}
 	}
 
@@ -210,8 +174,9 @@ class UbdwpLoader
 	protected function register_common_admin_scripts(string $hook_suffix): void
 	{
 		if (UbdwpHelperFacade::is_plugin_page($hook_suffix)) {
-			wp_register_script('wpubdp-dataTables-js', WPUBDP_PLUGIN_URL . 'assets/dataTables/datatables.min.js', array('jquery'), WPUBDP_PLUGIN_VERSION, true);
-			wp_enqueue_script('wpubdp-dataTables-js');
+			UbdwpHelperFacade::register_common_scripts([
+				'wpubdp-dataTables-js' => ['path' => 'assets/dataTables/datatables.min.js', 'deps' => ['jquery']],
+			]);
 		}
 	}
 }

@@ -8,7 +8,7 @@
 namespace UsersBulkDeleteWithPreview\Handlers;
 
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
-use UsersBulkDeleteWithPreview\Repositories\UbdwpLogsRepository;
+use UsersBulkDeleteWithPreview\Repositories\UbdwpAbstractLogsRepository;
 
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
@@ -18,7 +18,7 @@ defined('ABSPATH') || exit;
  */
 class UbdwpLogsHandler {
 
-	/** @var UbdwpLogsRepository Repository for managing logs. */
+	/** @var UbdwpAbstractLogsRepository Repository for managing logs. */
 	public $repository;
 
 	/**
@@ -27,7 +27,7 @@ class UbdwpLogsHandler {
 	 * @param int $current_user_id Current user ID.
 	 */
 	public function __construct(int $current_user_id) {
-		$this->repository = new UbdwpLogsRepository($current_user_id);
+		$this->repository = new UbdwpAbstractLogsRepository($current_user_id);
 	}
 
 	/**

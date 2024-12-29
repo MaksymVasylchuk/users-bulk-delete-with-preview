@@ -8,7 +8,7 @@
 namespace UsersBulkDeleteWithPreview\Handlers;
 
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
-use UsersBulkDeleteWithPreview\Repositories\UbdwpUsersRepository;
+use UsersBulkDeleteWithPreview\Repositories\UbdwpAbstractUsersRepository;
 
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
@@ -18,7 +18,7 @@ defined('ABSPATH') || exit;
  */
 class UbdwpUsersHandler {
 
-	/** @var UbdwpUsersRepository Repository for managing users. */
+	/** @var UbdwpAbstractUsersRepository Repository for managing users. */
 	private $repository;
 
 	/** @var int Current user ID. */
@@ -30,7 +30,7 @@ class UbdwpUsersHandler {
 	 * @param int $current_user_id Current user ID.
 	 */
 	public function __construct(int $current_user_id) {
-		$this->repository = new UbdwpUsersRepository($current_user_id);
+		$this->repository = new UbdwpAbstractUsersRepository($current_user_id);
 		$this->current_user_id = $current_user_id;
 	}
 
@@ -147,8 +147,8 @@ class UbdwpUsersHandler {
 	 *
 	 * @return array|\WP_Error List of users or error on failure.
 	 */
-	public function get_users_by_woocommerce_filters() {
-		$products = array_unique(array_map('absint', $_POST['products'] ?? array()));
+	public function get_users_by_woocommerce_filters(array $request) {
+		$products = array_unique(array_map('absint', $request['products'] ?? array()));
 
 		$user_ids = $this->repository->get_users_by_product_purchase($products);
 

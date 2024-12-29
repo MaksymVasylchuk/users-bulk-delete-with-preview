@@ -10,12 +10,13 @@ namespace UsersBulkDeleteWithPreview\Repositories;
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
+use UsersBulkDeleteWithPreview\Abstract\UbdwpAbstractBaseRepository;
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
 
 /**
  * Repository for managing user data and related operations.
  */
-class UbdwpUsersRepository extends UbdwpBaseRepository {
+class UbdwpAbstractUsersRepository extends UbdwpAbstractBaseRepository {
 
 	/**
 	 * Constructor to initialize the Users Repository.
