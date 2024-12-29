@@ -32,7 +32,6 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 	/** @var UbdwpAbstractLogsRepository Repository for logs data. */
 	private $logs_repository;
 	private $logs_handler;
-	public $current_user_id;
 	/**
 	 * Constructor to initialize the Users Page.
 	 */

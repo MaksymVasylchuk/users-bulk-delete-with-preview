@@ -8,10 +8,10 @@
 namespace UsersBulkDeleteWithPreview\Traits;
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 /**
- * Trait IsaTraitSingleton
+ * Trait UbdwpTraitSingleton
  *
  * Implements the Singleton design pattern to ensure only one instance
  * of a class using this trait exists throughout the application lifecycle.
@@ -21,9 +21,9 @@ trait UbdwpTraitSingleton {
 	/**
 	 * Holds the single instance of the class.
 	 *
-	 * @var static
+	 * @var static|null
 	 */
-	private static $instance;
+	private static ?self $instance = null;
 
 	/**
 	 * Get the single instance of the class.
@@ -33,8 +33,8 @@ trait UbdwpTraitSingleton {
 	 *
 	 * @return static The single instance of the class.
 	 */
-	public static function get_instance() {
-		if ( null === self::$instance ) {
+	public static function get_instance(): static {
+		if (self::$instance === null) {
 			self::$instance = new static();
 		}
 		return self::$instance;
@@ -55,14 +55,16 @@ trait UbdwpTraitSingleton {
 	 *
 	 * This method is private to ensure the Singleton instance cannot be cloned.
 	 */
-	private function __clone() {}
+	private function __clone(): void {}
 
 	/**
 	 * Prevent unserialization of the instance.
 	 *
 	 * This method is private to ensure the Singleton instance cannot be unserialized.
 	 */
-	public function __wakeup() {}
+	public function __wakeup(): void {
+		throw new \Exception('Cannot unserialize a singleton.');
+	}
 
 	/**
 	 * Optional initialization method.
@@ -70,5 +72,5 @@ trait UbdwpTraitSingleton {
 	 * This method can be implemented by the class using this trait to perform
 	 * setup tasks during instantiation.
 	 */
-	protected function initialize() {}
+	protected function initialize(): void {}
 }
