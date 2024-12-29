@@ -2,7 +2,7 @@
 /**
  * Views utils
  *
- * @package     UsersBulkDeleteWithPreview\Traits
+ * @package     UsersBulkDeleteWithPreview\Utils
  */
 
 namespace UsersBulkDeleteWithPreview\Utils;
@@ -56,15 +56,15 @@ class UbdwpViews {
 	 *
 	 * @param string $template_name The name of the template file to include.
 	 * @param array  $data          An associative array of data to pass to the template.
-	 * @return void|string Outputs the template content or returns an empty string if the file doesn't exist.
+	 * @return void Outputs the template content or returns an empty string if the file doesn't exist.
 	 */
-	public function include_template(string $template_name, array $data = []) {
+	public function include_template(string $template_name, array $data = []): void {
 		// Construct the full path to the template file.
 		$template_path = self::TEMPLATE_PATH . $template_name;
 
 		// Check if the template file exists.
 		if (!file_exists($template_path)) {
-			return ''; // Return an empty string if the file does not exist.
+			return; // Exit if the file does not exist.
 		}
 
 		// Create variables from the data array.

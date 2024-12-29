@@ -41,23 +41,6 @@ trait UbdwpTraitSingleton {
 	}
 
 	/**
-	 * Constructor is private to prevent direct instantiation.
-	 *
-	 * Calls the `initialize` method for additional setup, which can be defined
-	 * by the class using this trait.
-	 */
-	private function __construct() {
-		$this->initialize();
-	}
-
-	/**
-	 * Prevent cloning of the instance.
-	 *
-	 * This method is private to ensure the Singleton instance cannot be cloned.
-	 */
-	private function __clone(): void {}
-
-	/**
 	 * Prevent unserialization of the instance.
 	 *
 	 * This method is private to ensure the Singleton instance cannot be unserialized.
@@ -73,4 +56,21 @@ trait UbdwpTraitSingleton {
 	 * setup tasks during instantiation.
 	 */
 	protected function initialize(): void {}
+
+	/**
+	 * Constructor is private to prevent direct instantiation.
+	 *
+	 * Calls the `initialize` method for additional setup, which can be defined
+	 * by the class using this trait.
+	 */
+	private function __construct() {
+		$this->initialize();
+	}
+
+	/**
+	 * Prevent cloning of the instance.
+	 *
+	 * This method is private to ensure the Singleton instance cannot be cloned.
+	 */
+	private function __clone(): void {}
 }

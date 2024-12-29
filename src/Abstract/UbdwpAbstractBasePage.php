@@ -53,6 +53,29 @@ abstract class UbdwpAbstractBasePage {
 	}
 
 	/**
+	 * General AJAX request handler.
+	 *
+	 * @param string   $nonce_field Nonce field to verify.
+	 * @param string   $nonce_action Nonce action.
+	 * @param array    $capabilities Required capabilities.
+	 * @param callable $callback Callback function to handle the request.
+	 * @param string   $request_type Request type (POST or GET).
+	 * @return void
+	 */
+	public function handle_ajax_request(string $nonce_field, string $nonce_action, array $capabilities, callable $callback, string $request_type = 'POST'): void {
+		try {
+			$this->verify_nonce($nonce_field, $nonce_action, $request_type);
+			$this->check_permissions($capabilities);
+
+			$response = $callback();
+			wp_send_json_success($response);
+		} catch (\Exception $e) {
+			wp_send_json_error(['message' => UbdwpValidationFacade::get_error_message('generic_error')]);
+		}
+		wp_die();
+	}
+
+	/**
 	 * Render the page using the provided template and data.
 	 *
 	 * @param string $template_name Template file name.
@@ -115,28 +138,5 @@ abstract class UbdwpAbstractBasePage {
 				wp_die();
 			}
 		}
-	}
-
-	/**
-	 * General AJAX request handler.
-	 *
-	 * @param string   $nonce_field Nonce field to verify.
-	 * @param string   $nonce_action Nonce action.
-	 * @param array    $capabilities Required capabilities.
-	 * @param callable $callback Callback function to handle the request.
-	 * @param string   $request_type Request type (POST or GET).
-	 * @return void
-	 */
-	public function handle_ajax_request(string $nonce_field, string $nonce_action, array $capabilities, callable $callback, string $request_type = 'POST'): void {
-		try {
-			$this->verify_nonce($nonce_field, $nonce_action, $request_type);
-			$this->check_permissions($capabilities);
-
-			$response = $callback();
-			wp_send_json_success($response);
-		} catch (\Exception $e) {
-			wp_send_json_error(['message' => UbdwpValidationFacade::get_error_message('generic_error')]);
-		}
-		wp_die();
 	}
 }

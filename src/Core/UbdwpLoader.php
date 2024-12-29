@@ -63,38 +63,6 @@ class UbdwpLoader
 	}
 
 	/**
-	 * Initialize page objects from the list of page classes.
-	 *
-	 * @return void
-	 */
-	private function init_pages(): void
-	{
-		if (!empty($this->pages_for_init) && empty($this->pages)) {
-			foreach ($this->pages_for_init as $page => $page_class) {
-				$this->pages[$page] = new $page_class();
-			}
-		}
-	}
-
-	/**
-	 * Define plugin constants.
-	 *
-	 * @return void
-	 */
-	private function define_constants(): void
-	{
-		// Root directory of the plugin.
-		$plugin_root = dirname(__DIR__, 2);
-
-		// Define constants if not already defined.
-		defined('WPUBDP_PLUGIN_DIR') || define('WPUBDP_PLUGIN_DIR', $plugin_root . '/');
-		defined('WPUBDP_PLUGIN_FILE') || define('WPUBDP_PLUGIN_FILE', $plugin_root . '/ubdwp-users-bulk-delete-with-preview.php');
-		defined('WPUBDP_PLUGIN_URL') || define('WPUBDP_PLUGIN_URL', plugin_dir_url(WPUBDP_PLUGIN_FILE));
-		defined('WPUBDP_PLUGIN_VERSION') || define('WPUBDP_PLUGIN_VERSION', '1.1.1');
-		defined('WPUBDP_BASE_NAME') || define('WPUBDP_BASE_NAME', plugin_basename(WPUBDP_PLUGIN_FILE));
-	}
-
-	/**
 	 * Add admin menu and submenu pages.
 	 *
 	 * @return void
@@ -205,5 +173,37 @@ class UbdwpLoader
 				'wpubdp-dataTables-js' => ['path' => 'assets/dataTables/datatables.min.js', 'deps' => ['jquery']],
 			]);
 		}
+	}
+
+	/**
+	 * Initialize page objects from the list of page classes.
+	 *
+	 * @return void
+	 */
+	private function init_pages(): void
+	{
+		if (!empty($this->pages_for_init) && empty($this->pages)) {
+			foreach ($this->pages_for_init as $page => $page_class) {
+				$this->pages[$page] = new $page_class();
+			}
+		}
+	}
+
+	/**
+	 * Define plugin constants.
+	 *
+	 * @return void
+	 */
+	private function define_constants(): void
+	{
+		// Root directory of the plugin.
+		$plugin_root = dirname(__DIR__, 2);
+
+		// Define constants if not already defined.
+		defined('WPUBDP_PLUGIN_DIR') || define('WPUBDP_PLUGIN_DIR', $plugin_root . '/');
+		defined('WPUBDP_PLUGIN_FILE') || define('WPUBDP_PLUGIN_FILE', $plugin_root . '/ubdwp-users-bulk-delete-with-preview.php');
+		defined('WPUBDP_PLUGIN_URL') || define('WPUBDP_PLUGIN_URL', plugin_dir_url(WPUBDP_PLUGIN_FILE));
+		defined('WPUBDP_PLUGIN_VERSION') || define('WPUBDP_PLUGIN_VERSION', '1.1.1');
+		defined('WPUBDP_BASE_NAME') || define('WPUBDP_BASE_NAME', plugin_basename(WPUBDP_PLUGIN_FILE));
 	}
 }
