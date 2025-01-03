@@ -107,7 +107,7 @@ This plugin uses the following third-party libraries:
 
 == Changelog ==
 = 2.0.0 =
-*Release Date - 04 January 2025*
+*Release Date - 03 January 2025*
 
 * Updated plugin structure for better organization and maintainability.
 * Updated uk translation
