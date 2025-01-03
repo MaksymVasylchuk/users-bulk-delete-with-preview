@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 use UsersBulkDeleteWithPreview\Abstract\UbdwpAbstractBaseRepository;
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
+use UsersBulkDeleteWithPreview\Facades\UbdwpValidationFacade;
 
 /**
  * Repository for managing user data and related operations.
