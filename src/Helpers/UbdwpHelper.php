@@ -68,59 +68,6 @@ class UbdwpHelper {
 	}
 
 	/**
-	 * Build HTML options for the select dropdown.
-	 *
-	 * @param  array $all_users  List of all users.
-	 *
-	 * @return string HTML string of select options.
-	 */
-	private function build_select_options( array $all_users ): string {
-		$options = '<option value="">' . __( 'Select a user', 'users-bulk-delete-with-preview' ) . '</option>';
-
-		$options .= '<option value="remove_all_related_content">' . __( 'Remove all related content', 'users-bulk-delete-with-preview' ) . '</option>';
-
-		foreach ( $all_users as $user ) {
-			$options .= '<option value="' . esc_attr( $user->ID ) . '">' . esc_html( $user->user_login ) . '</option>';
-		}
-
-		return $options;
-	}
-
-	/**
-	 * Format a single user's data for table display.
-	 *
-	 * @param  \WP_User $user            The user object.
-	 * @param  string   $select_options  The HTML options for the select dropdown.
-	 *
-	 * @return array Formatted user data.
-	 */
-	private function format_user_data_for_table( \WP_User $user, string $select_options ): array {
-		return array(
-			'checkbox'        => '<input type="checkbox" class="user-checkbox" name="users[' . esc_attr( $user->ID ) . '][id]" value="' . esc_attr( $user->ID ) . '">',
-			'ID'              => intval( $user->ID ),
-			'user_login'      => sanitize_text_field( $user->user_login ),
-			'user_email'      => sanitize_email( $user->user_email ),
-			'user_registered' => sanitize_text_field( $user->user_registered ),
-			'user_role'       => implode( ', ', $user->roles ),
-			'select'          => $this->build_user_select_html( $user, $select_options ),
-		);
-	}
-
-	/**
-	 * Build HTML for the user select dropdown.
-	 *
-	 * @param  \WP_User $user            The user object.
-	 * @param  string   $select_options  The HTML options for the select dropdown.
-	 *
-	 * @return string The HTML string for the user select dropdown.
-	 */
-	private function build_user_select_html( \WP_User $user, string $select_options ): string {
-		return '<select class="user-select" name="users[' . esc_attr( $user->ID ) . '][reassign]">' . $select_options . '</select>' .
-		       '<input type="hidden" name="users[' . esc_attr( $user->ID ) . '][email]" value="' . esc_attr( $user->user_email ) . '">' .
-		       '<input type="hidden" name="users[' . esc_attr( $user->ID ) . '][display_name]" value="' . esc_attr( $user->display_name ) . '">';
-	}
-
-	/**
 	 * Return SVG icon for plugin.
 	 *
 	 * @return string Base64-encoded SVG icon.
@@ -240,7 +187,7 @@ class UbdwpHelper {
 	 *
 	 * @return array<string, string> Translation strings for DataTables.
 	 */
-	public function getDataTableTranslation(): array {
+	public function get_data_table_translation(): array {
 		return array(
 			'emptyTable'     => __( 'No data available in table', 'users-bulk-delete-with-preview' ),
 			'info'           => __( 'Showing _START_ to _END_ of _TOTAL_ entries', 'users-bulk-delete-with-preview' ),
@@ -259,7 +206,7 @@ class UbdwpHelper {
 	 *
 	 * @return array<string, string> Translation strings for the User table.
 	 */
-	public function getUserTableTranslation(): array {
+	public function get_user_table_translation(): array {
 		return array(
 			'id'             => __( 'ID', 'users-bulk-delete-with-preview' ),
 			'username'       => __( 'Username', 'users-bulk-delete-with-preview' ),
@@ -376,5 +323,58 @@ class UbdwpHelper {
 	 */
 	public function localize_scripts( string $script_handle, array $localizations ): void {
 		wp_localize_script( $script_handle, 'localizedData', $localizations );
+	}
+
+	/**
+	 * Build HTML options for the select dropdown.
+	 *
+	 * @param  array $all_users  List of all users.
+	 *
+	 * @return string HTML string of select options.
+	 */
+	private function build_select_options( array $all_users ): string {
+		$options = '<option value="">' . __( 'Select a user', 'users-bulk-delete-with-preview' ) . '</option>';
+
+		$options .= '<option value="remove_all_related_content">' . __( 'Remove all related content', 'users-bulk-delete-with-preview' ) . '</option>';
+
+		foreach ( $all_users as $user ) {
+			$options .= '<option value="' . esc_attr( $user->ID ) . '">' . esc_html( $user->user_login ) . '</option>';
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Format a single user's data for table display.
+	 *
+	 * @param  \WP_User $user            The user object.
+	 * @param  string   $select_options  The HTML options for the select dropdown.
+	 *
+	 * @return array Formatted user data.
+	 */
+	private function format_user_data_for_table( \WP_User $user, string $select_options ): array {
+		return array(
+			'checkbox'        => '<input type="checkbox" class="user-checkbox" name="users[' . esc_attr( $user->ID ) . '][id]" value="' . esc_attr( $user->ID ) . '">',
+			'ID'              => intval( $user->ID ),
+			'user_login'      => sanitize_text_field( $user->user_login ),
+			'user_email'      => sanitize_email( $user->user_email ),
+			'user_registered' => sanitize_text_field( $user->user_registered ),
+			'user_role'       => implode( ', ', $user->roles ),
+			'select'          => $this->build_user_select_html( $user, $select_options ),
+		);
+	}
+
+	/**
+	 * Build HTML for the user select dropdown.
+	 *
+	 * @param  \WP_User $user            The user object.
+	 * @param  string   $select_options  The HTML options for the select dropdown.
+	 *
+	 * @return string The HTML string for the user select dropdown.
+	 */
+	private function build_user_select_html( \WP_User $user, string $select_options ): string {
+		return '<select class="user-select" name="users[' . esc_attr( $user->ID ) . '][reassign]">' . $select_options . '</select>' .
+		       '<input type="hidden" name="users[' . esc_attr( $user->ID ) . '][email]" value="' . esc_attr( $user->user_email ) . '">' .
+		       '<input type="hidden" name="users[' . esc_attr( $user->ID ) . '][display_name]" value="' . esc_attr( $user->display_name ) . '">';
 	}
 }

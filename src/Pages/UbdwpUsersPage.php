@@ -91,8 +91,8 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage
 			UbdwpHelperFacade::localize_scripts('wpubdp-admin-js', [
 				'ajaxurl' => admin_url('admin-ajax.php'),
 				'translations' => array_merge(
-					UbdwpHelperFacade::getDataTableTranslation(),
-					UbdwpHelperFacade::getUserTableTranslation()
+					UbdwpHelperFacade::get_data_table_translation(),
+					UbdwpHelperFacade::get_user_table_translation()
 				),
 			]);
 		}
