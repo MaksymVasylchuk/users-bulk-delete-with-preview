@@ -30,10 +30,9 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 use UsersBulkDeleteWithPreview\Activators\UbdwpActivate;
 use UsersBulkDeleteWithPreview\Core\UbdwpLoader;
 
+register_activation_hook(__FILE__, array(UbdwpActivate::class, 'ubdwp_activate_plugin'));
 
-add_action('init', function () {
-	//Init constants, actions, filters, etc.
+add_action('plugins_loaded', function () {
+	// Initialize constants, actions, filters, etc.
 	UbdwpLoader::get_instance()->initialize();
-
-	register_activation_hook(__FILE__, array(UbdwpActivate::class, 'ubdwp_activate_plugin'));
 });
