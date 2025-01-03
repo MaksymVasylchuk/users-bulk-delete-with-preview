@@ -11,9 +11,22 @@ namespace UsersBulkDeleteWithPreview\Helpers;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class for handling helper function in the Users Bulk Delete With Preview plugin.
+ * Class for handling helper functions in the Users Bulk Delete With Preview plugin.
  */
 class UbdwpHelper {
+
+	/**
+	 * Check if the WooCommerce plugin is active.
+	 *
+	 * @return bool True if WooCommerce is active, false otherwise.
+	 */
+	public function check_if_woocommerce_is_active(): bool {
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		return is_plugin_active( 'woocommerce/woocommerce.php' ) || in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
+	}
 
 	/**
 	 * Get available user search types.
@@ -32,20 +45,6 @@ class UbdwpHelper {
 
 		return $types;
 	}
-
-	/**
-	 * Check if the WooCommerce plugin is active.
-	 *
-	 * @return bool True if WooCommerce is active, false otherwise.
-	 */
-	public function check_if_woocommerce_is_active(): bool {
-		if ( ! function_exists( 'is_plugin_active' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-
-		return is_plugin_active( 'woocommerce/woocommerce.php' ) || in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
-	}
-
 
 	/**
 	 * Prepare user data for displaying in a table.
@@ -68,16 +67,49 @@ class UbdwpHelper {
 	}
 
 	/**
-	 * Return SVG icon for plugin.
+	 * Get translation for DataTables.
 	 *
-	 * @return string Base64-encoded SVG icon.
+	 * @return array<string, string> Translation strings for DataTables.
 	 */
-	public function get_icon(): string {
-		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray"><path d="M19 13v-2h-6v2h6m-10-2V9H5v2h4m-4 4v-2H3v2h2M17 1H7c-1.1 0-2 .9-2 2v16h2v4h12v-4h2V3c0-1.1-.9-2-2-2zm0 18H7v-1h10v1zm2-4H5V3h14v12zM9 11H7V9h2v2zm6 0h-2v-2h2v2z"/></svg>';
+	public function get_data_table_translation(): array {
+		return array(
+			'emptyTable'     => __( 'No data available in table', 'users-bulk-delete-with-preview' ),
+			'info'           => __( 'Showing _START_ to _END_ of _TOTAL_ entries', 'users-bulk-delete-with-preview' ),
+			'infoEmpty'      => __( 'Showing 0 to 0 of 0 entries', 'users-bulk-delete-with-preview' ),
+			'infoFiltered'   => __( '(filtered from _MAX_ total entries)', 'users-bulk-delete-with-preview' ),
+			'lengthMenu'     => __( 'Show _MENU_ entries', 'users-bulk-delete-with-preview' ),
+			'loadingRecords' => __( 'Loading...', 'users-bulk-delete-with-preview' ),
+			'processing'     => __( 'Processing...', 'users-bulk-delete-with-preview' ),
+			'search'         => __( 'Search', 'users-bulk-delete-with-preview' ),
+			'zeroRecords'    => __( 'No matching records found', 'users-bulk-delete-with-preview' ),
+		);
+	}
 
-		$encoded_logo = base64_encode( $svg ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Used for data URI.
+	/**
+	 * Get translation for User table.
+	 *
+	 * @return array<string, string> Translation strings for the User table.
+	 */
+	public function get_user_table_translation(): array {
+		return array(
+			'id'             => __( 'ID', 'users-bulk-delete-with-preview' ),
+			'username'       => __( 'Username', 'users-bulk-delete-with-preview' ),
+			'email'          => __( 'Email', 'users-bulk-delete-with-preview' ),
+			'registered'     => __( 'Registered', 'users-bulk-delete-with-preview' ),
+			'role'           => __( 'Role', 'users-bulk-delete-with-preview' ),
+			'assignContent'  => __( 'Assign related content to user', 'users-bulk-delete-with-preview' ),
+		);
+	}
 
-		return 'data:image/svg+xml;base64,' . $encoded_logo;
+	/**
+	 * Check if the current page is a plugin-specific page.
+	 *
+	 * @param string $hook_suffix The hook suffix for the current admin page.
+	 *
+	 * @return bool True if the page is a plugin-specific page, otherwise false.
+	 */
+	public function is_plugin_page( string $hook_suffix ): bool {
+		return $hook_suffix === 'toplevel_page_ubdwp_admin' || ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'ubdwp_admin', 'ubdwp_admin_logs' ), true ) );
 	}
 
 	/**
@@ -109,7 +141,7 @@ class UbdwpHelper {
 					break;
 
 				case 'user_search':
-				case 'products': // Added 'products[]' sanitization
+				case 'products':
 					$sanitized_data[ $key ] = array_unique( array_map( 'absint', $value ) );
 					break;
 
@@ -118,7 +150,6 @@ class UbdwpHelper {
 					break;
 
 				default:
-					// Fallback for unexpected keys
 					$sanitized_data[ $key ] = sanitize_text_field( $value );
 					break;
 			}
@@ -173,7 +204,6 @@ class UbdwpHelper {
 					break;
 
 				default:
-					// Fallback for unexpected keys
 					$sanitized_data[ $key ] = sanitize_text_field( $value );
 					break;
 			}
@@ -183,49 +213,16 @@ class UbdwpHelper {
 	}
 
 	/**
-	 * Get translation for DataTables.
+	 * Return SVG icon for plugin.
 	 *
-	 * @return array<string, string> Translation strings for DataTables.
+	 * @return string Base64-encoded SVG icon.
 	 */
-	public function get_data_table_translation(): array {
-		return array(
-			'emptyTable'     => __( 'No data available in table', 'users-bulk-delete-with-preview' ),
-			'info'           => __( 'Showing _START_ to _END_ of _TOTAL_ entries', 'users-bulk-delete-with-preview' ),
-			'infoEmpty'      => __( 'Showing 0 to 0 of 0 entries', 'users-bulk-delete-with-preview' ),
-			'infoFiltered'   => __( '(filtered from _MAX_ total entries)', 'users-bulk-delete-with-preview' ),
-			'lengthMenu'     => __( 'Show _MENU_ entries', 'users-bulk-delete-with-preview' ),
-			'loadingRecords' => __( 'Loading...', 'users-bulk-delete-with-preview' ),
-			'processing'     => __( 'Processing...', 'users-bulk-delete-with-preview' ),
-			'search'         => __( 'Search', 'users-bulk-delete-with-preview' ),
-			'zeroRecords'    => __( 'No matching records found', 'users-bulk-delete-with-preview' ),
-		);
-	}
+	public function get_icon(): string {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray"><path d="M19 13v-2h-6v2h6m-10-2V9H5v2h4m-4 4v-2H3v2h2M17 1H7c-1.1 0-2 .9-2 2v16h2v4h12v-4h2V3c0-1.1-.9-2-2-2zm0 18H7v-1h10v1zm2-4H5V3h14v12zM9 11H7V9h2v2zm6 0h-2v-2h2v2z"/></svg>';
 
-	/**
-	 * Get translation for User table.
-	 *
-	 * @return array<string, string> Translation strings for the User table.
-	 */
-	public function get_user_table_translation(): array {
-		return array(
-			'id'             => __( 'ID', 'users-bulk-delete-with-preview' ),
-			'username'       => __( 'Username', 'users-bulk-delete-with-preview' ),
-			'email'          => __( 'Email', 'users-bulk-delete-with-preview' ),
-			'registered'     => __( 'Registered', 'users-bulk-delete-with-preview' ),
-			'role'           => __( 'Role', 'users-bulk-delete-with-preview' ),
-			'assignContent'  => __( 'Assign related content to user', 'users-bulk-delete-with-preview' ),
-		);
-	}
+		$encoded_logo = base64_encode( $svg ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Used for data URI.
 
-	/**
-	 * Check if the current page is a plugin-specific page.
-	 *
-	 * @param string $hook_suffix The hook suffix for the current admin page.
-	 *
-	 * @return bool True if the page is a plugin-specific page, otherwise false.
-	 */
-	public function is_plugin_page( string $hook_suffix ): bool {
-		return $hook_suffix === 'toplevel_page_ubdwp_admin' || ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'ubdwp_admin', 'ubdwp_admin_logs' ), true ) );
+		return 'data:image/svg+xml;base64,' . $encoded_logo;
 	}
 
 	/**
@@ -273,7 +270,6 @@ class UbdwpHelper {
 
 		return $map[ $comparison ] ?? '=';
 	}
-
 
 	/**
 	 * Register and enqueue common scripts.
