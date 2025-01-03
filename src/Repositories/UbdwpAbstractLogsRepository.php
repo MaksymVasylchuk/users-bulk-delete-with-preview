@@ -8,23 +8,21 @@
 namespace UsersBulkDeleteWithPreview\Repositories;
 
 // Exit if accessed directly.
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 use UsersBulkDeleteWithPreview\Abstract\UbdwpAbstractBaseRepository;
 
 /**
  * Repository for managing log records in the Users Bulk Delete With Preview plugin.
  */
-class UbdwpAbstractLogsRepository extends UbdwpAbstractBaseRepository
-{
+class UbdwpAbstractLogsRepository extends UbdwpAbstractBaseRepository {
 	/**
 	 * Constructor to initialize the Logs Repository.
 	 *
 	 * @param int $current_user_id Current user ID.
 	 */
-	public function __construct(int $current_user_id)
-	{
-		parent::__construct('ubdwp_logs', $current_user_id);
+	public function __construct( int $current_user_id ) {
+		parent::__construct( 'ubdwp_logs', $current_user_id );
 	}
 
 	/**
@@ -34,26 +32,24 @@ class UbdwpAbstractLogsRepository extends UbdwpAbstractBaseRepository
 	 *
 	 * @return void
 	 */
-	public function insert_log(string $user_data): void
-	{
-		$this->insert([
-			'user_id' => $this->current_user_id,
+	public function insert_log( string $user_data ): void {
+		$this->insert( [
+			'user_id'           => $this->current_user_id,
 			'user_deleted_data' => $user_data,
-			'deletion_time' => current_time('mysql'),
-		]);
+			'deletion_time'     => current_time( 'mysql' ),
+		] );
 	}
 
 	/**
 	 * Retrieve logs with optional filters, pagination, and sorting.
 	 *
-	 * @param string $where  WHERE clause for filtering log records.
-	 * @param int    $limit  Maximum number of records to retrieve.
-	 * @param int    $offset Number of records to skip.
+	 * @param string $where WHERE clause for filtering log records.
+	 * @param int $limit Maximum number of records to retrieve.
+	 * @param int $offset Number of records to skip.
 	 *
 	 * @return array<int, object> Logs as an array of result objects.
 	 */
-	public function get_logs(string $where, int $limit, int $offset): array
-	{
+	public function get_logs( string $where, int $limit, int $offset ): array {
 		$query = "
             SELECT t.ID, t.user_id, u.display_name, t.user_deleted_data, t.deletion_time
             FROM {$this->table_name} t
@@ -63,7 +59,7 @@ class UbdwpAbstractLogsRepository extends UbdwpAbstractBaseRepository
             LIMIT %d OFFSET %d
         ";
 
-		return $this->select($query, [$limit, $offset]);
+		return $this->select( $query, [ $limit, $offset ] );
 	}
 
 	/**
@@ -71,8 +67,7 @@ class UbdwpAbstractLogsRepository extends UbdwpAbstractBaseRepository
 	 *
 	 * @return int Total count of log records.
 	 */
-	public function get_total_record_count(): int
-	{
+	public function get_total_record_count(): int {
 		return $this->count();
 	}
 
@@ -83,8 +78,7 @@ class UbdwpAbstractLogsRepository extends UbdwpAbstractBaseRepository
 	 *
 	 * @return int Filtered count of log records.
 	 */
-	public function get_filtered_record_count(string $where): int
-	{
+	public function get_filtered_record_count( string $where ): int {
 		$query = "
             SELECT COUNT(*)
             FROM {$this->table_name} t
@@ -92,7 +86,7 @@ class UbdwpAbstractLogsRepository extends UbdwpAbstractBaseRepository
             WHERE 1=1 {$where}
         ";
 
-		return (int) $this->get_var($query);
+		return (int) $this->get_var( $query );
 	}
 
 	/**
@@ -102,16 +96,15 @@ class UbdwpAbstractLogsRepository extends UbdwpAbstractBaseRepository
 	 *
 	 * @return string WHERE clause for the search term.
 	 */
-	public function build_where_clause(string $search_value): string
-	{
-		if (empty($search_value)) {
+	public function build_where_clause( string $search_value ): string {
+		if ( empty( $search_value ) ) {
 			return '';
 		}
 
 		return $this->wpdb->prepare(
 			'AND (u.display_name LIKE %s OR t.user_deleted_data LIKE %s)',
-			'%' . $this->wpdb->esc_like($search_value) . '%',
-			'%' . $this->wpdb->esc_like($search_value) . '%'
+			'%' . $this->wpdb->esc_like( $search_value ) . '%',
+			'%' . $this->wpdb->esc_like( $search_value ) . '%'
 		);
 	}
 }

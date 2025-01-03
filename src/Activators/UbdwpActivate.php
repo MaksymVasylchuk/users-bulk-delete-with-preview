@@ -8,7 +8,7 @@
 namespace UsersBulkDeleteWithPreview\Activators;
 
 // Exit if accessed directly.
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class for handling plugin activation logic.
@@ -45,10 +45,10 @@ class UbdwpActivate {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
 		// Create or update the database table.
-		dbDelta($sql);
+		dbDelta( $sql );
 
 		// Set the plugin version in the options table.
-		add_option('ubdwp_plugin_db_version', WPUBDP_PLUGIN_VERSION);
+		add_option( 'ubdwp_plugin_db_version', WPUBDP_PLUGIN_VERSION );
 	}
 
 	/**
@@ -58,26 +58,26 @@ class UbdwpActivate {
 	 */
 	private static function check_environment(): void {
 		// Check if the PHP version is at least 8.0.
-		if (version_compare(PHP_VERSION, '8.0', '<')) {
+		if ( version_compare( PHP_VERSION, '8.0', '<' ) ) {
 			wp_die(
 				esc_html__(
 					'This plugin requires PHP version 8.0 or higher.',
 					'users-bulk-delete-with-preview'
 				),
-				esc_html__('Plugin Activation Error', 'users-bulk-delete-with-preview'),
-				['back_link' => true]
+				esc_html__( 'Plugin Activation Error', 'users-bulk-delete-with-preview' ),
+				[ 'back_link' => true ]
 			);
 		}
 
 		// Check if the WordPress version is at least 6.2.
-		if (version_compare(get_bloginfo('version'), '6.2', '<')) {
+		if ( version_compare( get_bloginfo( 'version' ), '6.2', '<' ) ) {
 			wp_die(
 				esc_html__(
 					'You must update WordPress to version 6.2 or higher to use this plugin.',
 					'users-bulk-delete-with-preview'
 				),
-				esc_html__('Plugin Activation Error', 'users-bulk-delete-with-preview'),
-				['back_link' => true]
+				esc_html__( 'Plugin Activation Error', 'users-bulk-delete-with-preview' ),
+				[ 'back_link' => true ]
 			);
 		}
 	}

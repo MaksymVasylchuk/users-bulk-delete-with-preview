@@ -8,7 +8,7 @@
 namespace UsersBulkDeleteWithPreview\Abstract;
 
 // Exit if accessed directly.
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract base class for a facade pattern.
@@ -27,30 +27,32 @@ abstract class UbdwpAbstractFacade {
 	 * Get the singleton instance of the specified class.
 	 *
 	 * @param string $class_name The name of the class to instantiate.
+	 *
 	 * @return object The singleton instance of the class.
 	 */
-	public static function get_instance(string $class_name): object {
-		if (!isset(self::$instances[$class_name])) {
-			self::$instances[$class_name] = new $class_name();
+	public static function get_instance( string $class_name ): object {
+		if ( ! isset( self::$instances[ $class_name ] ) ) {
+			self::$instances[ $class_name ] = new $class_name();
 		}
 
-		return self::$instances[$class_name];
+		return self::$instances[ $class_name ];
 	}
 
 	/**
 	 * Handle static method calls by delegating them to the singleton instance.
 	 *
-	 * @param string $name      The name of the method to call.
-	 * @param array  $arguments The arguments to pass to the method.
+	 * @param string $name The name of the method to call.
+	 * @param array $arguments The arguments to pass to the method.
+	 *
 	 * @return mixed The result of the method call.
 	 * @throws \Exception If the method does not exist in the class.
 	 */
-	public static function __callStatic(string $name, array $arguments): mixed {
+	public static function __callStatic( string $name, array $arguments ): mixed {
 		$class_name = static::get_class_name();
-		$instance = self::get_instance($class_name);
+		$instance   = self::get_instance( $class_name );
 
-		if (method_exists($instance, $name)) {
-			return call_user_func_array([$instance, $name], $arguments);
+		if ( method_exists( $instance, $name ) ) {
+			return call_user_func_array( [ $instance, $name ], $arguments );
 		}
 
 		throw new \Exception(
@@ -60,8 +62,8 @@ abstract class UbdwpAbstractFacade {
 					'Method %1$s does not exist in class %2$s.',
 					'users-bulk-delete-with-preview'
 				),
-				esc_html($name),
-				esc_html($class_name)
+				esc_html( $name ),
+				esc_html( $class_name )
 			)
 		);
 	}

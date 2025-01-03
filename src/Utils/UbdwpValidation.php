@@ -8,7 +8,7 @@
 namespace UsersBulkDeleteWithPreview\Utils;
 
 // Exit if accessed directly.
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class for handling validation logic in the Users Bulk Delete With Preview plugin.
@@ -18,14 +18,14 @@ class UbdwpValidation {
 	/**
 	 * Retrieve error messages based on the provided error code.
 	 *
-	 * @param  string $code  The error code.
+	 * @param string $code The error code.
 	 *
 	 * @return string The corresponding error message.
 	 */
-	public function get_error_message(string $code): string {
+	public function get_error_message( string $code ): string {
 		$messages = $this->get_error_messages();
 
-		return $messages[$code] ?? esc_html__(
+		return $messages[ $code ] ?? esc_html__(
 			'An unknown error occurred.',
 			'users-bulk-delete-with-preview'
 		);
@@ -34,82 +34,83 @@ class UbdwpValidation {
 	/**
 	 * Handle WP_Error responses and send a JSON error response.
 	 *
-	 * @param  \WP_Error|array $results  The WP_Error object or an array of results.
+	 * @param \WP_Error|array $results The WP_Error object or an array of results.
 	 *
 	 * @return void
 	 */
-	public function handle_wp_error(\WP_Error|array $results): void {
-		if (!is_wp_error($results)) {
+	public function handle_wp_error( \WP_Error|array $results ): void {
+		if ( ! is_wp_error( $results ) ) {
 			return;
 		}
 
-		$this->send_error_response($results->get_error_code());
+		$this->send_error_response( $results->get_error_code() );
 	}
 
 	/**
 	 * Validate the user search request for existing users.
 	 *
-	 * @param  array $request  The request data.
+	 * @param array $request The request data.
 	 *
 	 * @return void
 	 */
-	public function validate_user_search_for_existing_users(array $request): void {
-		$user_search = array_unique(array_map('intval', $request['user_search'] ?? []));
+	public function validate_user_search_for_existing_users( array $request ): void {
+		$user_search = array_unique( array_map( 'intval', $request['user_search'] ?? [] ) );
 
-		if (empty($user_search)) {
-			$this->send_error_response('no_users_found');
+		if ( empty( $user_search ) ) {
+			$this->send_error_response( 'no_users_found' );
 		}
 	}
 
 	/**
 	 * Validate the form for finding users based on various criteria.
 	 *
-	 * @param  array $request  The request data.
+	 * @param array $request The request data.
 	 *
 	 * @return void
 	 */
-	public function validate_find_user_form(array $request): void {
-		$user_role         = array_unique(array_map('sanitize_text_field', $request['user_role'] ?? []));
-		$user_email        = sanitize_text_field($request['user_email'] ?? '');
-		$registration_date = sanitize_text_field($request['registration_date'] ?? '');
-		$user_meta         = sanitize_text_field($request['user_meta'] ?? '');
-		$user_meta_value   = sanitize_text_field($request['user_meta_value'] ?? '');
+	public function validate_find_user_form( array $request ): void {
+		$user_role         = array_unique( array_map( 'sanitize_text_field', $request['user_role'] ?? [] ) );
+		$user_email        = sanitize_text_field( $request['user_email'] ?? '' );
+		$registration_date = sanitize_text_field( $request['registration_date'] ?? '' );
+		$user_meta         = sanitize_text_field( $request['user_meta'] ?? '' );
+		$user_meta_value   = sanitize_text_field( $request['user_meta_value'] ?? '' );
 
 		if (
-			empty($user_role) &&
-			empty($user_email) &&
-			empty($registration_date) &&
-			(empty($user_meta) || empty($user_meta_value))
+			empty( $user_role ) &&
+			empty( $user_email ) &&
+			empty( $registration_date ) &&
+			( empty( $user_meta ) || empty( $user_meta_value ) )
 		) {
-			$this->send_error_response('at_least_one_required');
+			$this->send_error_response( 'at_least_one_required' );
 		}
 	}
 
 	/**
 	 * Validate WooCommerce filters in the request.
 	 *
-	 * @param  array $request  The request data.
+	 * @param array $request The request data.
 	 *
 	 * @return void
 	 */
-	public function validate_woocommerce_filters(array $request): void {
-		$products = array_unique(array_map('intval', $request['products'] ?? []));
+	public function validate_woocommerce_filters( array $request ): void {
+		$products = array_unique( array_map( 'intval', $request['products'] ?? [] ) );
 
-		if (empty($products)) {
-			$this->send_error_response('at_least_one_required');
+		if ( empty( $products ) ) {
+			$this->send_error_response( 'at_least_one_required' );
 		}
 	}
 
 	/**
 	 * Validate and sanitize a positive integer value.
 	 *
-	 * @param mixed $value   Input value to validate.
-	 * @param int   $default Default value if validation fails.
+	 * @param mixed $value Input value to validate.
+	 * @param int $default Default value if validation fails.
 	 *
 	 * @return int Validated positive integer.
 	 */
-	public function validate_positive_integer($value, int $default): int {
-		$value = intval($value);
+	public function validate_positive_integer( $value, int $default ): int {
+		$value = intval( $value );
+
 		return $value > 0 ? $value : $default;
 	}
 
@@ -166,14 +167,14 @@ class UbdwpValidation {
 	/**
 	 * Send JSON error response with the given error code.
 	 *
-	 * @param  string $error_code  The error code.
+	 * @param string $error_code The error code.
 	 *
 	 * @return void
 	 */
-	private function send_error_response(string $error_code): void {
-		wp_send_json_error([
-			'message' => $this->get_error_message($error_code),
-		]);
+	private function send_error_response( string $error_code ): void {
+		wp_send_json_error( [
+			'message' => $this->get_error_message( $error_code ),
+		] );
 		wp_die();
 	}
 }

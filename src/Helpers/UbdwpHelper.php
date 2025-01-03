@@ -49,8 +49,8 @@ class UbdwpHelper {
 	/**
 	 * Prepare user data for displaying in a table.
 	 *
-	 * @param  array $users      List of WP_User objects.
-	 * @param  mixed $repository The user repository for retrieving additional data.
+	 * @param array $users List of WP_User objects.
+	 * @param mixed $repository The user repository for retrieving additional data.
 	 *
 	 * @return array Formatted user data for table display.
 	 */
@@ -92,12 +92,12 @@ class UbdwpHelper {
 	 */
 	public function get_user_table_translation(): array {
 		return array(
-			'id'             => __( 'ID', 'users-bulk-delete-with-preview' ),
-			'username'       => __( 'Username', 'users-bulk-delete-with-preview' ),
-			'email'          => __( 'Email', 'users-bulk-delete-with-preview' ),
-			'registered'     => __( 'Registered', 'users-bulk-delete-with-preview' ),
-			'role'           => __( 'Role', 'users-bulk-delete-with-preview' ),
-			'assignContent'  => __( 'Assign related content to user', 'users-bulk-delete-with-preview' ),
+			'id'            => __( 'ID', 'users-bulk-delete-with-preview' ),
+			'username'      => __( 'Username', 'users-bulk-delete-with-preview' ),
+			'email'         => __( 'Email', 'users-bulk-delete-with-preview' ),
+			'registered'    => __( 'Registered', 'users-bulk-delete-with-preview' ),
+			'role'          => __( 'Role', 'users-bulk-delete-with-preview' ),
+			'assignContent' => __( 'Assign related content to user', 'users-bulk-delete-with-preview' ),
 		);
 	}
 
@@ -109,7 +109,10 @@ class UbdwpHelper {
 	 * @return bool True if the page is a plugin-specific page, otherwise false.
 	 */
 	public function is_plugin_page( string $hook_suffix ): bool {
-		return $hook_suffix === 'toplevel_page_ubdwp_admin' || ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'ubdwp_admin', 'ubdwp_admin_logs' ), true ) );
+		return $hook_suffix === 'toplevel_page_ubdwp_admin' || ( isset( $_GET['page'] ) && in_array( $_GET['page'], array(
+					'ubdwp_admin',
+					'ubdwp_admin_logs'
+				), true ) );
 	}
 
 	/**
@@ -154,6 +157,7 @@ class UbdwpHelper {
 					break;
 			}
 		}
+
 		return $sanitized_data;
 	}
 
@@ -312,7 +316,7 @@ class UbdwpHelper {
 	/**
 	 * Localize scripts with provided data.
 	 *
-	 * @param string                $script_handle Script handle to localize.
+	 * @param string $script_handle Script handle to localize.
 	 * @param array<string, mixed> $localizations Data to localize the script with.
 	 *
 	 * @return void
@@ -324,7 +328,7 @@ class UbdwpHelper {
 	/**
 	 * Build HTML options for the select dropdown.
 	 *
-	 * @param  array $all_users  List of all users.
+	 * @param array $all_users List of all users.
 	 *
 	 * @return string HTML string of select options.
 	 */
@@ -343,8 +347,8 @@ class UbdwpHelper {
 	/**
 	 * Format a single user's data for table display.
 	 *
-	 * @param  \WP_User $user            The user object.
-	 * @param  string   $select_options  The HTML options for the select dropdown.
+	 * @param \WP_User $user The user object.
+	 * @param string $select_options The HTML options for the select dropdown.
 	 *
 	 * @return array Formatted user data.
 	 */
@@ -363,8 +367,8 @@ class UbdwpHelper {
 	/**
 	 * Build HTML for the user select dropdown.
 	 *
-	 * @param  \WP_User $user            The user object.
-	 * @param  string   $select_options  The HTML options for the select dropdown.
+	 * @param \WP_User $user The user object.
+	 * @param string $select_options The HTML options for the select dropdown.
 	 *
 	 * @return string The HTML string for the user select dropdown.
 	 */

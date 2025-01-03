@@ -8,7 +8,7 @@
 namespace UsersBulkDeleteWithPreview\Pages;
 
 // Exit if accessed directly.
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 use UsersBulkDeleteWithPreview\Abstract\UbdwpAbstractBasePage;
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
@@ -19,8 +19,7 @@ use UsersBulkDeleteWithPreview\Facades\UbdwpValidationFacade;
 /**
  * Class for managing the Users Page.
  */
-class UbdwpUsersPage extends UbdwpAbstractBasePage
-{
+class UbdwpUsersPage extends UbdwpAbstractBasePage {
 	/**
 	 * Handler for user actions.
 	 *
@@ -38,12 +37,11 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage
 	/**
 	 * Constructor to initialize the Users Page.
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$current_user_id = $this->get_current_user_id();
 
-		$this->handler = new UbdwpUsersHandler($current_user_id);
-		$this->logs_handler = new UbdwpLogsHandler($current_user_id);
+		$this->handler      = new UbdwpUsersHandler( $current_user_id );
+		$this->logs_handler = new UbdwpLogsHandler( $current_user_id );
 
 		$this->register_ajax_calls();
 	}
@@ -53,22 +51,21 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage
 	 *
 	 * @return void
 	 */
-	public function render(): void
-	{
+	public function render(): void {
 		$products = [];
 
-		if (UbdwpHelperFacade::check_if_woocommerce_is_active()) {
-			$products = wc_get_products(['limit' => -1]);
+		if ( UbdwpHelperFacade::check_if_woocommerce_is_active() ) {
+			$products = wc_get_products( [ 'limit' => - 1 ] );
 		}
 
 		$data = [
-			'title' => __('Users Management', 'users-bulk-delete-with-preview'),
-			'roles' => wp_roles()->roles,
-			'types' => UbdwpHelperFacade::get_types_of_user_search(),
+			'title'    => __( 'Users Management', 'users-bulk-delete-with-preview' ),
+			'roles'    => wp_roles()->roles,
+			'types'    => UbdwpHelperFacade::get_types_of_user_search(),
 			'products' => $products,
 		];
 
-		$this->render_template('admin-page.php', $data);
+		$this->render_template( 'admin-page.php', $data );
 	}
 
 	/**
@@ -78,23 +75,34 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage
 	 *
 	 * @return void
 	 */
-	public function register_admin_scripts(string $hook_suffix): void
-	{
-		if ($hook_suffix === 'toplevel_page_ubdwp_admin') {
-			UbdwpHelperFacade::register_common_scripts([
-				'wpubdp-bootstrap-js' => ['path' => 'assets/bootstrap/bootstrap.min.js', 'deps' => ['jquery']],
-				'wpubdp-select2-js' => ['path' => 'assets/select2/select2.min.js', 'deps' => ['jquery']],
-				'wpubdp-datepicker-js' => ['path' => 'assets/jquery-ui-datepicker/jquery-ui-timepicker-addon.min.js', 'deps' => ['jquery', 'jquery-ui-core', 'jquery-ui-datepicker']],
-				'wpubdp-admin-js' => ['path' => 'assets/admin/admin.min.js', 'deps' => ['jquery', 'wpubdp-bootstrap-js', 'wpubdp-select2-js', 'wpubdp-dataTables-js', 'wp-i18n']],
-			]);
+	public function register_admin_scripts( string $hook_suffix ): void {
+		if ( $hook_suffix === 'toplevel_page_ubdwp_admin' ) {
+			UbdwpHelperFacade::register_common_scripts( [
+				'wpubdp-bootstrap-js'  => [ 'path' => 'assets/bootstrap/bootstrap.min.js', 'deps' => [ 'jquery' ] ],
+				'wpubdp-select2-js'    => [ 'path' => 'assets/select2/select2.min.js', 'deps' => [ 'jquery' ] ],
+				'wpubdp-datepicker-js' => [
+					'path' => 'assets/jquery-ui-datepicker/jquery-ui-timepicker-addon.min.js',
+					'deps' => [ 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker' ]
+				],
+				'wpubdp-admin-js'      => [
+					'path' => 'assets/admin/admin.min.js',
+					'deps' => [
+						'jquery',
+						'wpubdp-bootstrap-js',
+						'wpubdp-select2-js',
+						'wpubdp-dataTables-js',
+						'wp-i18n'
+					]
+				],
+			] );
 
-			UbdwpHelperFacade::localize_scripts('wpubdp-admin-js', [
-				'ajaxurl' => admin_url('admin-ajax.php'),
+			UbdwpHelperFacade::localize_scripts( 'wpubdp-admin-js', [
+				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
 				'translations' => array_merge(
 					UbdwpHelperFacade::get_data_table_translation(),
 					UbdwpHelperFacade::get_user_table_translation()
 				),
-			]);
+			] );
 		}
 	}
 
@@ -103,23 +111,22 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage
 	 *
 	 * @return void
 	 */
-	public function search_existing_users_ajax(): void
-	{
+	public function search_existing_users_ajax(): void {
 		$capabilities = [
 			self::MANAGE_OPTIONS_CAP,
 			self::LIST_USERS_CAP,
 		];
 
-		$this->handle_ajax_request('nonce', 'search_user_existing_nonce', $capabilities, function () {
+		$this->handle_ajax_request( 'nonce', 'search_user_existing_nonce', $capabilities, function () {
 			$search_data = [
-				'q' => sanitize_text_field($_POST['q'] ?? ''),
-				'select_all' => filter_var($_POST['select_all'] ?? false, FILTER_VALIDATE_BOOLEAN),
+				'q'          => sanitize_text_field( $_POST['q'] ?? '' ),
+				'select_all' => filter_var( $_POST['select_all'] ?? false, FILTER_VALIDATE_BOOLEAN ),
 			];
 
-			$results = $this->handler->search_users_ajax($search_data);
+			$results = $this->handler->search_users_ajax( $search_data );
 
-			return ['results' => $results];
-		});
+			return [ 'results' => $results ];
+		} );
 	}
 
 	/**
@@ -127,20 +134,19 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage
 	 *
 	 * @return void
 	 */
-	public function search_usermeta_ajax(): void
-	{
+	public function search_usermeta_ajax(): void {
 		$capabilities = [
 			self::MANAGE_OPTIONS_CAP,
 			self::LIST_USERS_CAP,
 		];
 
-		$this->handle_ajax_request('nonce', 'search_user_meta_nonce', $capabilities, function () {
+		$this->handle_ajax_request( 'nonce', 'search_user_meta_nonce', $capabilities, function () {
 			$sanitized_data = [
-				'q' => sanitize_text_field($_POST['q'] ?? ''),
+				'q' => sanitize_text_field( $_POST['q'] ?? '' ),
 			];
 
-			return $this->handler->search_usermeta_ajax($sanitized_data);
-		});
+			return $this->handler->search_usermeta_ajax( $sanitized_data );
+		} );
 	}
 
 	/**
@@ -148,27 +154,26 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage
 	 *
 	 * @return void
 	 */
-	public function search_users_for_delete_ajax(): void
-	{
+	public function search_users_for_delete_ajax(): void {
 		$capabilities = [
 			self::MANAGE_OPTIONS_CAP,
 			self::LIST_USERS_CAP,
 		];
 
-		$this->handle_ajax_request('find_users_nonce', 'find_users_nonce', $capabilities, function () {
-			$type = sanitize_text_field($_POST['filter_type'] ?? '');
+		$this->handle_ajax_request( 'find_users_nonce', 'find_users_nonce', $capabilities, function () {
+			$type = sanitize_text_field( $_POST['filter_type'] ?? '' );
 
-			if (empty($type)) {
-				wp_send_json_error(['message' => UbdwpValidationFacade::get_error_message('select_type')]);
+			if ( empty( $type ) ) {
+				wp_send_json_error( [ 'message' => UbdwpValidationFacade::get_error_message( 'select_type' ) ] );
 				wp_die();
 			}
 
-			$results = $this->handler->search_users_for_delete_ajax($type, $_POST);
+			$results = $this->handler->search_users_for_delete_ajax( $type, $_POST );
 
-			UbdwpValidationFacade::handle_wp_error($results);
+			UbdwpValidationFacade::handle_wp_error( $results );
 
 			return $results;
-		});
+		} );
 	}
 
 	/**
@@ -176,42 +181,41 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage
 	 *
 	 * @return void
 	 */
-	public function delete_users_action(): void
-	{
+	public function delete_users_action(): void {
 		$capabilities = [
 			self::MANAGE_OPTIONS_CAP,
 			self::LIST_USERS_CAP,
 			self::DELETE_USERS_CAP,
 		];
 
-		$this->handle_ajax_request('delete_users_nonce', 'delete_users_nonce', $capabilities, function () {
-			$sanitized_users = array_filter(array_map(function ($user) {
-				return is_array($user) && !empty($user['id']) ? [
-					'id' => (int)$user['id'],
-					'reassign' => sanitize_text_field($user['reassign'] ?? ''),
-					'email' => sanitize_email($user['email'] ?? ''),
-					'display_name' => sanitize_text_field($user['display_name'] ?? ''),
+		$this->handle_ajax_request( 'delete_users_nonce', 'delete_users_nonce', $capabilities, function () {
+			$sanitized_users = array_filter( array_map( function ( $user ) {
+				return is_array( $user ) && ! empty( $user['id'] ) ? [
+					'id'           => (int) $user['id'],
+					'reassign'     => sanitize_text_field( $user['reassign'] ?? '' ),
+					'email'        => sanitize_email( $user['email'] ?? '' ),
+					'display_name' => sanitize_text_field( $user['display_name'] ?? '' ),
 				] : null;
-			}, $_POST['users'] ?? []));
+			}, $_POST['users'] ?? [] ) );
 
-			$user_ids = array_unique(array_column($sanitized_users, 'id'));
+			$user_ids = array_unique( array_column( $sanitized_users, 'id' ) );
 
-			if (empty($user_ids)) {
-				wp_send_json_error(['message' => UbdwpValidationFacade::get_error_message('select_any_user')]);
+			if ( empty( $user_ids ) ) {
+				wp_send_json_error( [ 'message' => UbdwpValidationFacade::get_error_message( 'select_any_user' ) ] );
 				wp_die();
 			}
 
-			$response = $this->handler->delete_users($sanitized_users);
+			$response = $this->handler->delete_users( $sanitized_users );
 
-			extract($response);
+			extract( $response );
 
-			$this->logs_handler->insert_log([
-				'user_delete_count' => count($deleted_users),
-				'user_delete_data' => array_values($deleted_users),
-			]);
+			$this->logs_handler->insert_log( [
+				'user_delete_count' => count( $deleted_users ),
+				'user_delete_data'  => array_values( $deleted_users ),
+			] );
 
-			return ['template' => $template];
-		});
+			return [ 'template' => $template ];
+		} );
 	}
 
 	/**
@@ -219,41 +223,40 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage
 	 *
 	 * @return void
 	 */
-	public function custom_export_users_action(): void
-	{
+	public function custom_export_users_action(): void {
 		$capabilities = [
 			self::MANAGE_OPTIONS_CAP,
 			self::LIST_USERS_CAP,
 		];
 
-		$this->handle_ajax_request('export_users_nonce', 'export_users_nonce', $capabilities, function () {
-			$sanitized_users = array_filter(array_map(function ($user) {
-				return is_array($user) && !empty($user['value']) ? [
-					'id' => (int)($user['value'] ?? 0),
-					'name' => sanitize_text_field($user['name'] ?? ''),
-					'email' => sanitize_email($user['email'] ?? ''),
+		$this->handle_ajax_request( 'export_users_nonce', 'export_users_nonce', $capabilities, function () {
+			$sanitized_users = array_filter( array_map( function ( $user ) {
+				return is_array( $user ) && ! empty( $user['value'] ) ? [
+					'id'    => (int) ( $user['value'] ?? 0 ),
+					'name'  => sanitize_text_field( $user['name'] ?? '' ),
+					'email' => sanitize_email( $user['email'] ?? '' ),
 				] : null;
-			}, $_POST['users'] ?? []));
+			}, $_POST['users'] ?? [] ) );
 
-			$user_ids = array_column($sanitized_users, 'id');
-			$user_ids = array_map('esc_attr', $user_ids);
+			$user_ids = array_column( $sanitized_users, 'id' );
+			$user_ids = array_map( 'esc_attr', $user_ids );
 
-			if (empty($user_ids)) {
-				wp_send_json_error(['message' => UbdwpValidationFacade::get_error_message('select_any_user')]);
+			if ( empty( $user_ids ) ) {
+				wp_send_json_error( [ 'message' => UbdwpValidationFacade::get_error_message( 'select_any_user' ) ] );
 				wp_die();
 			}
 
-			$user_list = $this->handler->repository->get_users_by_ids($user_ids);
+			$user_list = $this->handler->repository->get_users_by_ids( $user_ids );
 
-			$csv_output = $this->handler->generate_csv($user_list);
+			$csv_output = $this->handler->generate_csv( $user_list );
 
-			$file_url = $this->handler->save_csv_file($csv_output);
+			$file_url = $this->handler->save_csv_file( $csv_output );
 
 			return [
-				'file_url' => $file_url,
+				'file_url'  => $file_url,
 				'file_path' => $file_url,
 			];
-		});
+		} );
 	}
 
 	/**
@@ -261,19 +264,18 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage
 	 *
 	 * @return void
 	 */
-	public function delete_exported_files_action(): void
-	{
-		$capabilities = [self::MANAGE_OPTIONS_CAP, self::LIST_USERS_CAP];
+	public function delete_exported_files_action(): void {
+		$capabilities = [ self::MANAGE_OPTIONS_CAP, self::LIST_USERS_CAP ];
 
-		$this->handle_ajax_request('nonce', 'custom_export_users_nonce', $capabilities, function () {
-			$file_path = isset($_POST['file_path'])
-				? sanitize_text_field($_POST['file_path'])
+		$this->handle_ajax_request( 'nonce', 'custom_export_users_nonce', $capabilities, function () {
+			$file_path = isset( $_POST['file_path'] )
+				? sanitize_text_field( $_POST['file_path'] )
 				: '';
 
-			$this->handler->delete_csv_file($file_path);
+			$this->handler->delete_csv_file( $file_path );
 
 			return [];
-		});
+		} );
 	}
 
 	/**
@@ -281,19 +283,18 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage
 	 *
 	 * @return void
 	 */
-	private function register_ajax_calls(): void
-	{
+	private function register_ajax_calls(): void {
 		$ajax_calls = [
-			'search_users' => 'search_existing_users_ajax',
-			'search_usermeta' => 'search_usermeta_ajax',
+			'search_users'            => 'search_existing_users_ajax',
+			'search_usermeta'         => 'search_usermeta_ajax',
 			'search_users_for_delete' => 'search_users_for_delete_ajax',
-			'delete_users_action' => 'delete_users_action',
-			'custom_export_users' => 'custom_export_users_action',
-			'delete_exported_file' => 'delete_exported_files_action',
+			'delete_users_action'     => 'delete_users_action',
+			'custom_export_users'     => 'custom_export_users_action',
+			'delete_exported_file'    => 'delete_exported_files_action',
 		];
 
-		foreach ($ajax_calls as $action => $method) {
-			$this->register_ajax_call($action, [$this, $method]);
+		foreach ( $ajax_calls as $action => $method ) {
+			$this->register_ajax_call( $action, [ $this, $method ] );
 		}
 	}
 }
