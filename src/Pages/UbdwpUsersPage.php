@@ -119,8 +119,8 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 
 		$this->handle_ajax_request( 'nonce', 'search_user_existing_nonce', $capabilities, function () {
 			$search_data = [
-				'q'          => sanitize_text_field( $_POST['q'] ?? '' ),
-				'select_all' => filter_var( $_POST['select_all'] ?? false, FILTER_VALIDATE_BOOLEAN ),
+				'q'          => sanitize_text_field( $_POST['q'] ?? '' ), // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
+				'select_all' => filter_var( $_POST['select_all'] ?? false, FILTER_VALIDATE_BOOLEAN ), // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
 			];
 
 			$results = $this->handler->search_users_ajax( $search_data );
@@ -142,7 +142,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 
 		$this->handle_ajax_request( 'nonce', 'search_user_meta_nonce', $capabilities, function () {
 			$sanitized_data = [
-				'q' => sanitize_text_field( $_POST['q'] ?? '' ),
+				'q' => sanitize_text_field( $_POST['q'] ?? '' ), // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
 			];
 
 			return $this->handler->search_usermeta_ajax( $sanitized_data );
@@ -161,14 +161,14 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 		];
 
 		$this->handle_ajax_request( 'find_users_nonce', 'find_users_nonce', $capabilities, function () {
-			$type = sanitize_text_field( $_POST['filter_type'] ?? '' );
+			$type = sanitize_text_field( $_POST['filter_type'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
 
 			if ( empty( $type ) ) {
 				wp_send_json_error( [ 'message' => UbdwpValidationFacade::get_error_message( 'select_type' ) ] );
 				wp_die();
 			}
 
-			$results = $this->handler->search_users_for_delete_ajax( $type, $_POST );
+			$results = $this->handler->search_users_for_delete_ajax( $type, $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash --  Nonce is checked in "handle_ajax_request" method, variable will be sanitize in the "search_users_for_delete_ajax" method.
 
 			UbdwpValidationFacade::handle_wp_error( $results );
 
@@ -196,7 +196,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 					'email'        => sanitize_email( $user['email'] ?? '' ),
 					'display_name' => sanitize_text_field( $user['display_name'] ?? '' ),
 				] : null;
-			}, $_POST['users'] ?? [] ) );
+			}, $_POST['users'] ?? [] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
 
 			$user_ids = array_unique( array_column( $sanitized_users, 'id' ) );
 
@@ -236,7 +236,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 					'name'  => sanitize_text_field( $user['name'] ?? '' ),
 					'email' => sanitize_email( $user['email'] ?? '' ),
 				] : null;
-			}, $_POST['users'] ?? [] ) );
+			}, $_POST['users'] ?? [] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
 
 			$user_ids = array_column( $sanitized_users, 'id' );
 			$user_ids = array_map( 'esc_attr', $user_ids );
@@ -268,8 +268,8 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 		$capabilities = [ self::MANAGE_OPTIONS_CAP, self::LIST_USERS_CAP ];
 
 		$this->handle_ajax_request( 'nonce', 'custom_export_users_nonce', $capabilities, function () {
-			$file_path = isset( $_POST['file_path'] )
-				? sanitize_text_field( $_POST['file_path'] )
+			$file_path = isset( $_POST['file_path'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing -- Nonce is checked in "handle_ajax_request" method.
+				? sanitize_text_field( $_POST['file_path'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing -- Nonce is checked in "handle_ajax_request" method, variable already sanitized.
 				: '';
 
 			$this->handler->delete_csv_file( $file_path );
