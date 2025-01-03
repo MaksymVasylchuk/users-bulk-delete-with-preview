@@ -54,7 +54,7 @@ class UbdwpValidation {
 	 * @return void
 	 */
 	public function validate_user_search_for_existing_users( array $request ): void {
-		$user_search = array_unique( array_map( 'intval', $request['user_search'] ?? [] ) );
+		$user_search = array_unique( array_map( 'intval', $request['user_search'] ?? array() ) );
 
 		if ( empty( $user_search ) ) {
 			$this->send_error_response( 'no_users_found' );
@@ -69,7 +69,7 @@ class UbdwpValidation {
 	 * @return void
 	 */
 	public function validate_find_user_form( array $request ): void {
-		$user_role         = array_unique( array_map( 'sanitize_text_field', $request['user_role'] ?? [] ) );
+		$user_role         = array_unique( array_map( 'sanitize_text_field', $request['user_role'] ?? array() ) );
 		$user_email        = sanitize_text_field( $request['user_email'] ?? '' );
 		$registration_date = sanitize_text_field( $request['registration_date'] ?? '' );
 		$user_meta         = sanitize_text_field( $request['user_meta'] ?? '' );
@@ -93,7 +93,7 @@ class UbdwpValidation {
 	 * @return void
 	 */
 	public function validate_woocommerce_filters( array $request ): void {
-		$products = array_unique( array_map( 'intval', $request['products'] ?? [] ) );
+		$products = array_unique( array_map( 'intval', $request['products'] ?? array() ) );
 
 		if ( empty( $products ) ) {
 			$this->send_error_response( 'at_least_one_required' );
@@ -120,7 +120,7 @@ class UbdwpValidation {
 	 * @return array<string, string> An associative array of error codes and their corresponding messages.
 	 */
 	private function get_error_messages(): array {
-		return [
+		return array(
 			'permission_error'                  => esc_html__(
 				'You do not have sufficient permissions to perform this action.',
 				'users-bulk-delete-with-preview'
@@ -161,7 +161,7 @@ class UbdwpValidation {
 				'Please select at least one user for deletion.',
 				'users-bulk-delete-with-preview'
 			),
-		];
+		);
 	}
 
 	/**
@@ -172,9 +172,9 @@ class UbdwpValidation {
 	 * @return void
 	 */
 	private function send_error_response( string $error_code ): void {
-		wp_send_json_error( [
+		wp_send_json_error( array(
 			'message' => $this->get_error_message( $error_code ),
-		] );
+		) );
 		wp_die();
 	}
 }

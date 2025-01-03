@@ -33,11 +33,11 @@ class UbdwpLogsRepository extends UbdwpAbstractBaseRepository {
 	 * @return void
 	 */
 	public function insert_log( string $user_data ): void {
-		$this->insert( [
+		$this->insert( array(
 			'user_id'           => $this->current_user_id,
 			'user_deleted_data' => $user_data,
 			'deletion_time'     => current_time( 'mysql' ),
-		] );
+		) );
 	}
 
 	/**
@@ -59,7 +59,7 @@ class UbdwpLogsRepository extends UbdwpAbstractBaseRepository {
             LIMIT %d OFFSET %d
         ";
 
-		return $this->select( $query, [ $limit, $offset ] );
+		return $this->select( $query, array( $limit, $offset ) );
 	}
 
 	/**

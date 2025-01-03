@@ -72,7 +72,7 @@ abstract class UbdwpAbstractBasePage {
 			$response = $callback();
 			wp_send_json_success( $response );
 		} catch ( \Exception $e ) {
-			wp_send_json_error( [ 'message' => UbdwpValidationFacade::get_error_message( 'generic_error' ) ] );
+			wp_send_json_error( array( 'message' => UbdwpValidationFacade::get_error_message( 'generic_error' ) ) );
 		}
 		wp_die();
 	}
@@ -85,7 +85,7 @@ abstract class UbdwpAbstractBasePage {
 	 *
 	 * @return void
 	 */
-	protected function render_template( string $template_name, array $data = [] ): void {
+	protected function render_template( string $template_name, array $data = array() ): void {
 		if ( ! current_user_can( self::MANAGE_OPTIONS_CAP ) ) {
 			wp_die( UbdwpValidationFacade::get_error_message( 'permission_error' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --All messages are escaped and translated using the "get_error_message" method.
 		}
@@ -125,7 +125,7 @@ abstract class UbdwpAbstractBasePage {
 		}
 
 		if ( ! isset( $field ) || ! wp_verify_nonce( $field, $action ) ) {
-			wp_send_json_error( [ 'message' => UbdwpValidationFacade::get_error_message( 'invalid_nonce' ) ] );
+			wp_send_json_error( array( 'message' => UbdwpValidationFacade::get_error_message( 'invalid_nonce' ) ) );
 			wp_die();
 		}
 	}
@@ -140,7 +140,7 @@ abstract class UbdwpAbstractBasePage {
 	protected function check_permissions( array $caps ): void {
 		foreach ( $caps as $cap ) {
 			if ( ! current_user_can( $cap ) ) {
-				wp_send_json_error( [ 'message' => UbdwpValidationFacade::get_error_message( 'permission_error' ) ] );
+				wp_send_json_error( array( 'message' => UbdwpValidationFacade::get_error_message( 'permission_error' ) ) );
 				wp_die();
 			}
 		}

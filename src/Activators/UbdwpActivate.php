@@ -65,7 +65,7 @@ class UbdwpActivate {
 					'users-bulk-delete-with-preview'
 				),
 				esc_html__( 'Plugin Activation Error', 'users-bulk-delete-with-preview' ),
-				[ 'back_link' => true ]
+				array( 'back_link' => true )
 			);
 		}
 
@@ -77,7 +77,7 @@ class UbdwpActivate {
 					'users-bulk-delete-with-preview'
 				),
 				esc_html__( 'Plugin Activation Error', 'users-bulk-delete-with-preview' ),
-				[ 'back_link' => true ]
+				array( 'back_link' => true )
 			);
 		}
 	}

@@ -25,17 +25,17 @@ class UbdwpLoader {
 	 *
 	 * @var array<string, object>
 	 */
-	private array $pages = [];
+	private array $pages = array();
 
 	/**
 	 * List of page classes to initialize.
 	 *
 	 * @var array<string, string>
 	 */
-	private array $pages_for_init = [
+	private array $pages_for_init = array(
 		'users' => 'UsersBulkDeleteWithPreview\Pages\UbdwpUsersPage',
 		'logs'  => 'UsersBulkDeleteWithPreview\Pages\UbdwpLogsPage',
-	];
+	);
 
 	/**
 	 * Initialize the plugin by defining constants, setting up hooks, and loading pages.
@@ -46,15 +46,15 @@ class UbdwpLoader {
 		$this->define_constants();
 
 		// Load plugin translations.
-		add_action( 'init', [ $this, 'load_text_domain' ] );
+		add_action( 'init', array( $this, 'load_text_domain' ) );
 
 		// Register admin menu and enqueue assets.
-		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'register_admin_scripts' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'register_admin_styles' ] );
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_styles' ) );
 
 		// Add action links to the plugin list.
-		add_filter( 'plugin_action_links_' . WPUBDP_BASE_NAME, [ $this, 'action_links' ] );
+		add_filter( 'plugin_action_links_' . WPUBDP_BASE_NAME, array( $this, 'action_links' ) );
 
 		// Initialize page objects.
 		$this->init_pages();
@@ -71,7 +71,7 @@ class UbdwpLoader {
 			__( 'Bulk Users Delete', 'users-bulk-delete-with-preview' ),
 			'manage_options',
 			'ubdwp_admin',
-			[ $this->pages['users'], 'render' ],
+			array( $this->pages['users'], 'render' ),
 			UbdwpHelperFacade::get_icon()
 		);
 
@@ -81,7 +81,7 @@ class UbdwpLoader {
 			__( 'Bulk Users Delete Logs', 'users-bulk-delete-with-preview' ),
 			'manage_options',
 			'ubdwp_admin_logs',
-			[ $this->pages['logs'], 'render' ]
+			array( $this->pages['logs'], 'render' )
 		);
 	}
 
@@ -145,17 +145,17 @@ class UbdwpLoader {
 	 */
 	protected function register_common_admin_styles( string $hook_suffix ): void {
 		if ( UbdwpHelperFacade::is_plugin_page( $hook_suffix ) ) {
-			UbdwpHelperFacade::register_common_styles( [
-				'wpubdp-bootstrap-css' => [ 'path' => 'assets/bootstrap/bootstrap.min.css' ],
-				'wpubdp-select2-css' => [ 'path' => 'assets/select2/select2.min.css' ],
-				'wpubdp-jquery-ui-css' => [ 'path' => 'assets/jquery-ui/jquery-ui.css' ],
-				'wpubdp-jquery-ui-timepicker-addon-css' => [
+			UbdwpHelperFacade::register_common_styles( array(
+				'wpubdp-bootstrap-css' => array( 'path' => 'assets/bootstrap/bootstrap.min.css' ),
+				'wpubdp-select2-css' => array( 'path' => 'assets/select2/select2.min.css' ),
+				'wpubdp-jquery-ui-css' => array( 'path' => 'assets/jquery-ui/jquery-ui.css' ),
+				'wpubdp-jquery-ui-timepicker-addon-css' => array(
 					'path' => 'assets/jquery-ui-datepicker/jquery-ui-timepicker-addon.min.css',
-					'deps' => [ 'wpubdp-jquery-ui-css' ]
-				],
-				'wpubdp-dataTables-css' => [ 'path' => 'assets/dataTables/datatables.min.css' ],
-				'wpubdp-admin-css' => [ 'path' => 'assets/admin/admin.min.css' ],
-			] );
+					'deps' => array( 'wpubdp-jquery-ui-css' )
+				),
+				'wpubdp-dataTables-css' => array( 'path' => 'assets/dataTables/datatables.min.css' ),
+				'wpubdp-admin-css' => array( 'path' => 'assets/admin/admin.min.css' ),
+			) );
 		}
 	}
 
@@ -168,9 +168,12 @@ class UbdwpLoader {
 	 */
 	protected function register_common_admin_scripts( string $hook_suffix ): void {
 		if ( UbdwpHelperFacade::is_plugin_page( $hook_suffix ) ) {
-			UbdwpHelperFacade::register_common_scripts( [
-				'wpubdp-dataTables-js' => [ 'path' => 'assets/dataTables/datatables.min.js', 'deps' => [ 'jquery' ] ],
-			] );
+			UbdwpHelperFacade::register_common_scripts( array(
+				'wpubdp-dataTables-js' => array(
+					'path' => 'assets/dataTables/datatables.min.js',
+					'deps' => array( 'jquery' )
+				),
+			) );
 		}
 	}
 

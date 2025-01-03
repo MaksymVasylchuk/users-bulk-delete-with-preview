@@ -28,7 +28,7 @@ class UbdwpViews {
 	 *
 	 * @return string The rendered template content.
 	 */
-	public function render_template( string $template_name, array $data = [] ): string {
+	public function render_template( string $template_name, array $data = array() ): string {
 		// Construct the full path to the template file.
 		$template_path = self::TEMPLATE_PATH . $template_name;
 
@@ -60,7 +60,7 @@ class UbdwpViews {
 	 *
 	 * @return void Outputs the template content or returns an empty string if the file doesn't exist.
 	 */
-	public function include_template( string $template_name, array $data = [] ): void {
+	public function include_template( string $template_name, array $data = array() ): void {
 		// Construct the full path to the template file.
 		$template_path = self::TEMPLATE_PATH . $template_name;
 

@@ -66,12 +66,12 @@ class UbdwpLogsHandler {
 		$total_records    = $this->repository->get_total_record_count();
 		$filtered_records = $this->repository->get_filtered_record_count( $where );
 
-		return [
+		return array(
 			'draw'            => UbdwpValidationFacade::validate_positive_integer( $request['draw'] ?? 0, 0 ),
 			'recordsTotal'    => $total_records,
 			'recordsFiltered' => $filtered_records,
 			'data'            => $this->format_logs_data( $logs ),
-		];
+		);
 	}
 
 	/**
@@ -82,7 +82,7 @@ class UbdwpLogsHandler {
 	 * @return array<int, array<int, mixed>> Formatted logs data.
 	 */
 	private function format_logs_data( array $logs ): array {
-		$data = [];
+		$data = array();
 
 		foreach ( $logs as $log ) {
 			$deleted_user_data = json_decode( $log->user_deleted_data, true );
@@ -91,7 +91,7 @@ class UbdwpLogsHandler {
 				continue;
 			}
 
-			$data[] = [
+			$data[] = array(
 				intval( $log->ID ),
 				sanitize_text_field( $log->display_name ),
 				intval( $deleted_user_data['user_delete_count'] ?? 0 ),
@@ -103,7 +103,7 @@ class UbdwpLogsHandler {
 					)
 				),
 				sanitize_text_field( $log->deletion_time ),
-			];
+			);
 		}
 
 		return $data;

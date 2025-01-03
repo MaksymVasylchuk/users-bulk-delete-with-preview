@@ -32,7 +32,7 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 		$this->handler = new UbdwpLogsHandler( $this->get_current_user_id() );
 		$this->register_ajax_call(
 			'logs_datatables',
-			[ $this, 'handle_ajax_requests' ]
+			array( $this, 'handle_ajax_requests' )
 		);
 	}
 
@@ -42,9 +42,9 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 	 * @return void
 	 */
 	public function render(): void {
-		$data = [
+		$data = array(
 			'title' => __( 'Logs Page', 'users-bulk-delete-with-preview' ),
-		];
+		);
 		$this->render_template( 'logs-page.php', $data );
 	}
 
@@ -57,20 +57,20 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 	 */
 	public function register_admin_scripts( string $hook_suffix ): void {
 		if ( isset( $_GET['page'] ) && $_GET['page'] === 'ubdwp_admin_logs' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification not required here.
-			UbdwpHelperFacade::register_common_scripts( [
-				'wpubdp-logs-js' => [
+			UbdwpHelperFacade::register_common_scripts( array(
+				'wpubdp-logs-js' => array(
 					'path' => 'assets/admin/logs.min.js',
-					'deps' => [ 'jquery', 'wpubdp-dataTables-js', 'wp-i18n' ],
-				],
-			] );
+					'deps' => array( 'jquery', 'wpubdp-dataTables-js', 'wp-i18n' ),
+				),
+			) );
 
-			UbdwpHelperFacade::localize_scripts( 'wpubdp-logs-js', [
+			UbdwpHelperFacade::localize_scripts( 'wpubdp-logs-js', array(
 				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
 				'translations' => array_merge(
 					UbdwpHelperFacade::get_data_table_translation(),
 					UbdwpHelperFacade::get_user_table_translation()
 				),
-			] );
+			) );
 		}
 	}
 
@@ -80,7 +80,7 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 	 * @return void
 	 */
 	public function handle_ajax_requests(): void {
-		$capabilities = [ self::MANAGE_OPTIONS_CAP ];
+		$capabilities = array( self::MANAGE_OPTIONS_CAP );
 
 		$this->handle_ajax_request(
 			'logs_datatable_nonce',

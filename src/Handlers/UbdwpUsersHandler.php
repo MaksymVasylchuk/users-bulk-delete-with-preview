@@ -54,10 +54,10 @@ class UbdwpUsersHandler {
 		$search_term = $request['q'] ?? '';
 		$select_all  = ! empty( $request['select_all'] );
 
-		$args = [
-			'search_columns' => [ 'user_login', 'user_email', 'display_name' ],
-			'fields'         => [ 'ID', 'display_name', 'user_email' ],
-		];
+		$args = array(
+			'search_columns' => array( 'user_login', 'user_email', 'display_name' ),
+			'fields'         => array( 'ID', 'display_name', 'user_email' ),
+		);
 
 		if ( $select_all ) {
 			$args['number'] = - 1; // Fetch all users.
@@ -66,15 +66,15 @@ class UbdwpUsersHandler {
 		}
 
 		$user_query = $this->repository->search_users_ajax( $args );
-		$results    = [];
+		$results    = array();
 
 		if ( ! empty( $user_query->results ) ) {
 			foreach ( $user_query->results as $user ) {
 				if ( (int) $user->ID !== $this->current_user_id ) {
-					$results[] = [
+					$results[] = array(
 						'id'   => (string) $user->ID,
 						'text' => sprintf( '%s (%s)', sanitize_text_field( $user->display_name ), sanitize_email( $user->user_email ) ),
-					];
+					);
 				}
 			}
 		}
@@ -94,10 +94,10 @@ class UbdwpUsersHandler {
 		$results = $this->repository->search_usermeta_ajax( $search );
 
 		return array_map( static function ( $result ) {
-			return [
+			return array(
 				'id'   => sanitize_key( $result->meta_key ),
 				'text' => sanitize_text_field( $result->meta_key ),
-			];
+			);
 		}, $results );
 	}
 
@@ -131,11 +131,11 @@ class UbdwpUsersHandler {
 	 * @return array|\WP_Error List of users or error on failure.
 	 */
 	public function get_users_by_filters( array $request ) {
-		$args = [
+		$args = array(
 			'exclude'    => $this->current_user_id, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude --  In this case we need to exclude current user.
 			'meta_query' => array(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query --  DB call is OK.
 			'date_query' => array(),
-		];
+		);
 
 		$user_query = $this->repository->get_users_by_filters( $args, $request );
 
@@ -154,7 +154,7 @@ class UbdwpUsersHandler {
 	 * @return array|\WP_Error List of users or error on failure.
 	 */
 	public function get_users_by_woocommerce_filters( array $request ) {
-		$products = array_unique( array_map( 'absint', $request['products'] ?? [] ) );
+		$products = array_unique( array_map( 'absint', $request['products'] ?? array() ) );
 		$user_ids = $this->repository->get_users_by_product_purchase( $products );
 
 		$user_ids = array_filter( $user_ids, static fn( $value ) => $value !== 0 && $value !== '0' );
@@ -238,33 +238,33 @@ class UbdwpUsersHandler {
 	 * @return array<string, mixed> Result of the deletion process.
 	 */
 	public function delete_users( array $sanitized_users ): array {
-		$deleted_users = [];
+		$deleted_users = array();
 
 		foreach ( $sanitized_users as $user ) {
 			if ( (int) $user['id'] > 0 ) {
-				$deleted_users[ $user['id'] ] = [
+				$deleted_users[ $user['id'] ] = array(
 					'user_id'      => (int) $user['id'],
 					'email'        => $user['email'],
 					'display_name' => $user['display_name'],
 					'reassign'     => $user['reassign'] ?? '',
-				];
+				);
 
 				if ( isset( $user['reassign'] ) && $user['reassign'] === 'remove_all_related_content' ) {
 					$user_id = (int) $user['id'];
 
-					$user_posts = get_posts( [
+					$user_posts = get_posts( array(
 						'author'      => $user_id,
 						'post_type'   => 'any',
 						'post_status' => 'any',
 						'numberposts' => - 1,
 						'fields'      => 'ids',
-					] );
+					) );
 
 					foreach ( $user_posts as $post_id ) {
 						wp_delete_post( $post_id, true );
 					}
 
-					$user_comments = get_comments( [ 'user_id' => $user_id ] );
+					$user_comments = get_comments( array( 'user_id' => $user_id ) );
 					foreach ( $user_comments as $comment ) {
 						wp_delete_comment( $comment->comment_ID, true );
 					}
@@ -278,16 +278,16 @@ class UbdwpUsersHandler {
 
 		$template = UbdwpViewsFacade::render_template(
 			'partials/_success_user_delete.php',
-			[
+			array(
 				'user_delete_count' => count( $deleted_users ),
 				'deleted_users'     => array_values( $deleted_users ),
-			]
+			)
 		);
 
-		return [
+		return array(
 			'deleted_users' => $deleted_users,
 			'template'      => $template,
-		];
+		);
 	}
 
 	/**
@@ -310,7 +310,7 @@ class UbdwpUsersHandler {
 	 * @return array|\WP_Error Result of the search.
 	 */
 	public function search_users_for_delete_ajax( string $type, array $request ) {
-		$keys = [
+		$keys = array(
 			'find_users_nonce',
 			'search_user_existing_nonce',
 			'search_user_meta_nonce',
@@ -325,7 +325,7 @@ class UbdwpUsersHandler {
 			'products',
 			'user_role',
 			'user_meta',
-		];
+		);
 
 		$data_before_sanitize = array_intersect_key( $request, array_flip( $keys ) );
 		$sanitized_data       = UbdwpHelperFacade::sanitize_post_data( $data_before_sanitize );
@@ -333,7 +333,7 @@ class UbdwpUsersHandler {
 		switch ( $type ) {
 			case 'select_existing':
 				UbdwpValidationFacade::validate_user_search_for_existing_users( $sanitized_data );
-				$results = $this->get_users_by_ids( array_unique( array_map( 'intval', $request['user_search'] ?? [] ) ) );
+				$results = $this->get_users_by_ids( array_unique( array_map( 'intval', $request['user_search'] ?? array() ) ) );
 				break;
 			case 'find_users':
 				UbdwpValidationFacade::validate_find_user_form( $sanitized_data );
@@ -344,7 +344,7 @@ class UbdwpUsersHandler {
 				$results = $this->get_users_by_woocommerce_filters( $sanitized_data );
 				break;
 			default:
-				wp_send_json_error( [ 'message' => UbdwpValidationFacade::get_error_message( 'select_type' ) ] );
+				wp_send_json_error( array( 'message' => UbdwpValidationFacade::get_error_message( 'select_type' ) ) );
 				wp_die();
 		}
 

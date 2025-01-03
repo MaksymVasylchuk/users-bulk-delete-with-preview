@@ -21,7 +21,7 @@ abstract class UbdwpAbstractFacade {
 	 *
 	 * @var array<string, object>
 	 */
-	private static array $instances = [];
+	private static array $instances = array();
 
 	/**
 	 * Get the singleton instance of the specified class.
@@ -52,7 +52,7 @@ abstract class UbdwpAbstractFacade {
 		$instance   = self::get_instance( $class_name );
 
 		if ( method_exists( $instance, $name ) ) {
-			return call_user_func_array( [ $instance, $name ], $arguments );
+			return call_user_func_array( array( $instance, $name ), $arguments );
 		}
 
 		throw new \Exception(

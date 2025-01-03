@@ -49,7 +49,7 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
             SELECT DISTINCT meta_key FROM {$this->wpdb->usermeta} WHERE meta_key LIKE %s LIMIT 10
         ";
 
-		return $this->select( $query, [ '%' . $this->wpdb->esc_like( $search ) . '%' ] );
+		return $this->select( $query, array( '%' . $this->wpdb->esc_like( $search ) . '%' ) );
 	}
 
 	/**
@@ -60,7 +60,7 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 * @return array<\WP_User> List of users.
 	 */
 	public function get_users_by_ids( array $user_ids ): array {
-		return get_users( [ 'include' => $user_ids ] );
+		return get_users( array( 'include' => $user_ids ) );
 	}
 
 	/**
@@ -88,12 +88,12 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 * @return array<\WP_User> List of users excluding the specified IDs.
 	 */
 	public function get_users_exclude_ids( array $exclude_ids ): array {
-		return get_users( [
+		return get_users( array(
 			'exclude' => array_unique( array_map( 'absint', $exclude_ids ) ),
 			'number'  => - 1,
 			'orderby' => 'ID',
 			'order'   => 'ASC',
-		] );
+		) );
 	}
 
 	/**
@@ -105,7 +105,7 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 */
 	public function get_users_by_product_purchase( array $products_ids ): array {
 		if ( empty( $products_ids ) ) {
-			return [];
+			return array();
 		}
 
 		$products_ids = array_unique( array_map( 'absint', $products_ids ) );
@@ -121,7 +121,7 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 		$order_items = $this->get_col( $query, $products_ids );
 
 		if ( empty( $order_items ) ) {
-			return [];
+			return array();
 		}
 
 		$order_items            = array_map( 'intval', $order_items );
@@ -149,7 +149,7 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 		if ( $email_compare ) {
 			$compare = UbdwpHelperFacade::get_email_compare_operator( sanitize_text_field( $email_compare ) );
 
-			if ( in_array( $compare, [ 'LIKE', 'NOT LIKE' ] ) ) {
+			if ( in_array( $compare, array( 'LIKE', 'NOT LIKE' ) ) ) {
 				$email_search = '%' . $this->wpdb->esc_like( $email_search ) . '%';
 			}
 
@@ -159,7 +159,7 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
                 WHERE user_email $compare %s 
                 AND ID != %d
             ";
-			$user_ids = $this->get_col( $sql, [ $email_search, $this->current_user_id ] );
+			$user_ids = $this->get_col( $sql, array( $email_search, $this->current_user_id ) );
 
 			if ( ! empty( $user_ids ) ) {
 				$args['include'] = $user_ids;
@@ -168,7 +168,7 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 			}
 		} else {
 			$args['search']         = '*' . $email_search . '*';
-			$args['search_columns'] = [ 'user_email' ];
+			$args['search_columns'] = array( 'user_email' );
 		}
 
 		return $args;
@@ -194,11 +194,11 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 */
 	private function apply_registration_date_filter( array &$args, array $request ): void {
 		if ( ! empty( $request['registration_date'] ) ) {
-			$args['date_query'][] = [
+			$args['date_query'][] = array(
 				'column'    => 'user_registered',
 				'after'     => sanitize_text_field( $request['registration_date'] ),
 				'inclusive' => true,
-			];
+			);
 		}
 	}
 
@@ -211,11 +211,11 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	private function apply_usermeta_filter( array &$args, array $request ): void {
 		if ( ! empty( $request['user_meta'] ) && ! empty( $request['user_meta_value'] ) ) {
 			$compare              = UbdwpHelperFacade::get_meta_compare_operator( sanitize_text_field( $request['user_meta_equal'] ) );
-			$args['meta_query'][] = [
+			$args['meta_query'][] = array(
 				'key'     => sanitize_text_field( $request['user_meta'] ),
 				'value'   => sanitize_text_field( $request['user_meta_value'] ),
 				'compare' => $compare,
-			];
+			);
 		}
 	}
 }

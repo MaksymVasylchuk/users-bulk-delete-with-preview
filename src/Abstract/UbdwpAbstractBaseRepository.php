@@ -92,7 +92,7 @@ abstract class UbdwpAbstractBaseRepository {
 	 *
 	 * @return mixed Single value result.
 	 */
-	protected function get_var( string $query, array $params = [] ): mixed {
+	protected function get_var( string $query, array $params = array() ): mixed {
 		return $this->wpdb->get_var( $this->wpdb->prepare( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used here.
 	}
 
