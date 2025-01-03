@@ -87,7 +87,7 @@ abstract class UbdwpAbstractBasePage {
 	 */
 	protected function render_template( string $template_name, array $data = [] ): void {
 		if ( ! current_user_can( self::MANAGE_OPTIONS_CAP ) ) {
-			wp_die( UbdwpValidationFacade::get_error_message( 'permission_error' ) );
+			wp_die( UbdwpValidationFacade::get_error_message( 'permission_error' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --All messages are escaped and translated using the "get_error_message" method.
 		}
 
 		// Includes and renders the specified template securely.

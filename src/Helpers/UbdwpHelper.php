@@ -109,7 +109,7 @@ class UbdwpHelper {
 	 * @return bool True if the page is a plugin-specific page, otherwise false.
 	 */
 	public function is_plugin_page( string $hook_suffix ): bool {
-		return $hook_suffix === 'toplevel_page_ubdwp_admin' || ( isset( $_GET['page'] ) && in_array( $_GET['page'], array(
+		return $hook_suffix === 'toplevel_page_ubdwp_admin' || ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce check is not required, because we just check if this page is a plugin page, and the method returns true or false.
 					'ubdwp_admin',
 					'ubdwp_admin_logs'
 				), true ) );

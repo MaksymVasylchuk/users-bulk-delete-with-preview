@@ -132,9 +132,9 @@ class UbdwpUsersHandler {
 	 */
 	public function get_users_by_filters( array $request ) {
 		$args = [
-			'exclude'    => $this->current_user_id,
-			'meta_query' => [],
-			'date_query' => [],
+			'exclude'    => $this->current_user_id, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude --  In this case we need to exclude current user.
+			'meta_query' => array(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query --  DB call is OK.
+			'date_query' => array(),
 		];
 
 		$user_query = $this->repository->get_users_by_filters( $args, $request );

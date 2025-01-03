@@ -56,8 +56,7 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 	 * @return void
 	 */
 	public function register_admin_scripts( string $hook_suffix ): void {
-		if ( isset( $_GET['page'] ) && $_GET['page'] === 'ubdwp_admin_logs' ) {
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification not required here.
+		if ( isset( $_GET['page'] ) && $_GET['page'] === 'ubdwp_admin_logs' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification not required here.
 			UbdwpHelperFacade::register_common_scripts( [
 				'wpubdp-logs-js' => [
 					'path' => 'assets/admin/logs.min.js',
