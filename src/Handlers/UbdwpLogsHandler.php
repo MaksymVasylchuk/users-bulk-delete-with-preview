@@ -42,8 +42,6 @@ class UbdwpLogsHandler {
 		$user_data_json = wp_json_encode( $user_data );
 
 		if ( false === $user_data_json ) {
-			error_log( 'Failed to encode user data for logging.' );
-
 			return;
 		}
 
@@ -90,7 +88,6 @@ class UbdwpLogsHandler {
 			$deleted_user_data = json_decode( $log->user_deleted_data, true );
 
 			if ( json_last_error() !== JSON_ERROR_NONE ) {
-				error_log( 'Failed to decode user_deleted_data for log ID: ' . intval( $log->ID ) );
 				continue;
 			}
 

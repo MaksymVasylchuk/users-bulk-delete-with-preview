@@ -119,9 +119,9 @@ abstract class UbdwpAbstractBasePage {
 		$field = null;
 
 		if ( strtoupper( $type ) === 'POST' ) {
-			$field = sanitize_text_field( $_POST[ $nonce_field ] ?? '' );
+			$field = sanitize_text_field( $_POST[ $nonce_field ] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Variable already sanitized
 		} elseif ( strtoupper( $type ) === 'GET' ) {
-			$field = sanitize_text_field( $_GET[ $nonce_field ] ?? '' );
+			$field = sanitize_text_field( $_GET[ $nonce_field ] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Variable already sanitized
 		}
 
 		if ( ! isset( $field ) || ! wp_verify_nonce( $field, $action ) ) {

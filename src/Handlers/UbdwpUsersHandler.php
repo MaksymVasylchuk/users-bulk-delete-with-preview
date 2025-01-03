@@ -132,8 +132,10 @@ class UbdwpUsersHandler {
 	 */
 	public function get_users_by_filters( array $request ) {
 		$args = [
-			'exclude'    => $this->current_user_id, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude --  In this case we need to exclude current user.
-			'meta_query' => array(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query --  DB call is OK.
+			'exclude'    => $this->current_user_id,
+			// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude --  In this case we need to exclude current user.
+			'meta_query' => array(),
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query --  DB call is OK.
 			'date_query' => array(),
 		];
 
@@ -177,23 +179,30 @@ class UbdwpUsersHandler {
 	 * @return string CSV content.
 	 */
 	public function generate_csv( array $users ): string {
-		$output = fopen( 'php://temp', 'w' );
-		fputcsv( $output, [ 'ID', 'Username', 'Email', 'First Name', 'Last Name', 'Role' ] );
+		// Create a temporary file object in memory.
+		$temp_file = new \SplTempFileObject();
 
+		// Add CSV header.
+		$temp_file->fputcsv( array( 'ID', 'Username', 'Email', 'First Name', 'Last Name', 'Role' ) );
+
+		// Add user data.
 		foreach ( $users as $user ) {
-			fputcsv( $output, [
+			$temp_file->fputcsv( array(
 				(int) $user->ID,
 				sanitize_text_field( $user->user_login ),
 				sanitize_email( $user->user_email ),
 				sanitize_text_field( $user->first_name ),
 				sanitize_text_field( $user->last_name ),
 				implode( ', ', $user->roles ),
-			] );
+			) );
 		}
 
-		rewind( $output );
-		$csv_content = stream_get_contents( $output );
-		fclose( $output );
+		// Rewind the file pointer and retrieve the content.
+		$temp_file->rewind();
+		$csv_content = '';
+		while ( ! $temp_file->eof() ) {
+			$csv_content .= $temp_file->fgets();
+		}
 
 		return $csv_content;
 	}
