@@ -16,7 +16,7 @@ use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
 /**
  * Repository for managing user data and related operations.
  */
-class UbdwpAbstractUsersRepository extends UbdwpAbstractBaseRepository {
+class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	/**
 	 * Constructor to initialize the Users Repository.
 	 *

@@ -68,8 +68,8 @@ abstract class UbdwpAbstractBaseRepository {
 	 *
 	 * @return array Results as objects.
 	 */
-	protected function select( string $query, array $params = [] ): array {
-		return $this->wpdb->get_results( $this->wpdb->prepare( $query, $params ) );
+	protected function select( string $query, array $params = array() ): array {
+		return $this->wpdb->get_results( $this->wpdb->prepare( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used here.
 	}
 
 	/**
@@ -80,8 +80,8 @@ abstract class UbdwpAbstractBaseRepository {
 	 *
 	 * @return array Results as a single column array.
 	 */
-	protected function get_col( string $query, array $params = [] ): array {
-		return $this->wpdb->get_col( $this->wpdb->prepare( $query, $params ) );
+	protected function get_col( string $query, array $params = array() ): array {
+		return $this->wpdb->get_col( $this->wpdb->prepare( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used here.
 	}
 
 	/**
@@ -93,7 +93,7 @@ abstract class UbdwpAbstractBaseRepository {
 	 * @return mixed Single value result.
 	 */
 	protected function get_var( string $query, array $params = [] ): mixed {
-		return $this->wpdb->get_var( $this->wpdb->prepare( $query, $params ) );
+		return $this->wpdb->get_var( $this->wpdb->prepare( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used here.
 	}
 
 	/**
@@ -104,6 +104,6 @@ abstract class UbdwpAbstractBaseRepository {
 	 * @return int Row count.
 	 */
 	protected function count( string $where = '' ): int {
-		return (int) $this->wpdb->get_var( "SELECT COUNT(*) FROM {$this->table_name} {$where}" );
+		return (int) $this->wpdb->get_var( "SELECT COUNT(*) FROM {$this->table_name} {$where}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name already escaped, and where clause also.
 	}
 }

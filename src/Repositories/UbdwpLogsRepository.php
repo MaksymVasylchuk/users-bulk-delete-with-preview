@@ -15,7 +15,7 @@ use UsersBulkDeleteWithPreview\Abstract\UbdwpAbstractBaseRepository;
 /**
  * Repository for managing log records in the Users Bulk Delete With Preview plugin.
  */
-class UbdwpAbstractLogsRepository extends UbdwpAbstractBaseRepository {
+class UbdwpLogsRepository extends UbdwpAbstractBaseRepository {
 	/**
 	 * Constructor to initialize the Logs Repository.
 	 *

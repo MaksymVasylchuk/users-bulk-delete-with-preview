@@ -9,7 +9,7 @@ namespace UsersBulkDeleteWithPreview\Handlers;
 
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
 use UsersBulkDeleteWithPreview\Facades\UbdwpViewsFacade;
-use UsersBulkDeleteWithPreview\Repositories\UbdwpAbstractUsersRepository;
+use UsersBulkDeleteWithPreview\Repositories\UbdwpUsersRepository;
 use UsersBulkDeleteWithPreview\Facades\UbdwpValidationFacade;
 
 // Exit if accessed directly.
@@ -22,9 +22,9 @@ class UbdwpUsersHandler {
 	/**
 	 * Repository for managing users.
 	 *
-	 * @var UbdwpAbstractUsersRepository
+	 * @var UbdwpUsersRepository
 	 */
-	public UbdwpAbstractUsersRepository $repository;
+	public UbdwpUsersRepository $repository;
 
 	/**
 	 * Current user ID.
@@ -39,7 +39,7 @@ class UbdwpUsersHandler {
 	 * @param int $current_user_id Current user ID.
 	 */
 	public function __construct( int $current_user_id ) {
-		$this->repository      = new UbdwpAbstractUsersRepository( $current_user_id );
+		$this->repository      = new UbdwpUsersRepository( $current_user_id );
 		$this->current_user_id = $current_user_id;
 	}
 
