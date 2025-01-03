@@ -30,7 +30,7 @@
                 placeholder: __( 'Search for users', 'users-bulk-delete-with-preview' ),
                 width: '400px',
                 ajax: {
-                    url: myAjax.ajaxurl,
+                    url: localizedData.ajaxurl,
                     type: 'POST',
                     dataType: 'json',
                     delay: 250,
@@ -67,7 +67,7 @@
             {
                 width: '400px',
                 ajax: {
-                    url: myAjax.ajaxurl,
+                    url: localizedData.ajaxurl,
                     type: 'POST',
                     dataType: 'json',
                     delay: 250,
@@ -149,7 +149,7 @@
                     showLoader();
                     $.ajax(
                         {
-                            url: myAjax.ajaxurl,
+                            url: localizedData.ajaxurl,
                             type: 'POST',
                             dataType: 'json',
                             data: {
@@ -264,7 +264,7 @@
 
                 $.ajax(
                     {
-                        url: myAjax.ajaxurl,
+                        url: localizedData.ajaxurl,
                         type: 'POST',
                         dataType: 'json',
                         data: $( form ).serialize(),
@@ -339,7 +339,7 @@
         // Function to process each batch of users
         function processUsersDeletionBatch(batch, usersArray, batchSize, totalUsers) {
             $.ajax({
-                url: myAjax.ajaxurl,
+                url: localizedData.ajaxurl,
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -402,7 +402,7 @@
                 showLoader();
                 $.ajax(
                     {
-                        url: myAjax.ajaxurl,
+                        url: localizedData.ajaxurl,
                         type: 'POST',
                         dataType: 'json',
                         data: {
@@ -426,7 +426,7 @@
                                                 type: 'POST',
                                                 data: {
                                                     action: 'delete_exported_file',
-                                                    nonce: myAjax.ajaxurl,
+                                                    nonce: localizedData.ajaxurl,
                                                     file_path: response.data.file_path
                                                 },
                                                 success: function (response) {
@@ -615,28 +615,28 @@
                         orderable: false,
                         searchable: false
                     },
-                    {title: dataTableLang.id, data: 'ID'},
-                    {title: dataTableLang.username, data: 'user_login'},
-                    {title: dataTableLang.email, data: 'user_email'},
-                    {title: dataTableLang.registered, data: 'user_registered'},
-                    {title: dataTableLang.role, data: 'user_role'},
+                    {title: localizedData.id, data: 'ID'},
+                    {title: localizedData.username, data: 'user_login'},
+                    {title: localizedData.email, data: 'user_email'},
+                    {title: localizedData.registered, data: 'user_registered'},
+                    {title: localizedData.role, data: 'user_role'},
                     {
-                        title: dataTableLang.assignContent,
+                        title: localizedData.assignContent,
                         data: 'select',
                         orderable: false,
                         searchable: false
                     }
                 ],
                 language: {
-                    emptyTable: dataTableLang.emptyTable,
-                    info: dataTableLang.info,
-                    infoEmpty: dataTableLang.infoEmpty,
-                    infoFiltered: dataTableLang.infoFiltered,
-                    lengthMenu: dataTableLang.lengthMenu,
-                    loadingRecords: dataTableLang.loadingRecords,
-                    processing: dataTableLang.processing,
-                    search: dataTableLang.search,
-                    zeroRecords: dataTableLang.zeroRecords
+                    emptyTable: localizedData.emptyTable,
+                    info: localizedData.info,
+                    infoEmpty: localizedData.infoEmpty,
+                    infoFiltered: localizedData.infoFiltered,
+                    lengthMenu: localizedData.lengthMenu,
+                    loadingRecords: localizedData.loadingRecords,
+                    processing: localizedData.processing,
+                    search: localizedData.search,
+                    zeroRecords: localizedData.zeroRecords
                 },
                 order: [[1, 'asc']],
                 lengthMenu: [

@@ -12,7 +12,7 @@ msgstr ""
 "<translations@example."
 "com>\n"
 "POT-Creation-Date: "
-"2024-11-02 10:46+0100\n"
+"2025-01-03 12:57+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Your "
 "Name <you@example.com>\n"
@@ -76,6 +76,8 @@ msgid ""
 msgstr ""
 
 #: assets/admin/admin.js:520
+#: assets/admin/logs.js:23
+#: assets/admin/logs.js:33
 msgid ""
 "An unexpected error "
 "occurred."
@@ -85,168 +87,148 @@ msgstr ""
 msgid "0000-01-01 00:00:00"
 msgstr ""
 
-#: classes/class-ubdwp-ajax-calls.php:385
+#: src/Abstract/UbdwpAbstractFacade.php:62
+#, php-format
+msgid ""
+"Method %1$s does not "
+"exist in class %2$s."
+msgstr ""
+
+#: src/Activators/UbdwpActivate.php:64
+msgid ""
+"This plugin requires PHP "
+"version 8.0 or higher."
+msgstr ""
+
+#: src/Activators/UbdwpActivate.php:67
+#: src/Activators/UbdwpActivate.php:79
+msgid ""
+"Plugin Activation Error"
+msgstr ""
+
+#: src/Activators/UbdwpActivate.php:76
+msgid ""
+"You must update "
+"WordPress to version 6.2 "
+"or higher to use this "
+"plugin."
+msgstr ""
+
+#: src/Core/UbdwpLoader.php:70
+#: src/Core/UbdwpLoader.php:71
+msgid "Bulk Users Delete"
+msgstr ""
+
+#: src/Core/UbdwpLoader.php:80
+#: src/Core/UbdwpLoader.php:81
+msgid ""
+"Bulk Users Delete Logs"
+msgstr ""
+
+#: src/Core/UbdwpLoader.php:122
+msgid "Delete users"
+msgstr ""
+
+#: src/Core/UbdwpLoader.php:123
+msgid "Logs"
+msgstr ""
+
+#: src/Handlers/UbdwpUsersHandler.php:227
 msgid ""
 "Failed to write the CSV "
 "file."
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:29
-msgid ""
-"An unknown error "
-"occurred."
-msgstr ""
-
-#: classes/class-ubdwp-helper.php:39
-msgid ""
-"You do not have "
-"sufficient permissions "
-"to perform this action."
-msgstr ""
-
-#: classes/class-ubdwp-helper.php:40
-msgid "Invalid nonce"
-msgstr ""
-
-#: classes/class-ubdwp-helper.php:41
-msgid "Select type"
-msgstr ""
-
-#: classes/class-ubdwp-helper.php:42
-msgid ""
-"Invalid security token"
-msgstr ""
-
-#: classes/class-ubdwp-helper.php:43
-msgid ""
-"Something went wrong. "
-"Please try again."
-msgstr ""
-
-#: classes/class-ubdwp-helper.php:44
-msgid ""
-"User IDs should be an "
-"array."
-msgstr ""
-
-#: classes/class-ubdwp-helper.php:45
-msgid ""
-"At least one required "
-"field."
-msgstr ""
-
-#: classes/class-ubdwp-helper.php:46
-msgid ""
-"No users found with the "
-"given filters"
-msgstr ""
-
-#: classes/class-ubdwp-helper.php:47
-msgid ""
-"No users found for the "
-"provided IDs."
-msgstr ""
-
-#: classes/class-ubdwp-helper.php:48
-msgid ""
-"Please select at least "
-"one user for deletion."
-msgstr ""
-
-#: classes/class-ubdwp-helper.php:72
+#: src/Helpers/UbdwpHelper.php:38
 msgid ""
 "Choose from existing "
 "users"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:73
+#: src/Helpers/UbdwpHelper.php:39
 msgid ""
 "Find users according to "
 "certain criteria"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:78
+#: src/Helpers/UbdwpHelper.php:43
 msgid ""
 "Find users using "
 "WooCommerce filters"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:187
-msgid "Select a user"
-msgstr ""
-
-#: classes/class-ubdwp-helper.php:354
+#: src/Helpers/UbdwpHelper.php:76
 msgid ""
 "No data available in "
 "table"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:355
+#: src/Helpers/UbdwpHelper.php:77
 msgid ""
 "Showing _START_ to _END_ "
 "of _TOTAL_ entries"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:356
+#: src/Helpers/UbdwpHelper.php:78
 msgid ""
 "Showing 0 to 0 of 0 "
 "entries"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:357
+#: src/Helpers/UbdwpHelper.php:79
 msgid ""
 "(filtered from _MAX_ "
 "total entries)"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:358
+#: src/Helpers/UbdwpHelper.php:80
 msgid "Show _MENU_ entries"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:359
+#: src/Helpers/UbdwpHelper.php:81
 msgid "Loading..."
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:360
+#: src/Helpers/UbdwpHelper.php:82
 msgid "Processing..."
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:361
+#: src/Helpers/UbdwpHelper.php:83
 msgid "Search"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:362
+#: src/Helpers/UbdwpHelper.php:84
 msgid ""
 "No matching records found"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:373
+#: src/Helpers/UbdwpHelper.php:95
 #: templates/logs-page.php:31
 #: templates/partials/_users_table.php:32
 msgid "ID"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:374
+#: src/Helpers/UbdwpHelper.php:96
 #: templates/partials/_users_table.php:33
 msgid "Username"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:375
+#: src/Helpers/UbdwpHelper.php:97
 #: templates/partials/_users_table.php:34
 msgid "Email"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:376
+#: src/Helpers/UbdwpHelper.php:98
 #: templates/partials/_users_table.php:35
 msgid "Registered"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:377
+#: src/Helpers/UbdwpHelper.php:99
 #: templates/partials/_users_table.php:36
 msgid "Role"
 msgstr ""
 
-#: classes/class-ubdwp-helper.php:378
+#: src/Helpers/UbdwpHelper.php:100
 #: templates/partials/_users_table.php:16
 #: templates/partials/_users_table.php:37
 msgid ""
@@ -254,18 +236,84 @@ msgid ""
 "to user"
 msgstr ""
 
-#: classes/facades/abstract-ubdwp-facade.php:66
-#, php-format
-msgid ""
-"Method %1$s does not "
-"exist in class %2$s."
+#: src/Helpers/UbdwpHelper.php:336
+msgid "Select a user"
 msgstr ""
 
-#: includes/activate.php:25
+#: src/Helpers/UbdwpHelper.php:338
 msgid ""
-"You must update "
-"WordPress to use the "
-"plugin."
+"Remove all related "
+"content"
+msgstr ""
+
+#: src/Pages/UbdwpLogsPage.php:46
+msgid "Logs Page"
+msgstr ""
+
+#: src/Pages/UbdwpUsersPage.php:62
+msgid "Users Management"
+msgstr ""
+
+#: src/Utils/UbdwpValidation.php:29
+msgid ""
+"An unknown error "
+"occurred."
+msgstr ""
+
+#: src/Utils/UbdwpValidation.php:125
+msgid ""
+"You do not have "
+"sufficient permissions "
+"to perform this action."
+msgstr ""
+
+#: src/Utils/UbdwpValidation.php:129
+msgid "Invalid nonce"
+msgstr ""
+
+#: src/Utils/UbdwpValidation.php:133
+msgid "Select type"
+msgstr ""
+
+#: src/Utils/UbdwpValidation.php:137
+msgid ""
+"Invalid security token"
+msgstr ""
+
+#: src/Utils/UbdwpValidation.php:141
+msgid ""
+"Something went wrong. "
+"Please try again."
+msgstr ""
+
+#: src/Utils/UbdwpValidation.php:145
+msgid ""
+"User IDs should be an "
+"array."
+msgstr ""
+
+#: src/Utils/UbdwpValidation.php:149
+msgid ""
+"At least one required "
+"field."
+msgstr ""
+
+#: src/Utils/UbdwpValidation.php:153
+msgid ""
+"No users found with the "
+"given filters"
+msgstr ""
+
+#: src/Utils/UbdwpValidation.php:157
+msgid ""
+"No users found for the "
+"provided IDs."
+msgstr ""
+
+#: src/Utils/UbdwpValidation.php:161
+msgid ""
+"Please select at least "
+"one user for deletion."
 msgstr ""
 
 #: templates/logs-page.php:32
@@ -452,33 +500,4 @@ msgstr ""
 
 #: templates/steps/step-1.php:51
 msgid "Preview"
-msgstr ""
-
-#: ubdwp-users-bulk-delete-with-preview.php:131
-#: ubdwp-users-bulk-delete-with-preview.php:132
-msgid "Bulk Users Delete"
-msgstr ""
-
-#: ubdwp-users-bulk-delete-with-preview.php:142
-#: ubdwp-users-bulk-delete-with-preview.php:146
-msgid ""
-"Bulk Users Delete Logs"
-msgstr ""
-
-#: ubdwp-users-bulk-delete-with-preview.php:175
-msgid ""
-"Users Bulk Delete With "
-"Preview"
-msgstr ""
-
-#: ubdwp-users-bulk-delete-with-preview.php:198
-msgid "Logs page"
-msgstr ""
-
-#: ubdwp-users-bulk-delete-with-preview.php:379
-msgid "Delete users"
-msgstr ""
-
-#: ubdwp-users-bulk-delete-with-preview.php:381
-msgid "Logs"
 msgstr ""

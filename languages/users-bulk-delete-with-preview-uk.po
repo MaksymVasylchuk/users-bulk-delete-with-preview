@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2024-11-02 10:46+0100\n"
+"POT-Creation-Date: 2025-01-03 12:58+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -45,7 +45,7 @@ msgstr "Виберіть продукти, які купив користува�
 msgid "Select registration date"
 msgstr "Виберіть дату реєстрації"
 
-#: assets/admin/admin.js:520
+#: assets/admin/admin.js:520 assets/admin/logs.js:23 assets/admin/logs.js:33
 msgid "An unexpected error occurred."
 msgstr "Виникла непередбачувана помилка."
 
@@ -53,140 +53,178 @@ msgstr "Виникла непередбачувана помилка."
 msgid "0000-01-01 00:00:00"
 msgstr "0000-01-01 00:00:00"
 
-#: classes/class-ubdwp-ajax-calls.php:385
-msgid "Failed to write the CSV file."
-msgstr "Не вдалося записати файл CSV."
-
-#: classes/class-ubdwp-helper.php:29
-msgid "An unknown error occurred."
-msgstr "Сталася невідома помилка."
-
-#: classes/class-ubdwp-helper.php:39
-msgid "You do not have sufficient permissions to perform this action."
-msgstr "У вас недостатньо прав для виконання цієї дії."
-
-#: classes/class-ubdwp-helper.php:40
-msgid "Invalid nonce"
-msgstr "Недійсний nonce"
-
-#: classes/class-ubdwp-helper.php:41
-msgid "Select type"
-msgstr "Виберіть тип"
-
-#: classes/class-ubdwp-helper.php:42
-msgid "Invalid security token"
-msgstr "Недійсний маркер безпеки"
-
-#: classes/class-ubdwp-helper.php:43
-msgid "Something went wrong. Please try again."
-msgstr "Щось пішло не так. Спробуйте ще раз."
-
-#: classes/class-ubdwp-helper.php:44
-msgid "User IDs should be an array."
-msgstr "Ідентифікатори користувачів мають бути масивом."
-
-#: classes/class-ubdwp-helper.php:45
-msgid "At least one required field."
-msgstr "Принаймні одне обов’язкове поле."
-
-#: classes/class-ubdwp-helper.php:46
-msgid "No users found with the given filters"
-msgstr "Користувачів із заданими фільтрами не знайдено"
-
-#: classes/class-ubdwp-helper.php:47
-msgid "No users found for the provided IDs."
-msgstr "Не знайдено користувачів для наданих ідентифікаторів."
-
-#: classes/class-ubdwp-helper.php:48
-msgid "Please select at least one user for deletion."
-msgstr "Будь ласка, виберіть принаймні одного користувача для видалення."
-
-#: classes/class-ubdwp-helper.php:72
-msgid "Choose from existing users"
-msgstr "Виберіть з існуючих користувачів"
-
-#: classes/class-ubdwp-helper.php:73
-msgid "Find users according to certain criteria"
-msgstr "Знайти користувачів за певними критеріями"
-
-#: classes/class-ubdwp-helper.php:78
-msgid "Find users using WooCommerce filters"
-msgstr "Знайдіть користувачів за допомогою фільтрів WooCommerce"
-
-#: classes/class-ubdwp-helper.php:187
-msgid "Select a user"
-msgstr "Виберіть користувача"
-
-#: classes/class-ubdwp-helper.php:354
-msgid "No data available in table"
-msgstr "У таблиці немає даних"
-
-#: classes/class-ubdwp-helper.php:355
-msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr "Відображення від _START_ до _END_ _TOTAL_ записів"
-
-#: classes/class-ubdwp-helper.php:356
-msgid "Showing 0 to 0 of 0 entries"
-msgstr "Показано від 0 до 0 з 0 записів"
-
-#: classes/class-ubdwp-helper.php:357
-msgid "(filtered from _MAX_ total entries)"
-msgstr "(відфільтровано з _MAX_ всіх записів)"
-
-#: classes/class-ubdwp-helper.php:358
-msgid "Show _MENU_ entries"
-msgstr "Показати _MENU_ записів"
-
-#: classes/class-ubdwp-helper.php:359
-msgid "Loading..."
-msgstr "Завантаження…"
-
-#: classes/class-ubdwp-helper.php:360
-msgid "Processing..."
-msgstr "Обробка…"
-
-#: classes/class-ubdwp-helper.php:361
-msgid "Search"
-msgstr "Пошук"
-
-#: classes/class-ubdwp-helper.php:362
-msgid "No matching records found"
-msgstr "Відповідних записів не знайдено"
-
-#: classes/class-ubdwp-helper.php:373 templates/logs-page.php:31
-#: templates/partials/_users_table.php:32
-msgid "ID"
-msgstr "ID"
-
-#: classes/class-ubdwp-helper.php:374 templates/partials/_users_table.php:33
-msgid "Username"
-msgstr "Ім’я користувача"
-
-#: classes/class-ubdwp-helper.php:375 templates/partials/_users_table.php:34
-msgid "Email"
-msgstr "Електронна пошта"
-
-#: classes/class-ubdwp-helper.php:376 templates/partials/_users_table.php:35
-msgid "Registered"
-msgstr "Зареєстрований"
-
-#: classes/class-ubdwp-helper.php:377 templates/partials/_users_table.php:36
-msgid "Role"
-msgstr "Роль"
-
-#: classes/class-ubdwp-helper.php:378 templates/partials/_users_table.php:16
-#: templates/partials/_users_table.php:37
-msgid "Assign related content to user"
-msgstr "Призначте пов’язаний вміст користувачу"
-
-#: classes/facades/abstract-ubdwp-facade.php:66
+#: src/Abstract/UbdwpAbstractFacade.php:62
 #, php-format
 msgid "Method %1$s does not exist in class %2$s."
 msgstr "Метод %1$s не існує в класі %2$s."
 
-#: includes/activate.php:25
-msgid "You must update WordPress to use the plugin."
-msgstr "Ви повинні оновити WordPress, щоб використовувати плагін."
+#: src/Activators/UbdwpActivate.php:64
+msgid "This plugin requires PHP version 8.0 or higher."
+msgstr "Цей плагін потребує PHP версії 8.0 або новішої."
+
+#: src/Activators/UbdwpActivate.php:67 src/Activators/UbdwpActivate.php:79
+msgid "Plugin Activation Error"
+msgstr "Помилка активації плагіна"
+
+#: src/Activators/UbdwpActivate.php:76
+msgid "You must update WordPress to version 6.2 or higher to use this plugin."
+msgstr ""
+"Щоб використовувати цей плагін, вам потрібно оновити WordPress до версії 6.2 "
+"або вище."
+
+#: src/Core/UbdwpLoader.php:70 src/Core/UbdwpLoader.php:71
+msgid "Bulk Users Delete"
+msgstr "Масове видалення користувачів"
+
+#: src/Core/UbdwpLoader.php:80 src/Core/UbdwpLoader.php:81
+msgid "Bulk Users Delete Logs"
+msgstr "Журнал масового видалення користувачів"
+
+#: src/Core/UbdwpLoader.php:122
+msgid "Delete users"
+msgstr "Видалити користувачів"
+
+#: src/Core/UbdwpLoader.php:123
+msgid "Logs"
+msgstr "Журнали"
+
+#: src/Handlers/UbdwpUsersHandler.php:227
+msgid "Failed to write the CSV file."
+msgstr "Не вдалося записати файл CSV."
+
+#: src/Helpers/UbdwpHelper.php:38
+msgid "Choose from existing users"
+msgstr "Виберіть з існуючих користувачів"
+
+#: src/Helpers/UbdwpHelper.php:39
+msgid "Find users according to certain criteria"
+msgstr "Знайти користувачів за певними критеріями"
+
+#: src/Helpers/UbdwpHelper.php:43
+msgid "Find users using WooCommerce filters"
+msgstr "Знайдіть користувачів за допомогою фільтрів WooCommerce"
+
+#: src/Helpers/UbdwpHelper.php:76
+msgid "No data available in table"
+msgstr "У таблиці немає даних"
+
+#: src/Helpers/UbdwpHelper.php:77
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Відображення від _START_ до _END_ _TOTAL_ записів"
+
+#: src/Helpers/UbdwpHelper.php:78
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Показано від 0 до 0 з 0 записів"
+
+#: src/Helpers/UbdwpHelper.php:79
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(відфільтровано з _MAX_ всіх записів)"
+
+#: src/Helpers/UbdwpHelper.php:80
+msgid "Show _MENU_ entries"
+msgstr "Показати _MENU_ записів"
+
+#: src/Helpers/UbdwpHelper.php:81
+msgid "Loading..."
+msgstr "Завантаження…"
+
+#: src/Helpers/UbdwpHelper.php:82
+msgid "Processing..."
+msgstr "Обробка…"
+
+#: src/Helpers/UbdwpHelper.php:83
+msgid "Search"
+msgstr "Пошук"
+
+#: src/Helpers/UbdwpHelper.php:84
+msgid "No matching records found"
+msgstr "Відповідних записів не знайдено"
+
+#: src/Helpers/UbdwpHelper.php:95 templates/logs-page.php:31
+#: templates/partials/_users_table.php:32
+msgid "ID"
+msgstr "ID"
+
+#: src/Helpers/UbdwpHelper.php:96 templates/partials/_users_table.php:33
+msgid "Username"
+msgstr "Ім’я користувача"
+
+#: src/Helpers/UbdwpHelper.php:97 templates/partials/_users_table.php:34
+msgid "Email"
+msgstr "Електронна пошта"
+
+#: src/Helpers/UbdwpHelper.php:98 templates/partials/_users_table.php:35
+msgid "Registered"
+msgstr "Зареєстрований"
+
+#: src/Helpers/UbdwpHelper.php:99 templates/partials/_users_table.php:36
+msgid "Role"
+msgstr "Роль"
+
+#: src/Helpers/UbdwpHelper.php:100 templates/partials/_users_table.php:16
+#: templates/partials/_users_table.php:37
+msgid "Assign related content to user"
+msgstr "Призначте пов’язаний вміст користувачу"
+
+#: src/Helpers/UbdwpHelper.php:336
+msgid "Select a user"
+msgstr "Виберіть користувача"
+
+#: src/Helpers/UbdwpHelper.php:338
+msgid "Remove all related content"
+msgstr "Видаліть весь пов'язаний вміст"
+
+#: src/Pages/UbdwpLogsPage.php:46
+msgid "Logs Page"
+msgstr "Сторінка журналів"
+
+#: src/Pages/UbdwpUsersPage.php:62
+msgid "Users Management"
+msgstr "Керування користувачами"
+
+#: src/Utils/UbdwpValidation.php:29
+msgid "An unknown error occurred."
+msgstr "Сталася невідома помилка."
+
+#: src/Utils/UbdwpValidation.php:125
+msgid "You do not have sufficient permissions to perform this action."
+msgstr "У вас недостатньо прав для виконання цієї дії."
+
+#: src/Utils/UbdwpValidation.php:129
+msgid "Invalid nonce"
+msgstr "Недійсний nonce"
+
+#: src/Utils/UbdwpValidation.php:133
+msgid "Select type"
+msgstr "Виберіть тип"
+
+#: src/Utils/UbdwpValidation.php:137
+msgid "Invalid security token"
+msgstr "Недійсний маркер безпеки"
+
+#: src/Utils/UbdwpValidation.php:141
+msgid "Something went wrong. Please try again."
+msgstr "Щось пішло не так. Спробуйте ще раз."
+
+#: src/Utils/UbdwpValidation.php:145
+msgid "User IDs should be an array."
+msgstr "Ідентифікатори користувачів мають бути масивом."
+
+#: src/Utils/UbdwpValidation.php:149
+msgid "At least one required field."
+msgstr "Принаймні одне обов’язкове поле."
+
+#: src/Utils/UbdwpValidation.php:153
+msgid "No users found with the given filters"
+msgstr "Користувачів із заданими фільтрами не знайдено"
+
+#: src/Utils/UbdwpValidation.php:157
+msgid "No users found for the provided IDs."
+msgstr "Не знайдено користувачів для наданих ідентифікаторів."
+
+#: src/Utils/UbdwpValidation.php:161
+msgid "Please select at least one user for deletion."
+msgstr "Будь ласка, виберіть принаймні одного користувача для видалення."
 
 #: templates/logs-page.php:32
 msgid "User"
@@ -355,31 +393,8 @@ msgstr "Виберіть тип фільтра"
 msgid "Preview"
 msgstr "Попередній перегляд"
 
-#: ubdwp-users-bulk-delete-with-preview.php:131
-#: ubdwp-users-bulk-delete-with-preview.php:132
-msgid "Bulk Users Delete"
-msgstr "Масове видалення користувачів"
-
-#: ubdwp-users-bulk-delete-with-preview.php:142
-#: ubdwp-users-bulk-delete-with-preview.php:146
-msgid "Bulk Users Delete Logs"
-msgstr "Журнал масового видалення користувачів"
-
-#: ubdwp-users-bulk-delete-with-preview.php:175
-msgid "Users Bulk Delete With Preview"
-msgstr "Масове видалення користувачів із попереднім переглядом"
-
-#: ubdwp-users-bulk-delete-with-preview.php:198
-msgid "Logs page"
-msgstr "Сторінка журналів"
-
-#: ubdwp-users-bulk-delete-with-preview.php:379
-msgid "Delete users"
-msgstr "Видалити користувачів"
-
-#: ubdwp-users-bulk-delete-with-preview.php:381
-msgid "Logs"
-msgstr "Журнали"
+#~ msgid "Users Bulk Delete With Preview"
+#~ msgstr "Масове видалення користувачів із попереднім переглядом"
 
 #~ msgid "First"
 #~ msgstr "Перша"
