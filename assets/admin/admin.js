@@ -66,6 +66,7 @@
         $( '#user_meta' ).select2(
             {
                 width: '400px',
+                tags: true,
                 ajax: {
                     url: localizedData.ajaxurl,
                     type: 'POST',
@@ -98,6 +99,20 @@
                 placeholder: __( 'Select registration date', 'users-bulk-delete-with-preview' )
             }
         );
+
+        const select = document.getElementById('user_meta_equal');
+        const valueInput = document.getElementById('user_meta_value');
+
+        function toggleInput() {
+            if (select.value === 'meta_not_exists' || select.value === 'meta_is_empty') {
+                valueInput.style.display = 'none';
+            } else {
+                valueInput.style.display = 'inline-block';
+            }
+        }
+
+        select.addEventListener('change', toggleInput);
+        toggleInput(); // Initial check
     }
 
     /**

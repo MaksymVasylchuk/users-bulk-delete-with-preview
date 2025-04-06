@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2025-01-03 12:58+0100\n"
+"POT-Creation-Date: 2025-04-06 20:02+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -29,23 +29,23 @@ msgstr ""
 msgid "Search for users"
 msgstr "Пошук користувачів"
 
-#: assets/admin/admin.js:81
+#: assets/admin/admin.js:82
 msgid "Select meta field"
 msgstr "Виберіть метаполе"
 
-#: assets/admin/admin.js:86
+#: assets/admin/admin.js:87
 msgid "Select user roles"
 msgstr "Виберіть ролі користувачів"
 
-#: assets/admin/admin.js:87 templates/partials/_woocommerce_filters_form.php:19
+#: assets/admin/admin.js:88 templates/partials/_woocommerce_filters_form.php:19
 msgid "Select products that bought user"
 msgstr "Виберіть продукти, які купив користувач"
 
-#: assets/admin/admin.js:98
+#: assets/admin/admin.js:99
 msgid "Select registration date"
 msgstr "Виберіть дату реєстрації"
 
-#: assets/admin/admin.js:520 assets/admin/logs.js:23 assets/admin/logs.js:33
+#: assets/admin/admin.js:535 assets/admin/logs.js:23 assets/admin/logs.js:33
 msgid "An unexpected error occurred."
 msgstr "Виникла непередбачувана помилка."
 
@@ -186,43 +186,43 @@ msgstr "Керування користувачами"
 msgid "An unknown error occurred."
 msgstr "Сталася невідома помилка."
 
-#: src/Utils/UbdwpValidation.php:125
+#: src/Utils/UbdwpValidation.php:133
 msgid "You do not have sufficient permissions to perform this action."
 msgstr "У вас недостатньо прав для виконання цієї дії."
 
-#: src/Utils/UbdwpValidation.php:129
+#: src/Utils/UbdwpValidation.php:137
 msgid "Invalid nonce"
 msgstr "Недійсний nonce"
 
-#: src/Utils/UbdwpValidation.php:133
+#: src/Utils/UbdwpValidation.php:141
 msgid "Select type"
 msgstr "Виберіть тип"
 
-#: src/Utils/UbdwpValidation.php:137
+#: src/Utils/UbdwpValidation.php:145
 msgid "Invalid security token"
 msgstr "Недійсний маркер безпеки"
 
-#: src/Utils/UbdwpValidation.php:141
+#: src/Utils/UbdwpValidation.php:149
 msgid "Something went wrong. Please try again."
 msgstr "Щось пішло не так. Спробуйте ще раз."
 
-#: src/Utils/UbdwpValidation.php:145
+#: src/Utils/UbdwpValidation.php:153
 msgid "User IDs should be an array."
 msgstr "Ідентифікатори користувачів мають бути масивом."
 
-#: src/Utils/UbdwpValidation.php:149
+#: src/Utils/UbdwpValidation.php:157
 msgid "At least one required field."
 msgstr "Принаймні одне обов’язкове поле."
 
-#: src/Utils/UbdwpValidation.php:153
+#: src/Utils/UbdwpValidation.php:161
 msgid "No users found with the given filters"
 msgstr "Користувачів із заданими фільтрами не знайдено"
 
-#: src/Utils/UbdwpValidation.php:157
+#: src/Utils/UbdwpValidation.php:165
 msgid "No users found for the provided IDs."
 msgstr "Не знайдено користувачів для наданих ідентифікаторів."
 
-#: src/Utils/UbdwpValidation.php:161
+#: src/Utils/UbdwpValidation.php:169
 msgid "Please select at least one user for deletion."
 msgstr "Будь ласка, виберіть принаймні одного користувача для видалення."
 
@@ -280,22 +280,22 @@ msgid "User Email"
 msgstr "Електронна пошта користувача"
 
 #: templates/partials/_find_user_form.php:38
-#: templates/partials/_find_user_form.php:66
+#: templates/partials/_find_user_form.php:68
 msgid "Equal to (string)"
 msgstr "Equal to (string)"
 
 #: templates/partials/_find_user_form.php:39
-#: templates/partials/_find_user_form.php:67
+#: templates/partials/_find_user_form.php:69
 msgid "Not equal to (string)"
 msgstr "Not equal to (string)"
 
 #: templates/partials/_find_user_form.php:40
-#: templates/partials/_find_user_form.php:68
+#: templates/partials/_find_user_form.php:70
 msgid "Like (string)"
 msgstr "Like (string)"
 
 #: templates/partials/_find_user_form.php:41
-#: templates/partials/_find_user_form.php:69
+#: templates/partials/_find_user_form.php:71
 msgid "Not like (string)"
 msgstr "Not like (string)"
 
@@ -311,55 +311,63 @@ msgstr "Дата реєстрації користувача"
 msgid "User Meta"
 msgstr "Мета користувача"
 
-#: templates/partials/_find_user_form.php:70
+#: templates/partials/_find_user_form.php:66
+msgid "Meta does not exist"
+msgstr "Meta does not exist"
+
+#: templates/partials/_find_user_form.php:67
+msgid "Meta is empty"
+msgstr "Meta is empty"
+
+#: templates/partials/_find_user_form.php:72
 msgid "Equal to (date)"
 msgstr "Equal to (date)"
 
-#: templates/partials/_find_user_form.php:71
+#: templates/partials/_find_user_form.php:73
 msgid "Not equal to (date)"
 msgstr "Not equal to (date)"
 
-#: templates/partials/_find_user_form.php:72
+#: templates/partials/_find_user_form.php:74
 msgid "Less than (date)"
 msgstr "Less than (date)"
 
-#: templates/partials/_find_user_form.php:73
+#: templates/partials/_find_user_form.php:75
 msgid "Less than or equal to (date)"
 msgstr "Less than or equal to (date)"
 
-#: templates/partials/_find_user_form.php:74
+#: templates/partials/_find_user_form.php:76
 msgid "Greater than (date)"
 msgstr "Greater than (date)"
 
-#: templates/partials/_find_user_form.php:75
+#: templates/partials/_find_user_form.php:77
 msgid "Greater than or equal to (date)"
 msgstr "Greater than or equal to (date)"
 
-#: templates/partials/_find_user_form.php:76
+#: templates/partials/_find_user_form.php:78
 msgid "Equal to (number)"
 msgstr "Equal to (number)"
 
-#: templates/partials/_find_user_form.php:77
+#: templates/partials/_find_user_form.php:79
 msgid "Not equal to (number)"
 msgstr "Not equal to (number)"
 
-#: templates/partials/_find_user_form.php:78
+#: templates/partials/_find_user_form.php:80
 msgid "Less than (number)"
 msgstr "Less than (number)"
 
-#: templates/partials/_find_user_form.php:79
+#: templates/partials/_find_user_form.php:81
 msgid "Less than or equal to (number)"
 msgstr "Less than or equal to (number)"
 
-#: templates/partials/_find_user_form.php:80
+#: templates/partials/_find_user_form.php:82
 msgid "Greater than (number)"
 msgstr "Greater than (number)"
 
-#: templates/partials/_find_user_form.php:81
+#: templates/partials/_find_user_form.php:83
 msgid "Greater than or equal to (number)"
 msgstr "Greater than or equal to (number)"
 
-#: templates/partials/_find_user_form.php:83
+#: templates/partials/_find_user_form.php:85
 msgid "Enter user meta value"
 msgstr "Введіть мета-значення користувача"
 

@@ -78,6 +78,7 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 		$this->apply_usermeta_filter( $args, $request );
 		$this->apply_email_filters( $args, $request['user_email'] ?? '', $request['user_email_equal'] ?? '' );
 
+
 		return new \WP_User_Query( $args );
 	}
 
@@ -210,13 +211,44 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 * @param array<string, mixed> $request Request parameters.
 	 */
 	private function apply_usermeta_filter( array &$args, array $request ): void {
-		if ( ! empty( $request['user_meta'] ) && ! empty( $request['user_meta_value'] ) ) {
-			$compare              = UbdwpHelperFacade::get_meta_compare_operator( sanitize_text_field( $request['user_meta_equal'] ) );
-			$args['meta_query'][] = array(
-				'key'     => sanitize_text_field( $request['user_meta'] ),
-				'value'   => sanitize_text_field( $request['user_meta_value'] ),
-				'compare' => $compare,
-			);
+		$key          = sanitize_text_field( $request['user_meta'] ?? '' );
+		$compare_type = sanitize_text_field( $request['user_meta_equal'] ?? '' );
+
+		if ( $key === '' ) {
+			return;
+		}
+
+		switch ( $compare_type ) {
+			case 'meta_not_exists':
+				$args['meta_query'][] = [
+					'key'     => $key,
+					'compare' => 'NOT EXISTS',
+				];
+				break;
+
+			case 'meta_is_empty':
+				$args['meta_query'][] = [
+					[
+						'key'     => $key,
+						'value'   => '',
+						'compare' => '=',
+					],
+				];
+				break;
+
+			default:
+				$value = sanitize_text_field( $request['user_meta_value'] ?? '' );
+				if ( $value === '' ) {
+					return;
+				}
+
+				$compare = UbdwpHelperFacade::get_meta_compare_operator( $compare_type );
+				$args['meta_query'][] = [
+					'key'     => $key,
+					'value'   => $value,
+					'compare' => $compare,
+				];
+				break;
 		}
 	}
 }
