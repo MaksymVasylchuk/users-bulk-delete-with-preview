@@ -63,7 +63,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<input type="hidden" id="search_user_meta_nonce" name="search_user_meta_nonce" value="<?php echo esc_attr( wp_create_nonce( 'search_user_meta_nonce' ) ); ?>" />
 		<select class="regular-text" name="user_meta" id="user_meta"></select>
 		<select name="user_meta_equal" id="user_meta_equal">
-			<option value="equal_to_str"><?php esc_html_e( 'Equal to (string)', 'users-bulk-delete-with-preview' ); ?></option>
+            <option value="meta_not_exists"><?php esc_html_e( 'Meta does not exist', 'users-bulk-delete-with-preview' ); ?></option>
+            <option value="meta_is_empty"><?php esc_html_e( 'Meta is empty', 'users-bulk-delete-with-preview' ); ?></option>
+            <option value="equal_to_str"><?php esc_html_e( 'Equal to (string)', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="notequal_to_str"><?php esc_html_e( 'Not equal to (string)', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="like_str"><?php esc_html_e( 'Like (string)', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="notlike_str"><?php esc_html_e( 'Not like (string)', 'users-bulk-delete-with-preview' ); ?></option>

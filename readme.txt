@@ -2,8 +2,8 @@
 Contributors: maksymvasylchuk
 Tags: bulk delete, user management, delete users, preview delete, bulk clean
 Requires at least: 6.2
-Tested up to: 6.7.1
-Stable tag: 2.0.0
+Tested up to: 6.7.2
+Stable tag: 2.1.0
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -81,6 +81,9 @@ Yes, the plugin is compatible with WooCommerce and allows filtering users who ha
 
 == Upgrade Notice ==
 
+= 2.1.0 =
+Added option to search for non-existing or empty user meta. Updated translations. No upgrade steps are required for this version.
+
 = 2.0.0 =
 Updated structure, uk translation, bug fixes and code improvements. No upgrade steps required for this version.
 
@@ -106,6 +109,13 @@ This plugin uses the following third-party libraries:
 – [Select2](https://select2.org/) – Licensed under MIT License.
 
 == Changelog ==
+= 2.1.0 =
+*Release Date - 06 April 2025*
+
+* Added option to search for non-existing or empty user meta
+* Updated translations
+* Bug fixes and code improvements
+
 = 2.0.0 =
 *Release Date - 03 January 2025*
 

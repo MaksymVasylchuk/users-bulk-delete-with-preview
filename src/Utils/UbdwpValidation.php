@@ -69,17 +69,25 @@ class UbdwpValidation {
 	 * @return void
 	 */
 	public function validate_find_user_form( array $request ): void {
-		$user_role         = array_unique( array_map( 'sanitize_text_field', $request['user_role'] ?? array() ) );
+		$user_role         = array_unique( array_map( 'sanitize_text_field', $request['user_role'] ?? [] ) );
 		$user_email        = sanitize_text_field( $request['user_email'] ?? '' );
 		$registration_date = sanitize_text_field( $request['registration_date'] ?? '' );
 		$user_meta         = sanitize_text_field( $request['user_meta'] ?? '' );
 		$user_meta_value   = sanitize_text_field( $request['user_meta_value'] ?? '' );
+		$user_meta_equal   = sanitize_text_field( $request['user_meta_equal'] ?? '' );
+
+		$has_meta_filter = ! empty( $user_meta ) && (
+				$user_meta_equal === 'meta_not_exists' ||
+				$user_meta_equal === 'meta_is_empty' ||
+				! empty( $user_meta_value )
+			);
+
 
 		if (
 			empty( $user_role ) &&
 			empty( $user_email ) &&
 			empty( $registration_date ) &&
-			( empty( $user_meta ) || empty( $user_meta_value ) )
+			! $has_meta_filter
 		) {
 			$this->send_error_response( 'at_least_one_required' );
 		}
