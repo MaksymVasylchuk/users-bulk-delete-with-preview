@@ -2,7 +2,7 @@
 Contributors: maksymvasylchuk
 Tags: bulk delete, user management, delete users, preview delete, bulk clean
 Requires at least: 6.2
-Tested up to: 6.7.2
+Tested up to: 6.9
 Stable tag: 2.1.0
 Requires PHP: 8.0
 License: GPLv2 or later
