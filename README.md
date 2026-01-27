@@ -7,7 +7,7 @@
 **Contributors**: maksymvasylchuk  
 **Tags**: bulk delete, users delete with preview, users bulk delete with preview, users bulk clean with preview  
 **Requires at least**: 6.2  
-**Tested up to**: 6.9 
+**Tested up to**: 6.9  
 **Stable tag**: 2.1.0  
 **Requires PHP**: 8.0  
 **License**: GPLv2 or later  
