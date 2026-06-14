@@ -2,8 +2,8 @@
 Contributors: maksymvasylchuk
 Tags: bulk delete, user management, delete users, preview delete, bulk clean
 Requires at least: 6.2
-Tested up to: 6.9
-Stable tag: 2.1.0
+Tested up to: 7.0
+Stable tag: 2.1.1
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -81,6 +81,9 @@ Yes, the plugin is compatible with WooCommerce and allows filtering users who ha
 
 == Upgrade Notice ==
 
+= 2.1.1 =
+Security and compatibility maintenance release for WordPress 7.0. Includes safer CSV export handling and cleanup. No manual upgrade steps are required.
+
 = 2.1.0 =
 Added option to search for non-existing or empty user meta. Updated translations. No upgrade steps are required for this version.
 
@@ -109,6 +112,18 @@ This plugin uses the following third-party libraries:
 – [Select2](https://select2.org/) – Licensed under MIT License.
 
 == Changelog ==
+= 2.1.1 =
+*Release Date - 14 June 2026*
+
+* Tested compatibility with WordPress 7.0
+* Fixed export file cleanup nonce handling
+* Hardened CSV export file deletion path validation
+* Added CSV formula injection protection
+* Prevented deletion of the current administrator via crafted requests
+* Fixed plugin text domain loading path
+* Fixed plugin database version option
+* Improved escaping in admin templates
+
 = 2.1.0 =
 *Release Date - 06 April 2025*
 

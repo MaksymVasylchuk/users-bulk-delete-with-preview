@@ -187,11 +187,11 @@ class UbdwpUsersHandler {
 		foreach ( $users as $user ) {
 			$temp_file->fputcsv( array(
 				(int) $user->ID,
-				sanitize_text_field( $user->user_login ),
-				sanitize_email( $user->user_email ),
-				sanitize_text_field( $user->first_name ),
-				sanitize_text_field( $user->last_name ),
-				implode( ', ', $user->roles ),
+				$this->escape_csv_cell( sanitize_text_field( $user->user_login ) ),
+				$this->escape_csv_cell( sanitize_email( $user->user_email ) ),
+				$this->escape_csv_cell( sanitize_text_field( $user->first_name ) ),
+				$this->escape_csv_cell( sanitize_text_field( $user->last_name ) ),
+				$this->escape_csv_cell( implode( ', ', array_map( 'sanitize_text_field', $user->roles ) ) ),
 			) );
 		}
 
@@ -210,7 +210,7 @@ class UbdwpUsersHandler {
 	 *
 	 * @param string $csv_output The CSV content.
 	 *
-	 * @return string|\WP_Error URL of the saved file or error on failure.
+	 * @return array<string, string>|\WP_Error URL and path of the saved file or error on failure.
 	 */
 	public function save_csv_file( string $csv_output ) {
 		global $wp_filesystem;
@@ -221,13 +221,28 @@ class UbdwpUsersHandler {
 		WP_Filesystem();
 
 		$upload_dir = wp_upload_dir();
-		$file_path  = $upload_dir['path'] . '/users_export_' . time() . '.csv';
+		$export_dir = $this->get_export_dir();
+
+		if ( ! wp_mkdir_p( $export_dir ) ) {
+			return new \WP_Error( 'file_write_error', __( 'Failed to create the CSV export directory.', 'users-bulk-delete-with-preview' ) );
+		}
+
+		$index_file = trailingslashit( $export_dir ) . 'index.php';
+		if ( ! file_exists( $index_file ) ) {
+			$wp_filesystem->put_contents( $index_file, "<?php\n// Silence is golden.\n", FS_CHMOD_FILE );
+		}
+
+		$file_name = wp_unique_filename( $export_dir, 'users_export_' . time() . '.csv' );
+		$file_path = trailingslashit( $export_dir ) . $file_name;
 
 		if ( ! $wp_filesystem->put_contents( $file_path, $csv_output, FS_CHMOD_FILE ) ) {
 			return new \WP_Error( 'file_write_error', __( 'Failed to write the CSV file.', 'users-bulk-delete-with-preview' ) );
 		}
 
-		return $upload_dir['url'] . '/' . basename( $file_path );
+		return array(
+			'file_url'  => trailingslashit( $upload_dir['baseurl'] ) . 'ubdwp-exports/' . basename( $file_path ),
+			'file_path' => $file_path,
+		);
 	}
 
 	/**
@@ -241,17 +256,23 @@ class UbdwpUsersHandler {
 		$deleted_users = array();
 
 		foreach ( $sanitized_users as $user ) {
-			if ( (int) $user['id'] > 0 ) {
-				$deleted_users[ $user['id'] ] = array(
-					'user_id'      => (int) $user['id'],
+			$user_id = (int) $user['id'];
+
+			if ( $user_id <= 0 || $user_id === $this->current_user_id || ! get_userdata( $user_id ) ) {
+				continue;
+			}
+
+			$reassign = $this->normalize_reassign_user_id( $user['reassign'] ?? null, $user_id );
+
+			if ( $user_id > 0 ) {
+				$deleted_users[ $user_id ] = array(
+					'user_id'      => $user_id,
 					'email'        => $user['email'],
 					'display_name' => $user['display_name'],
-					'reassign'     => $user['reassign'] ?? '',
+					'reassign'     => $reassign ?? '',
 				);
 
 				if ( isset( $user['reassign'] ) && $user['reassign'] === 'remove_all_related_content' ) {
-					$user_id = (int) $user['id'];
-
 					$user_posts = get_posts( array(
 						'author'      => $user_id,
 						'post_type'   => 'any',
@@ -269,10 +290,10 @@ class UbdwpUsersHandler {
 						wp_delete_comment( $comment->comment_ID, true );
 					}
 
-					$user['reassign'] = null;
+					$reassign = null;
 				}
 
-				wp_delete_user( (int) $user['id'], $user['reassign'] ?? null );
+				wp_delete_user( $user_id, $reassign );
 			}
 		}
 
@@ -296,9 +317,58 @@ class UbdwpUsersHandler {
 	 * @param string $file_path Path to the file to delete.
 	 */
 	public function delete_csv_file( string $file_path ): void {
-		if ( ! empty( $file_path ) && file_exists( $file_path ) ) {
-			wp_delete_file( $file_path );
+		$real_file_path = realpath( $file_path );
+		$real_export_dir = realpath( $this->get_export_dir() );
+
+		if (
+			$real_file_path &&
+			$real_export_dir &&
+			str_starts_with( $real_file_path, trailingslashit( $real_export_dir ) ) &&
+			str_ends_with( $real_file_path, '.csv' ) &&
+			file_exists( $real_file_path )
+		) {
+			wp_delete_file( $real_file_path );
 		}
+	}
+
+	/**
+	 * Escape a CSV value against spreadsheet formula injection.
+	 *
+	 * @param string $value CSV cell value.
+	 *
+	 * @return string Safe CSV cell value.
+	 */
+	private function escape_csv_cell( string $value ): string {
+		return preg_match( '/^[=+\-@]/', $value ) ? "'" . $value : $value;
+	}
+
+	/**
+	 * Get the plugin export directory inside uploads.
+	 *
+	 * @return string Export directory path.
+	 */
+	private function get_export_dir(): string {
+		$upload_dir = wp_upload_dir();
+
+		return trailingslashit( $upload_dir['basedir'] ) . 'ubdwp-exports';
+	}
+
+	/**
+	 * Normalize the reassign target for wp_delete_user().
+	 *
+	 * @param mixed $reassign Reassign value from request.
+	 * @param int   $deleted_user_id User being deleted.
+	 *
+	 * @return int|null Reassign user ID or null.
+	 */
+	private function normalize_reassign_user_id( mixed $reassign, int $deleted_user_id ): ?int {
+		$reassign_id = absint( $reassign );
+
+		if ( $reassign_id <= 0 || $reassign_id === $deleted_user_id || ! get_userdata( $reassign_id ) ) {
+			return null;
+		}
+
+		return $reassign_id;
 	}
 
 	/**
