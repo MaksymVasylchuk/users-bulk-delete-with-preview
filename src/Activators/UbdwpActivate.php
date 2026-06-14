@@ -48,7 +48,7 @@ class UbdwpActivate {
 		dbDelta( $sql );
 
 		// Set the plugin version in the options table.
-		add_option( 'ubdwp_plugin_db_version', '2.0.0' );
+		add_option( 'ubdwp_plugin_db_version', '2.1.1' );
 	}
 
 	/**

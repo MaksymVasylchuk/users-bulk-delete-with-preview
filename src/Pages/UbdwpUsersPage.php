@@ -102,13 +102,14 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 				),
 			) );
 
-			UbdwpHelperFacade::localize_scripts( 'wpubdp-admin-js', array(
-				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
-				'translations' => array_merge(
-					UbdwpHelperFacade::get_data_table_translation(),
-					UbdwpHelperFacade::get_user_table_translation()
-				),
-			) );
+				UbdwpHelperFacade::localize_scripts( 'wpubdp-admin-js', array(
+					'ajaxurl'                => admin_url( 'admin-ajax.php' ),
+					'customExportUsersNonce' => wp_create_nonce( 'custom_export_users_nonce' ),
+					'translations'           => array_merge(
+						UbdwpHelperFacade::get_data_table_translation(),
+						UbdwpHelperFacade::get_user_table_translation()
+					),
+				) );
 		}
 	}
 
@@ -244,8 +245,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 				) : null;
 			}, $_POST['users'] ?? array() ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
 
-			$user_ids = array_column( $sanitized_users, 'id' );
-			$user_ids = array_map( 'esc_attr', $user_ids );
+			$user_ids = array_unique( array_map( 'absint', array_column( $sanitized_users, 'id' ) ) );
 
 			if ( empty( $user_ids ) ) {
 				wp_send_json_error( array( 'message' => UbdwpValidationFacade::get_error_message( 'select_any_user' ) ) );
@@ -256,12 +256,11 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 
 			$csv_output = $this->handler->generate_csv( $user_list );
 
-			$file_url = $this->handler->save_csv_file( $csv_output );
+			$file_data = $this->handler->save_csv_file( $csv_output );
 
-			return array(
-				'file_url'  => $file_url,
-				'file_path' => $file_url,
-			);
+			UbdwpValidationFacade::handle_wp_error( $file_data );
+
+			return $file_data;
 		} );
 	}
 

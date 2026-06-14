@@ -439,11 +439,11 @@
                                             {
                                                 url: ajaxurl,
                                                 type: 'POST',
-                                                data: {
-                                                    action: 'delete_exported_file',
-                                                    nonce: localizedData.ajaxurl,
-                                                    file_path: response.data.file_path
-                                                },
+	                                                data: {
+	                                                    action: 'delete_exported_file',
+	                                                    nonce: localizedData.customExportUsersNonce,
+	                                                    file_path: response.data.file_path
+	                                                },
                                                 success: function (response) {
                                                     hideLoader();
                                                 },

@@ -169,6 +169,10 @@ class UbdwpValidation {
 				'Please select at least one user for deletion.',
 				'users-bulk-delete-with-preview'
 			),
+			'file_write_error'                  => esc_html__(
+				'Failed to create the export file.',
+				'users-bulk-delete-with-preview'
+			),
 		);
 	}
 

@@ -82,7 +82,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<option value="greaterthen_number"><?php esc_html_e( 'Greater than (number)', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="greaterthenequal_number"><?php esc_html_e( 'Greater than or equal to (number)', 'users-bulk-delete-with-preview' ); ?></option>
 		</select>
-		<input type="text" id="user_meta_value" name="user_meta_value" class="regular-text" placeholder="<?php esc_html_e( 'Enter user meta value', 'users-bulk-delete-with-preview' ); ?>">
+		<input type="text" id="user_meta_value" name="user_meta_value" class="regular-text" placeholder="<?php esc_attr_e( 'Enter user meta value', 'users-bulk-delete-with-preview' ); ?>">
 	</td>
 </tr>
 <!-- User Meta -->
