@@ -18,12 +18,76 @@ class UbdwpActivate {
 	/**
 	 * Activation callback for the Users Bulk Delete With Preview plugin.
 	 *
+	 * @param bool $network_wide Whether the plugin is being activated network-wide.
+	 *
 	 * @return void
 	 */
-	public static function ubdwp_activate_plugin(): void {
+	public static function ubdwp_activate_plugin( bool $network_wide = false ): void {
 		// Ensure the environment meets the plugin requirements.
 		self::check_environment();
 
+		if ( is_multisite() && $network_wide ) {
+			$site_ids = get_sites( array(
+				'fields' => 'ids',
+				'number' => 0,
+			) );
+
+			foreach ( $site_ids as $site_id ) {
+				switch_to_blog( (int) $site_id );
+				self::setup_current_site();
+				restore_current_blog();
+			}
+
+			return;
+		}
+
+		self::setup_current_site();
+	}
+
+	/**
+	 * Initialize plugin data for a newly created multisite site.
+	 *
+	 * @param \WP_Site $site New site object.
+	 *
+	 * @return void
+	 */
+	public static function ubdwp_initialize_new_site( \WP_Site $site ): void {
+		if ( ! is_multisite() ) {
+			return;
+		}
+
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		if ( ! is_plugin_active_for_network( WPUBDP_BASE_NAME ) ) {
+			return;
+		}
+
+		switch_to_blog( (int) $site->blog_id );
+		self::setup_current_site();
+		restore_current_blog();
+	}
+
+	/**
+	 * Ensure the current site's plugin data is up to date after plugin updates.
+	 *
+	 * @return void
+	 */
+	public static function ubdwp_maybe_upgrade_current_site(): void {
+		if ( get_option( 'ubdwp_plugin_db_version' ) === WPUBDP_PLUGIN_VERSION ) {
+			return;
+		}
+
+		self::setup_current_site();
+	}
+
+	/**
+	 * Create or update the custom plugin table for the current site.
+	 *
+	 * @return void
+	 */
+	private static function setup_current_site(): void {
 		global $wpdb;
 
 		// Define the table name with WordPress table prefix.
@@ -48,7 +112,7 @@ class UbdwpActivate {
 		dbDelta( $sql );
 
 		// Set the plugin version in the options table.
-		add_option( 'ubdwp_plugin_db_version', '2.1.1' );
+			update_option( 'ubdwp_plugin_db_version', WPUBDP_PLUGIN_VERSION );
 	}
 
 	/**

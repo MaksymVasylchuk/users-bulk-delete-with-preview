@@ -139,6 +139,10 @@ class UbdwpUsersHandler {
 
 		$user_query = $this->repository->get_users_by_filters( $args, $request );
 
+		if ( is_wp_error( $user_query ) ) {
+			return $user_query;
+		}
+
 		if ( ! empty( $user_query->get_results() ) ) {
 			return UbdwpHelperFacade::prepare_users_for_table( $user_query->get_results(), $this->repository );
 		}
@@ -227,12 +231,14 @@ class UbdwpUsersHandler {
 			return new \WP_Error( 'file_write_error', __( 'Failed to create the CSV export directory.', 'users-bulk-delete-with-preview' ) );
 		}
 
+		$this->cleanup_old_export_files( $export_dir );
+
 		$index_file = trailingslashit( $export_dir ) . 'index.php';
 		if ( ! file_exists( $index_file ) ) {
 			$wp_filesystem->put_contents( $index_file, "<?php\n// Silence is golden.\n", FS_CHMOD_FILE );
 		}
 
-		$file_name = wp_unique_filename( $export_dir, 'users_export_' . time() . '.csv' );
+		$file_name = wp_unique_filename( $export_dir, 'users_export_' . time() . '_' . wp_generate_password( 12, false ) . '.csv' );
 		$file_path = trailingslashit( $export_dir ) . $file_name;
 
 		if ( ! $wp_filesystem->put_contents( $file_path, $csv_output, FS_CHMOD_FILE ) ) {
@@ -258,42 +264,30 @@ class UbdwpUsersHandler {
 		foreach ( $sanitized_users as $user ) {
 			$user_id = (int) $user['id'];
 
-			if ( $user_id <= 0 || $user_id === $this->current_user_id || ! get_userdata( $user_id ) ) {
+			if ( ! $this->can_manage_user_for_current_site( $user_id ) ) {
 				continue;
 			}
 
 			$reassign = $this->normalize_reassign_user_id( $user['reassign'] ?? null, $user_id );
+			$remove_related_content = isset( $user['reassign'] ) && $user['reassign'] === 'remove_all_related_content';
 
 			if ( $user_id > 0 ) {
+				if ( $remove_related_content ) {
+					$this->delete_related_content( $user_id );
+					$reassign = null;
+				}
+
+				if ( ! $this->remove_or_delete_user( $user_id, $reassign ) ) {
+					continue;
+				}
+
 				$deleted_users[ $user_id ] = array(
 					'user_id'      => $user_id,
 					'email'        => $user['email'],
 					'display_name' => $user['display_name'],
-					'reassign'     => $reassign ?? '',
+					'reassign'     => $remove_related_content ? 'remove_all_related_content' : ( $reassign ?? '' ),
+					'action'       => is_multisite() ? 'removed_from_site' : 'deleted',
 				);
-
-				if ( isset( $user['reassign'] ) && $user['reassign'] === 'remove_all_related_content' ) {
-					$user_posts = get_posts( array(
-						'author'      => $user_id,
-						'post_type'   => 'any',
-						'post_status' => 'any',
-						'numberposts' => - 1,
-						'fields'      => 'ids',
-					) );
-
-					foreach ( $user_posts as $post_id ) {
-						wp_delete_post( $post_id, true );
-					}
-
-					$user_comments = get_comments( array( 'user_id' => $user_id ) );
-					foreach ( $user_comments as $comment ) {
-						wp_delete_comment( $comment->comment_ID, true );
-					}
-
-					$reassign = null;
-				}
-
-				wp_delete_user( $user_id, $reassign );
 			}
 		}
 
@@ -354,6 +348,27 @@ class UbdwpUsersHandler {
 	}
 
 	/**
+	 * Remove old export files from the plugin export directory.
+	 *
+	 * @param string $export_dir Export directory path.
+	 *
+	 * @return void
+	 */
+	private function cleanup_old_export_files( string $export_dir ): void {
+		$files = glob( trailingslashit( $export_dir ) . 'users_export_*.csv' );
+
+		if ( ! is_array( $files ) ) {
+			return;
+		}
+
+		foreach ( $files as $file ) {
+			if ( is_file( $file ) && ( time() - filemtime( $file ) ) > HOUR_IN_SECONDS ) {
+				wp_delete_file( $file );
+			}
+		}
+	}
+
+	/**
 	 * Normalize the reassign target for wp_delete_user().
 	 *
 	 * @param mixed $reassign Reassign value from request.
@@ -368,7 +383,83 @@ class UbdwpUsersHandler {
 			return null;
 		}
 
+		if ( is_multisite() && ! is_user_member_of_blog( $reassign_id, get_current_blog_id() ) ) {
+			return null;
+		}
+
 		return $reassign_id;
+	}
+
+	/**
+	 * Check whether a user can be managed in the current site context.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return bool True when the user can be managed.
+	 */
+	private function can_manage_user_for_current_site( int $user_id ): bool {
+		if ( $user_id <= 0 || $user_id === $this->current_user_id || ! get_userdata( $user_id ) ) {
+			return false;
+		}
+
+		if ( ! is_multisite() ) {
+			return true;
+		}
+
+		if ( ! is_user_member_of_blog( $user_id, get_current_blog_id() ) ) {
+			return false;
+		}
+
+		return ! is_super_admin( $user_id ) || is_super_admin( $this->current_user_id );
+	}
+
+	/**
+	 * Remove a user from the current site in multisite or delete it on single-site installs.
+	 *
+	 * @param int      $user_id User ID.
+	 * @param int|null $reassign User ID to reassign content to.
+	 *
+	 * @return bool True on success.
+	 */
+	private function remove_or_delete_user( int $user_id, ?int $reassign ): bool {
+		if ( is_multisite() ) {
+			$result = remove_user_from_blog( $user_id, get_current_blog_id(), $reassign );
+
+			return ! is_wp_error( $result );
+		}
+
+		if ( ! function_exists( 'wp_delete_user' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/user.php';
+		}
+
+		return (bool) wp_delete_user( $user_id, $reassign );
+	}
+
+	/**
+	 * Delete posts and comments owned by a user in the current site context.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return void
+	 */
+	private function delete_related_content( int $user_id ): void {
+		$user_posts = get_posts( array(
+			'author'      => $user_id,
+			'post_type'   => 'any',
+			'post_status' => 'any',
+			'numberposts' => -1,
+			'fields'      => 'ids',
+		) );
+
+		foreach ( $user_posts as $post_id ) {
+			wp_delete_post( $post_id, true );
+		}
+
+		$user_comments = get_comments( array( 'user_id' => $user_id ) );
+
+		foreach ( $user_comments as $comment ) {
+			wp_delete_comment( $comment->comment_ID, true );
+		}
 	}
 
 	/**

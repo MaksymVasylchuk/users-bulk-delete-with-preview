@@ -11,6 +11,7 @@ namespace UsersBulkDeleteWithPreview\Core;
 defined( 'ABSPATH' ) || exit;
 
 use UsersBulkDeleteWithPreview\Traits\UbdwpTraitSingleton;
+use UsersBulkDeleteWithPreview\Activators\UbdwpActivate;
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
 
 /**
@@ -49,12 +50,17 @@ class UbdwpLoader {
 		add_action( 'init', array( $this, 'load_text_domain' ) );
 
 		// Register admin menu and enqueue assets.
+		add_action( 'admin_init', array( UbdwpActivate::class, 'ubdwp_maybe_upgrade_current_site' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_styles' ) );
 
 		// Add action links to the plugin list.
 		add_filter( 'plugin_action_links_' . WPUBDP_BASE_NAME, array( $this, 'action_links' ) );
+
+		if ( is_multisite() ) {
+			add_action( 'wp_initialize_site', array( UbdwpActivate::class, 'ubdwp_initialize_new_site' ) );
+		}
 
 		// Initialize page objects.
 		$this->init_pages();
@@ -146,15 +152,11 @@ class UbdwpLoader {
 	protected function register_common_admin_styles( string $hook_suffix ): void {
 		if ( UbdwpHelperFacade::is_plugin_page( $hook_suffix ) ) {
 			UbdwpHelperFacade::register_common_styles( array(
-				'wpubdp-bootstrap-css' => array( 'path' => 'assets/bootstrap/bootstrap.min.css' ),
-				'wpubdp-select2-css' => array( 'path' => 'assets/select2/select2.min.css' ),
-				'wpubdp-jquery-ui-css' => array( 'path' => 'assets/jquery-ui/jquery-ui.css' ),
-				'wpubdp-jquery-ui-timepicker-addon-css' => array(
-					'path' => 'assets/jquery-ui-datepicker/jquery-ui-timepicker-addon.min.css',
-					'deps' => array( 'wpubdp-jquery-ui-css' )
-				),
-				'wpubdp-dataTables-css' => array( 'path' => 'assets/dataTables/datatables.min.css' ),
-				'wpubdp-admin-css' => array( 'path' => 'assets/admin/admin.min.css' ),
+					'wpubdp-bootstrap-css'  => array( 'path' => 'assets/bootstrap/bootstrap.min.css' ),
+					'wpubdp-select2-css'    => array( 'path' => 'assets/select2/select2.min.css' ),
+					'wpubdp-jquery-ui-css'  => array( 'path' => 'assets/jquery-ui/jquery-ui.css' ),
+					'wpubdp-dataTables-css' => array( 'path' => 'assets/dataTables/datatables.min.css' ),
+					'wpubdp-admin-css'      => array( 'path' => 'assets/admin/admin.min.css' ),
 			) );
 		}
 	}
@@ -203,7 +205,7 @@ class UbdwpLoader {
 		defined( 'WPUBDP_PLUGIN_DIR' ) || define( 'WPUBDP_PLUGIN_DIR', $plugin_root . '/' );
 		defined( 'WPUBDP_PLUGIN_FILE' ) || define( 'WPUBDP_PLUGIN_FILE', $plugin_root . '/ubdwp-users-bulk-delete-with-preview.php' );
 		defined( 'WPUBDP_PLUGIN_URL' ) || define( 'WPUBDP_PLUGIN_URL', plugin_dir_url( WPUBDP_PLUGIN_FILE ) );
-		defined( 'WPUBDP_PLUGIN_VERSION' ) || define( 'WPUBDP_PLUGIN_VERSION', '2.1.1' );
+		defined( 'WPUBDP_PLUGIN_VERSION' ) || define( 'WPUBDP_PLUGIN_VERSION', '2.2.0' );
 		defined( 'WPUBDP_BASE_NAME' ) || define( 'WPUBDP_BASE_NAME', plugin_basename( WPUBDP_PLUGIN_FILE ) );
 	}
 }

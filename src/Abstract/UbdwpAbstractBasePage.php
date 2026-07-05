@@ -34,6 +34,11 @@ abstract class UbdwpAbstractBasePage {
 	public const DELETE_USERS_CAP = 'delete_users';
 
 	/**
+	 * Capability required to remove users from a site in multisite.
+	 */
+	public const REMOVE_USERS_CAP = 'remove_users';
+
+	/**
 	 * ID of the current user.
 	 *
 	 * @var int|null

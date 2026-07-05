@@ -86,30 +86,27 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 					'path' => 'assets/select2/select2.min.js',
 					'deps' => array( 'jquery' )
 				),
-				'wpubdp-datepicker-js' => array(
-					'path' => 'assets/jquery-ui-datepicker/jquery-ui-timepicker-addon.min.js',
-					'deps' => array( 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker' )
-				),
-				'wpubdp-admin-js'      => array(
-					'path' => 'assets/admin/admin.min.js',
-					'deps' => array(
-						'jquery',
-						'wpubdp-bootstrap-js',
-						'wpubdp-select2-js',
-						'wpubdp-dataTables-js',
-						'wp-i18n'
-					)
-				),
+					'wpubdp-admin-js'      => array(
+						'path' => 'assets/admin/admin.min.js',
+						'deps' => array(
+							'jquery',
+							'wpubdp-bootstrap-js',
+							'wpubdp-select2-js',
+							'wpubdp-dataTables-js',
+							'jquery-ui-datepicker',
+							'wp-i18n'
+						)
+					),
 			) );
 
-				UbdwpHelperFacade::localize_scripts( 'wpubdp-admin-js', array(
-					'ajaxurl'                => admin_url( 'admin-ajax.php' ),
-					'customExportUsersNonce' => wp_create_nonce( 'custom_export_users_nonce' ),
-					'translations'           => array_merge(
-						UbdwpHelperFacade::get_data_table_translation(),
-						UbdwpHelperFacade::get_user_table_translation()
-					),
-				) );
+			UbdwpHelperFacade::localize_scripts( 'wpubdp-admin-js', array(
+				'ajaxurl'                => admin_url( 'admin-ajax.php' ),
+				'customExportUsersNonce' => wp_create_nonce( 'custom_export_users_nonce' ),
+				'translations'           => array_merge(
+					UbdwpHelperFacade::get_data_table_translation(),
+					UbdwpHelperFacade::get_user_table_translation()
+				),
+			) );
 		}
 	}
 
@@ -192,7 +189,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 		$capabilities = array(
 			self::MANAGE_OPTIONS_CAP,
 			self::LIST_USERS_CAP,
-			self::DELETE_USERS_CAP,
+			is_multisite() ? self::REMOVE_USERS_CAP : self::DELETE_USERS_CAP,
 		);
 
 		$this->handle_ajax_request( 'delete_users_nonce', 'delete_users_nonce', $capabilities, function () {
@@ -213,8 +210,8 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 			}
 
 			$response = $this->handler->delete_users( $sanitized_users );
-
-			extract( $response );
+			$deleted_users = $response['deleted_users'] ?? array();
+			$template      = $response['template'] ?? '';
 
 			$this->logs_handler->insert_log( array(
 				'user_delete_count' => count( $deleted_users ),

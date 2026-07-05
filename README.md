@@ -8,7 +8,7 @@
 **Tags**: bulk delete, users delete with preview, users bulk delete with preview, users bulk clean with preview  
 **Requires at least**: 6.2  
 **Tested up to**: 7.0  
-**Stable tag**: 2.1.1  
+**Stable tag**: 2.2.0  
 **Requires PHP**: 8.0  
 **License**: GPLv2 or later  
 **License URI**: [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -18,7 +18,7 @@ Easily delete multiple WordPress users with the Users Bulk Delete With Preview p
 
 ## Description
 
-Introducing the **Users Bulk Delete With Preview** plugin – the ultimate solution for managing large numbers of WordPress users with precision and ease. Whether you’re handling a growing membership site, an extensive e-commerce platform, or a vibrant community, this plugin simplifies the process of user deletion, ensuring that your user management is both efficient and error-free.
+Introducing the **Users Bulk Delete With Preview** plugin – the ultimate solution for managing large numbers of WordPress users with precision and ease. Whether you’re handling a growing membership site, an extensive e-commerce platform, a WordPress multisite network, or a vibrant community, this plugin simplifies the process of user deletion and site-level user removal while helping you avoid accidental data loss.
 
 ### Features
 
@@ -36,6 +36,12 @@ Introducing the **Users Bulk Delete With Preview** plugin – the ultimate solut
 
 5. **User-Friendly Interface**  
    Designed with simplicity in mind, the plugin features an intuitive interface that makes it easy for users of all technical levels to navigate and operate. The clear layout and straightforward options ensure a smooth experience throughout the user management process.
+
+6. **Single Site and Multisite Support**  
+   On single-site installations, selected users are deleted from the site. On multisite installations, selected users are safely removed from the current site without deleting their network account.
+
+7. **Export and Audit Tools**  
+   Export selected users before taking action, keep a log of deletion operations, and rely on hardened export file handling to reduce the risk of stale or predictable CSV files.
 
 ## Minimum Requirements
 
@@ -82,10 +88,20 @@ No, once users are deleted, they cannot be restored. Please make sure to verify 
 ### Is this plugin compatible with WooCommerce?
 Yes, the plugin is compatible with WooCommerce and allows filtering users who have placed orders.
 
+### How does the plugin work on WordPress multisite?
+On multisite, the plugin works in the current site context. It removes selected users from the current site instead of deleting their network account, helping network administrators avoid removing users from other sites by mistake.
+
+### Does the plugin support network activation?
+Yes. When network activated, the plugin creates its log table for each site and initializes the table automatically for newly created sites.
+
 ## Upgrade Notice
+
+### 2.2.0
+Adds single-site and multisite-aware user management, network activation support, safer current-site user removal, and hardened CSV export handling. No manual upgrade steps are required.
 
 ### 2.1.1
 Security and compatibility maintenance release for WordPress 7.0. Includes safer CSV export handling and cleanup. No manual upgrade steps are required.
+
 ### 2.1.0
 Added option to search for non-existing or empty user meta. Updated translations. No upgrade steps are required for this version.
 ### 2.0.0
@@ -109,6 +125,23 @@ This plugin uses the following third-party libraries:
 - [Select2](https://select2.org/) – Licensed under MIT License.
 
 ## Changelog
+### 2.2.0
+*Release Date - 05 July 2026*
+* Added multisite-aware activation for network-wide installs
+* Added automatic log table setup for newly created multisite sites
+* Added automatic per-site database setup after plugin updates
+* Added multisite-aware uninstall cleanup across all sites
+* Limited user searches and filters to the current site context
+* Fixed email comparison filters returning a broad user list when no users matched
+* Fixed empty email fields affecting other user filters
+* Limited email comparison SQL results to current-site users on multisite
+* Removed users from the current site on multisite instead of deleting network users
+* Kept single-site behavior as full user deletion
+* Added deletion log action context for deleted vs removed users
+* Added randomized CSV export file names
+* Added automatic cleanup for old CSV export files
+* Ensured WordPress user deletion helpers are loaded before single-site deletes
+
 ### 2.1.1
 *Release Date - 14 June 2026*
 * Tested compatibility with WordPress 7.0
