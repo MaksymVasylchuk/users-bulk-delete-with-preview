@@ -11,7 +11,33 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-delete_option('ubdwp_plugin_db_version');
-
 global $wpdb;
-$wpdb->query( $wpdb->prepare("DROP TABLE IF EXISTS %i", "{$wpdb->prefix}ubdwp_logs") ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Drop custom plugin table, in this case cache is not needed and we only delete custom table for this plugin.
+
+/**
+ * Drop plugin data for the current site.
+ *
+ * @return void
+ */
+function ubdwp_uninstall_current_site(): void {
+	global $wpdb;
+
+	delete_option( 'ubdwp_plugin_db_version' );
+	$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', "{$wpdb->prefix}ubdwp_logs" ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Drop custom plugin table, in this case cache is not needed and we only delete custom table for this plugin.
+}
+
+if ( is_multisite() ) {
+	$site_ids = get_sites( array(
+		'fields' => 'ids',
+		'number' => 0,
+	) );
+
+	foreach ( $site_ids as $site_id ) {
+		switch_to_blog( (int) $site_id );
+		ubdwp_uninstall_current_site();
+		restore_current_blog();
+	}
+
+	return;
+}
+
+ubdwp_uninstall_current_site();

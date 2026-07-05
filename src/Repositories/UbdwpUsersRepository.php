@@ -35,6 +35,8 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 * @return \WP_User_Query List of users matching the search term.
 	 */
 	public function search_users_ajax( array $args ): \WP_User_Query {
+		$args['blog_id'] = get_current_blog_id();
+
 		return new \WP_User_Query( $args );
 	}
 
@@ -61,7 +63,10 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 * @return array<\WP_User> List of users.
 	 */
 	public function get_users_by_ids( array $user_ids ): array {
-		return get_users( array( 'include' => $user_ids ) );
+		return get_users( array(
+			'blog_id' => get_current_blog_id(),
+			'include' => $user_ids,
+		) );
 	}
 
 	/**
@@ -70,14 +75,19 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 * @param array<string, mixed> $args Query arguments.
 	 * @param array<string, mixed> $request Request parameters.
 	 *
-	 * @return \WP_User_Query List of users.
+	 * @return \WP_User_Query|\WP_Error List of users or error on failure.
 	 */
-	public function get_users_by_filters( array $args, array $request ): \WP_User_Query {
+	public function get_users_by_filters( array $args, array $request ): \WP_User_Query|\WP_Error {
+		$args['blog_id'] = get_current_blog_id();
+
 		$this->apply_role_filter( $args, $request );
 		$this->apply_registration_date_filter( $args, $request );
 		$this->apply_usermeta_filter( $args, $request );
-		$this->apply_email_filters( $args, $request['user_email'] ?? '', $request['user_email_equal'] ?? '' );
+		$email_filter_result = $this->apply_email_filters( $args, $request['user_email'] ?? '', $request['user_email_equal'] ?? '' );
 
+		if ( is_wp_error( $email_filter_result ) ) {
+			return $email_filter_result;
+		}
 
 		return new \WP_User_Query( $args );
 	}
@@ -91,6 +101,7 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 */
 	public function get_users_exclude_ids( array $exclude_ids ): array {
 		return get_users( array(
+			'blog_id' => get_current_blog_id(),
 			'exclude' => array_unique( array_map( 'absint', $exclude_ids ) ),
 			'number'  => - 1,
 			'orderby' => 'ID',
@@ -148,6 +159,10 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	private function apply_email_filters( array &$args, string $email_search, string $email_compare ): mixed {
 		$email_search = sanitize_text_field( $email_search );
 
+		if ( $email_search === '' ) {
+			return $args;
+		}
+
 		if ( $email_compare ) {
 			$compare = UbdwpHelperFacade::get_email_compare_operator( sanitize_text_field( $email_compare ) );
 
@@ -162,6 +177,10 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
                 AND ID != %d
             ";
 			$user_ids = $this->get_col( $sql, array( $email_search, $this->current_user_id ) );
+			$user_ids = array_filter(
+				array_map( 'absint', $user_ids ),
+				static fn( int $user_id ): bool => ! is_multisite() || is_user_member_of_blog( $user_id, get_current_blog_id() )
+			);
 
 			if ( ! empty( $user_ids ) ) {
 				$args['include'] = $user_ids;
