@@ -2,6 +2,8 @@
     'use strict';
 
     const {__, _x, _n, _nx} = wp.i18n;
+    const translations = localizedData.translations || {};
+    const escapeText   = $.fn.dataTable.render.text();
 
     // Initialize DataTable for logs
     $( '#logs' ).DataTable(
@@ -34,24 +36,24 @@
                 }
             },
             "language": {
-                "emptyTable": localizedData.emptyTable,
-                "info": localizedData.info,
-                "infoEmpty": localizedData.infoEmpty,
-                "infoFiltered": localizedData.infoFiltered,
-                "lengthMenu": localizedData.lengthMenu,
-                "loadingRecords": localizedData.loadingRecords,
-                "processing": localizedData.processing,
-                "search": localizedData.search,
-                "zeroRecords": localizedData.zeroRecords
+                "emptyTable": translations.emptyTable,
+                "info": translations.info,
+                "infoEmpty": translations.infoEmpty,
+                "infoFiltered": translations.infoFiltered,
+                "lengthMenu": translations.lengthMenu,
+                "loadingRecords": translations.loadingRecords,
+                "processing": translations.processing,
+                "search": translations.search,
+                "zeroRecords": translations.zeroRecords
             },
 
             // Define columns in the DataTable
             "columns": [
-                {"data": 0},            // Data for the first column
-                {"data": 1},            // Data for the second column
-                {"data": 2},            // Data for the third column
-                {"data": 3},            // Data for the fourth column
-                {"data": 4}             // Data for the fifth column
+                {"data": 0, "render": escapeText},            // Data for the first column
+                {"data": 1, "render": escapeText},            // Data for the second column
+                {"data": 2, "render": escapeText},            // Data for the third column
+                {"data": 3, "render": escapeText},            // Data for the fourth column
+                {"data": 4, "render": escapeText}             // Data for the fifth column
             ]
         }
     );
@@ -68,7 +70,7 @@
             '<button>',
             {
                 class: 'notice-dismiss',
-                html: '<span class="screen-reader-text">Dismiss this notice.</span>',
+                html: $( '<span class="screen-reader-text">' ).text( __( 'Dismiss this notice.', 'users-bulk-delete-with-preview' ) ),
                 click: () => errorDiv.hide()
             }
         );

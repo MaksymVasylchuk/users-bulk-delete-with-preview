@@ -50,18 +50,16 @@ class UbdwpHelper {
 	 * Prepare user data for displaying in a table.
 	 *
 	 * @param array $users List of WP_User objects.
-	 * @param mixed $repository The user repository for retrieving additional data.
 	 *
 	 * @return array Formatted user data for table display.
 	 */
-	public function prepare_users_for_table( array $users, $repository ): array {
+	public function prepare_users_for_table( array $users ): array {
 		if ( empty( $users ) ) {
 			return array();
 		}
 
-		$user_ids       = array_unique( array_map( 'intval', array_map( fn( $user ) => $user->ID, $users ) ) );
-		$all_users      = $repository->get_users_exclude_ids( $user_ids );
-		$select_options = $this->build_select_options( $all_users );
+		// Reassign targets are loaded on demand via AJAX, so only static options are rendered per row.
+		$select_options = $this->build_select_options();
 
 		return array_map( fn( $user ) => $this->format_user_data_for_table( $user, $select_options ), $users );
 	}
@@ -98,6 +96,13 @@ class UbdwpHelper {
 			'registered'    => __( 'Registered', 'users-bulk-delete-with-preview' ),
 			'role'          => __( 'Role', 'users-bulk-delete-with-preview' ),
 			'assignContent' => __( 'Assign related content to user', 'users-bulk-delete-with-preview' ),
+			'selectUser'    => __( 'Select a user', 'users-bulk-delete-with-preview' ),
+			'removeContent' => __( 'Remove all related content', 'users-bulk-delete-with-preview' ),
+			/* translators: %d: number of users. */
+			'deleteSuccess' => __( 'Success! Selected users removed: %d.', 'users-bulk-delete-with-preview' ),
+			/* translators: %d: number of users. */
+			'deleteFailed'  => __( 'Users that could not be removed: %d.', 'users-bulk-delete-with-preview' ),
+			'selectAnyUser' => __( 'Please select at least one user for deletion.', 'users-bulk-delete-with-preview' ),
 		);
 	}
 
@@ -139,17 +144,21 @@ class UbdwpHelper {
 				case 'action':
 				case 'user_email_equal':
 				case 'user_meta_equal':
-				case 'user_meta':
 					$sanitized_data[ $key ] = sanitize_key( $value );
+					break;
+
+				case 'user_meta':
+					// Meta keys are case-sensitive and may contain characters sanitize_key() would strip.
+					$sanitized_data[ $key ] = sanitize_text_field( $value );
 					break;
 
 				case 'user_search':
 				case 'products':
-					$sanitized_data[ $key ] = array_unique( array_map( 'absint', $value ) );
+					$sanitized_data[ $key ] = array_unique( array_map( 'absint', (array) $value ) );
 					break;
 
 				case 'user_role':
-					$sanitized_data[ $key ] = array_unique( array_map( 'sanitize_text_field', $value ) );
+					$sanitized_data[ $key ] = array_unique( array_map( 'sanitize_text_field', (array) $value ) );
 					break;
 
 				default:
@@ -259,6 +268,25 @@ class UbdwpHelper {
 	}
 
 	/**
+	 * Map user meta comparison type from request, so numbers and dates are not compared as strings.
+	 *
+	 * @param string $comparison Comparison type from request.
+	 *
+	 * @return string Meta query value type.
+	 */
+	public function get_meta_compare_type( string $comparison ): string {
+		if ( str_ends_with( $comparison, '_number' ) ) {
+			return 'NUMERIC';
+		}
+
+		if ( str_ends_with( $comparison, '_date' ) ) {
+			return 'DATE';
+		}
+
+		return 'CHAR';
+	}
+
+	/**
 	 * Map email comparison operator from request.
 	 *
 	 * @param string $comparison Comparison type from request.
@@ -328,18 +356,12 @@ class UbdwpHelper {
 	/**
 	 * Build HTML options for the select dropdown.
 	 *
-	 * @param array $all_users List of all users.
-	 *
 	 * @return string HTML string of select options.
 	 */
-	private function build_select_options( array $all_users ): string {
-		$options = '<option value="">' . __( 'Select a user', 'users-bulk-delete-with-preview' ) . '</option>';
+	private function build_select_options(): string {
+		$options = '<option value="">' . esc_html__( 'Select a user', 'users-bulk-delete-with-preview' ) . '</option>';
 
-		$options .= '<option value="remove_all_related_content">' . __( 'Remove all related content', 'users-bulk-delete-with-preview' ) . '</option>';
-
-		foreach ( $all_users as $user ) {
-			$options .= '<option value="' . esc_attr( $user->ID ) . '">' . esc_html( $user->user_login ) . '</option>';
-		}
+		$options .= '<option value="remove_all_related_content">' . esc_html__( 'Remove all related content', 'users-bulk-delete-with-preview' ) . '</option>';
 
 		return $options;
 	}
@@ -359,7 +381,7 @@ class UbdwpHelper {
 			'user_login'      => sanitize_text_field( $user->user_login ),
 			'user_email'      => sanitize_email( $user->user_email ),
 			'user_registered' => sanitize_text_field( $user->user_registered ),
-			'user_role'       => implode( ', ', $user->roles ),
+			'user_role'       => implode( ', ', array_map( 'sanitize_text_field', $user->roles ) ),
 			'select'          => $this->build_user_select_html( $user, $select_options ),
 		);
 	}

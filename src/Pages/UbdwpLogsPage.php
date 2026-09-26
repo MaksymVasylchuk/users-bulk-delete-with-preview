@@ -71,6 +71,8 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 					UbdwpHelperFacade::get_user_table_translation()
 				),
 			) );
+
+			wp_set_script_translations( 'wpubdp-logs-js', 'users-bulk-delete-with-preview', WPUBDP_PLUGIN_DIR . 'languages' );
 		}
 	}
 

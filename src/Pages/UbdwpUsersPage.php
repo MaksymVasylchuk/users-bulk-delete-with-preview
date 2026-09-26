@@ -101,12 +101,14 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 
 			UbdwpHelperFacade::localize_scripts( 'wpubdp-admin-js', array(
 				'ajaxurl'                => admin_url( 'admin-ajax.php' ),
-				'customExportUsersNonce' => wp_create_nonce( 'custom_export_users_nonce' ),
+				'reassignUsersNonce'     => wp_create_nonce( 'search_reassign_users_nonce' ),
 				'translations'           => array_merge(
 					UbdwpHelperFacade::get_data_table_translation(),
 					UbdwpHelperFacade::get_user_table_translation()
 				),
 			) );
+
+			wp_set_script_translations( 'wpubdp-admin-js', 'users-bulk-delete-with-preview', WPUBDP_PLUGIN_DIR . 'languages' );
 		}
 	}
 
@@ -150,6 +152,29 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 			);
 
 			return $this->handler->search_usermeta_ajax( $sanitized_data );
+		} );
+	}
+
+	/**
+	 * Handle AJAX request to search users that can receive reassigned content.
+	 *
+	 * @return void
+	 */
+	public function search_reassign_users_ajax(): void {
+		$capabilities = array(
+			self::MANAGE_OPTIONS_CAP,
+			self::LIST_USERS_CAP,
+		);
+
+		$this->handle_ajax_request( 'nonce', 'search_reassign_users_nonce', $capabilities, function () {
+			$exclude = wp_unslash( $_POST['exclude'] ?? array() ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked in "handle_ajax_request" method, values are cast to integers below.
+
+			$search_data = array(
+				'q'       => sanitize_text_field( wp_unslash( $_POST['q'] ?? '' ) ), // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked in "handle_ajax_request" method.
+				'exclude' => is_array( $exclude ) ? array_map( 'absint', $exclude ) : array(),
+			);
+
+			return array( 'results' => $this->handler->search_reassign_users_ajax( $search_data ) );
 		} );
 	}
 
@@ -209,16 +234,23 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 				wp_die();
 			}
 
-			$response = $this->handler->delete_users( $sanitized_users );
+			$response      = $this->handler->delete_users( $sanitized_users );
 			$deleted_users = $response['deleted_users'] ?? array();
+			$failed_users  = $response['failed_users'] ?? array();
 			$template      = $response['template'] ?? '';
 
-			$this->logs_handler->insert_log( array(
-				'user_delete_count' => count( $deleted_users ),
-				'user_delete_data'  => array_values( $deleted_users ),
-			) );
+			if ( ! empty( $deleted_users ) ) {
+				$this->logs_handler->insert_log( array(
+					'user_delete_count' => count( $deleted_users ),
+					'user_delete_data'  => array_values( $deleted_users ),
+				) );
+			}
 
-			return array( 'template' => $template );
+			return array(
+				'template'      => $template,
+				'deleted_count' => count( $deleted_users ),
+				'failed_count'  => count( $failed_users ),
+			);
 		} );
 	}
 
@@ -251,32 +283,10 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 
 			$user_list = $this->handler->repository->get_users_by_ids( $user_ids );
 
-			$csv_output = $this->handler->generate_csv( $user_list );
-
-			$file_data = $this->handler->save_csv_file( $csv_output );
-
-			UbdwpValidationFacade::handle_wp_error( $file_data );
-
-			return $file_data;
-		} );
-	}
-
-	/**
-	 * Handle AJAX request to delete exported files.
-	 *
-	 * @return void
-	 */
-	public function delete_exported_files_action(): void {
-		$capabilities = array( self::MANAGE_OPTIONS_CAP, self::LIST_USERS_CAP );
-
-		$this->handle_ajax_request( 'nonce', 'custom_export_users_nonce', $capabilities, function () {
-			$file_path = isset( $_POST['file_path'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing -- Nonce is checked in "handle_ajax_request" method.
-				? sanitize_text_field( $_POST['file_path'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing -- Nonce is checked in "handle_ajax_request" method, variable already sanitized.
-				: '';
-
-			$this->handler->delete_csv_file( $file_path );
-
-			return array();
+			return array(
+				'file_name' => $this->handler->get_csv_file_name(),
+				'content'   => $this->handler->generate_csv( $user_list ),
+			);
 		} );
 	}
 
@@ -291,8 +301,8 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 			'search_usermeta'         => 'search_usermeta_ajax',
 			'search_users_for_delete' => 'search_users_for_delete_ajax',
 			'delete_users_action'     => 'delete_users_action',
+			'search_reassign_users'   => 'search_reassign_users_ajax',
 			'custom_export_users'     => 'custom_export_users_action',
-			'delete_exported_file'    => 'delete_exported_files_action',
 		);
 
 		foreach ( $ajax_calls as $action => $method ) {

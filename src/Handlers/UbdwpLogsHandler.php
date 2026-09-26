@@ -93,12 +93,15 @@ class UbdwpLogsHandler {
 
 			$data[] = array(
 				intval( $log->ID ),
-				sanitize_text_field( $log->display_name ),
+				null !== $log->display_name
+					? sanitize_text_field( $log->display_name )
+					/* translators: %d: ID of the deleted administrator who performed the deletion. */
+					: sprintf( __( 'Deleted user #%d', 'users-bulk-delete-with-preview' ), (int) $log->user_id ),
 				intval( $deleted_user_data['user_delete_count'] ?? 0 ),
 				implode(
 					', ',
 					array_map(
-						fn( $entry ) => sanitize_text_field( $entry['email'] ),
+						fn( $entry ) => sanitize_text_field( $entry['email'] ?? '' ),
 						$deleted_user_data['user_delete_data'] ?? []
 					)
 				),

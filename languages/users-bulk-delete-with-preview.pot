@@ -1,249 +1,193 @@
-# Blank WordPress Pot
-# Copyright 2014 ...
-# This file is distributed under the GNU General Public License v3 or later.
-#, fuzzy
+# Copyright (C) 2026 maksymvasylchuk
+# This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: "
-"Blank WordPress Pot "
-"v1.0.0\n"
-"Report-Msgid-Bugs-To: "
-"Translator Name "
-"<translations@example."
-"com>\n"
-"POT-Creation-Date: "
-"2025-04-06 20:01+0200\n"
-"PO-Revision-Date: \n"
-"Last-Translator: Your "
-"Name <you@example.com>\n"
-"Language-Team: Your Team "
-"<translations@example."
-"com>\n"
-"Language: en_US\n"
+"Project-Id-Version: Users Bulk Delete With Preview 2.2.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/users-bulk-delete-with-preview\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/"
-"plain; charset=UTF-8\n"
-"Content-Transfer-"
-"Encoding: 8bit\n"
-"Plural-Forms: "
-"nplurals=2; plural=n != "
-"1;\n"
-"X-Textdomain-Support: "
-"yesX-Generator: Poedit "
-"1.6.4\n"
-"X-Poedit-SourceCharset: "
-"UTF-8\n"
-"X-Poedit-KeywordsList: "
-"__;_e;esc_html_e;"
-"esc_html_x:1,2c;"
-"esc_html__;esc_attr_e;"
-"esc_attr_x:1,2c;"
-"esc_attr__;_ex:1,2c;"
-"_nx:4c,1,2;"
-"_nx_noop:4c,1,2;_x:1,2c;"
-"_n:1,2;_n_noop:1,2;"
-"__ngettext:1,2;"
-"__ngettext_noop:1,2;_c,"
-"_nc:4c,1,2\n"
-"X-Poedit-Basepath: ..\n"
-"X-Generator: Poedit "
-"3.4.4\n"
-"X-Poedit-"
-"SearchPath-0: .\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-26T07:58:42+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: users-bulk-delete-with-preview\n"
 
-#: assets/admin/admin.js:30
-msgid "Search for users"
+#. Plugin Name of the plugin
+#: ubdwp-users-bulk-delete-with-preview.php
+msgid "Users Bulk Delete With Preview"
 msgstr ""
 
-#: assets/admin/admin.js:82
-msgid "Select meta field"
+#. Plugin URI of the plugin
+#: ubdwp-users-bulk-delete-with-preview.php
+msgid "https://github.com/MaksymVasylchuk/users-bulk-delete-with-preview"
 msgstr ""
 
-#: assets/admin/admin.js:87
-msgid "Select user roles"
+#. Description of the plugin
+#: ubdwp-users-bulk-delete-with-preview.php
+msgid "Effortlessly delete multiple WordPress users with our Users Bulk Delete With Preview plugin. View and confirm user details before removal to ensure accuracy and avoid mistakes. Streamline your user management process with ease and confidence!"
 msgstr ""
 
-#: assets/admin/admin.js:88
-#: templates/partials/_woocommerce_filters_form.php:19
-msgid ""
-"Select products that "
-"bought user"
+#. Author of the plugin
+#: ubdwp-users-bulk-delete-with-preview.php
+msgid "maksymvasylchuk"
 msgstr ""
 
-#: assets/admin/admin.js:99
-msgid ""
-"Select registration date"
+#. Author URI of the plugin
+#: ubdwp-users-bulk-delete-with-preview.php
+msgid "https://github.com/MaksymVasylchuk"
 msgstr ""
 
-#: assets/admin/admin.js:535
-#: assets/admin/logs.js:23
-#: assets/admin/logs.js:33
-msgid ""
-"An unexpected error "
-"occurred."
-msgstr ""
-
-#: assets/dataTables/datatables.min.js:16
-msgid "0000-01-01 00:00:00"
-msgstr ""
-
-#: src/Abstract/UbdwpAbstractFacade.php:62
+#. translators: %1$s is the method name; %2$s is the class name.
+#: src/Abstract/UbdwpAbstractFacade.php:61
 #, php-format
-msgid ""
-"Method %1$s does not "
-"exist in class %2$s."
+msgid "Method %1$s does not exist in class %2$s."
 msgstr ""
 
-#: src/Activators/UbdwpActivate.php:64
-msgid ""
-"This plugin requires PHP "
-"version 8.0 or higher."
+#: src/Activators/UbdwpActivate.php:159
+msgid "This plugin requires PHP version 8.0 or higher."
 msgstr ""
 
-#: src/Activators/UbdwpActivate.php:67
-#: src/Activators/UbdwpActivate.php:79
-msgid ""
-"Plugin Activation Error"
+#: src/Activators/UbdwpActivate.php:163
+#: src/Activators/UbdwpActivate.php:175
+msgid "Plugin Activation Error"
 msgstr ""
 
-#: src/Activators/UbdwpActivate.php:76
-msgid ""
-"You must update "
-"WordPress to version 6.2 "
-"or higher to use this "
-"plugin."
+#: src/Activators/UbdwpActivate.php:171
+msgid "You must update WordPress to version 6.2 or higher to use this plugin."
 msgstr ""
 
-#: src/Core/UbdwpLoader.php:70
-#: src/Core/UbdwpLoader.php:71
+#: src/Core/UbdwpLoader.php:76
+#: src/Core/UbdwpLoader.php:77
 msgid "Bulk Users Delete"
 msgstr ""
 
-#: src/Core/UbdwpLoader.php:80
-#: src/Core/UbdwpLoader.php:81
-msgid ""
-"Bulk Users Delete Logs"
+#: src/Core/UbdwpLoader.php:86
+#: src/Core/UbdwpLoader.php:87
+msgid "Bulk Users Delete Logs"
 msgstr ""
 
-#: src/Core/UbdwpLoader.php:122
+#: src/Core/UbdwpLoader.php:128
 msgid "Delete users"
 msgstr ""
 
-#: src/Core/UbdwpLoader.php:123
+#: src/Core/UbdwpLoader.php:129
 msgid "Logs"
 msgstr ""
 
-#: src/Handlers/UbdwpUsersHandler.php:227
-msgid ""
-"Failed to write the CSV "
-"file."
+#. translators: %d: ID of the deleted administrator who performed the deletion.
+#: src/Handlers/UbdwpLogsHandler.php:99
+#, php-format
+msgid "Deleted user #%d"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:38
-msgid ""
-"Choose from existing "
-"users"
+msgid "Choose from existing users"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:39
-msgid ""
-"Find users according to "
-"certain criteria"
+msgid "Find users according to certain criteria"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:43
-msgid ""
-"Find users using "
-"WooCommerce filters"
+msgid "Find users using WooCommerce filters"
+msgstr ""
+
+#: src/Helpers/UbdwpHelper.php:74
+msgid "No data available in table"
+msgstr ""
+
+#: src/Helpers/UbdwpHelper.php:75
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:76
-msgid ""
-"No data available in "
-"table"
+msgid "Showing 0 to 0 of 0 entries"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:77
-msgid ""
-"Showing _START_ to _END_ "
-"of _TOTAL_ entries"
+msgid "(filtered from _MAX_ total entries)"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:78
-msgid ""
-"Showing 0 to 0 of 0 "
-"entries"
-msgstr ""
-
-#: src/Helpers/UbdwpHelper.php:79
-msgid ""
-"(filtered from _MAX_ "
-"total entries)"
-msgstr ""
-
-#: src/Helpers/UbdwpHelper.php:80
 msgid "Show _MENU_ entries"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:81
+#: src/Helpers/UbdwpHelper.php:79
 msgid "Loading..."
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:82
+#: src/Helpers/UbdwpHelper.php:80
 msgid "Processing..."
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:83
+#: src/Helpers/UbdwpHelper.php:81
 msgid "Search"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:84
-msgid ""
-"No matching records found"
+#: src/Helpers/UbdwpHelper.php:82
+msgid "No matching records found"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:95
+#: src/Helpers/UbdwpHelper.php:93
 #: templates/logs-page.php:31
 #: templates/partials/_users_table.php:32
 msgid "ID"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:96
+#: src/Helpers/UbdwpHelper.php:94
 #: templates/partials/_users_table.php:33
 msgid "Username"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:97
+#: src/Helpers/UbdwpHelper.php:95
 #: templates/partials/_users_table.php:34
+#: templates/steps/step-3.php:27
 msgid "Email"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:98
+#: src/Helpers/UbdwpHelper.php:96
 #: templates/partials/_users_table.php:35
 msgid "Registered"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:99
+#: src/Helpers/UbdwpHelper.php:97
 #: templates/partials/_users_table.php:36
 msgid "Role"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:100
+#: src/Helpers/UbdwpHelper.php:98
 #: templates/partials/_users_table.php:16
 #: templates/partials/_users_table.php:37
-msgid ""
-"Assign related content "
-"to user"
+msgid "Assign related content to user"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:336
+#: src/Helpers/UbdwpHelper.php:99
+#: src/Helpers/UbdwpHelper.php:339
 msgid "Select a user"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:338
-msgid ""
-"Remove all related "
-"content"
+#: src/Helpers/UbdwpHelper.php:100
+#: src/Helpers/UbdwpHelper.php:341
+msgid "Remove all related content"
+msgstr ""
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:102
+#, php-format
+msgid "Success! Selected users removed: %d."
+msgstr ""
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:104
+#, php-format
+msgid "Users that could not be removed: %d."
+msgstr ""
+
+#: src/Helpers/UbdwpHelper.php:105
+#: src/Utils/UbdwpValidation.php:168
+msgid "Please select at least one user for deletion."
 msgstr ""
 
 #: src/Pages/UbdwpLogsPage.php:46
@@ -254,66 +198,48 @@ msgstr ""
 msgid "Users Management"
 msgstr ""
 
-#: src/Utils/UbdwpValidation.php:29
-msgid ""
-"An unknown error "
-"occurred."
+#: src/Utils/UbdwpValidation.php:28
+msgid "An unknown error occurred."
 msgstr ""
 
-#: src/Utils/UbdwpValidation.php:133
-msgid ""
-"You do not have "
-"sufficient permissions "
-"to perform this action."
+#: src/Utils/UbdwpValidation.php:132
+msgid "You do not have sufficient permissions to perform this action."
 msgstr ""
 
-#: src/Utils/UbdwpValidation.php:137
+#: src/Utils/UbdwpValidation.php:136
 msgid "Invalid nonce"
 msgstr ""
 
-#: src/Utils/UbdwpValidation.php:141
+#: src/Utils/UbdwpValidation.php:140
 msgid "Select type"
 msgstr ""
 
-#: src/Utils/UbdwpValidation.php:145
-msgid ""
-"Invalid security token"
+#: src/Utils/UbdwpValidation.php:144
+msgid "Invalid security token"
 msgstr ""
 
-#: src/Utils/UbdwpValidation.php:149
-msgid ""
-"Something went wrong. "
-"Please try again."
+#: src/Utils/UbdwpValidation.php:148
+msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: src/Utils/UbdwpValidation.php:153
-msgid ""
-"User IDs should be an "
-"array."
+#: src/Utils/UbdwpValidation.php:152
+msgid "User IDs should be an array."
 msgstr ""
 
-#: src/Utils/UbdwpValidation.php:157
-msgid ""
-"At least one required "
-"field."
+#: src/Utils/UbdwpValidation.php:156
+msgid "At least one required field."
 msgstr ""
 
-#: src/Utils/UbdwpValidation.php:161
-msgid ""
-"No users found with the "
-"given filters"
+#: src/Utils/UbdwpValidation.php:160
+msgid "No users found with the given filters"
 msgstr ""
 
-#: src/Utils/UbdwpValidation.php:165
-msgid ""
-"No users found for the "
-"provided IDs."
+#: src/Utils/UbdwpValidation.php:164
+msgid "No users found for the provided IDs."
 msgstr ""
 
-#: src/Utils/UbdwpValidation.php:169
-msgid ""
-"Please select at least "
-"one user for deletion."
+#: src/Utils/UbdwpValidation.php:172
+msgid "Failed to create the export file."
 msgstr ""
 
 #: templates/logs-page.php:32
@@ -341,10 +267,7 @@ msgid "Close"
 msgstr ""
 
 #: templates/partials/_confirmation-popup.php:23
-msgid ""
-"Are you sure you want to "
-"delete this(these) "
-"user(s)?"
+msgid "Are you sure you want to delete this(these) user(s)?"
 msgstr ""
 
 #: templates/partials/_confirmation-popup.php:26
@@ -356,8 +279,7 @@ msgid "Delete"
 msgstr ""
 
 #: templates/partials/_existing_user_form.php:18
-msgid ""
-"Select existing users"
+msgid "Select existing users"
 msgstr ""
 
 #: templates/partials/_existing_user_form.php:26
@@ -380,8 +302,7 @@ msgstr ""
 
 #: templates/partials/_find_user_form.php:39
 #: templates/partials/_find_user_form.php:69
-msgid ""
-"Not equal to (string)"
+msgid "Not equal to (string)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:40
@@ -399,8 +320,7 @@ msgid "Enter user email..."
 msgstr ""
 
 #: templates/partials/_find_user_form.php:50
-msgid ""
-"User Registration Date"
+msgid "User Registration Date"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:60
@@ -428,9 +348,7 @@ msgid "Less than (date)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:75
-msgid ""
-"Less than or equal to "
-"(date)"
+msgid "Less than or equal to (date)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:76
@@ -438,9 +356,7 @@ msgid "Greater than (date)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:77
-msgid ""
-"Greater than or equal to "
-"(date)"
+msgid "Greater than or equal to (date)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:78
@@ -448,8 +364,7 @@ msgid "Equal to (number)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:79
-msgid ""
-"Not equal to (number)"
+msgid "Not equal to (number)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:80
@@ -457,25 +372,19 @@ msgid "Less than (number)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:81
-msgid ""
-"Less than or equal to "
-"(number)"
+msgid "Less than or equal to (number)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:82
-msgid ""
-"Greater than (number)"
+msgid "Greater than (number)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:83
-msgid ""
-"Greater than or equal to "
-"(number)"
+msgid "Greater than or equal to (number)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:85
-msgid ""
-"Enter user meta value"
+msgid "Enter user meta value"
 msgstr ""
 
 #: templates/partials/_step-2-buttons.php:16
@@ -483,13 +392,11 @@ msgid "Previous step"
 msgstr ""
 
 #: templates/partials/_step-2-buttons.php:19
-msgid ""
-"Export Selected Users"
+msgid "Export Selected Users"
 msgstr ""
 
 #: templates/partials/_step-2-buttons.php:22
-msgid ""
-"Delete selected users"
+msgid "Delete selected users"
 msgstr ""
 
 #: templates/partials/_step-wizard.php:19
@@ -502,10 +409,55 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
+#: templates/partials/_woocommerce_filters_form.php:19
+#: assets/admin/admin.js:90
+msgid "Select products that bought user"
+msgstr ""
+
 #: templates/steps/step-1.php:26
 msgid "Choose filter type"
 msgstr ""
 
 #: templates/steps/step-1.php:51
 msgid "Preview"
+msgstr ""
+
+#: templates/steps/step-3.php:25
+msgid "User ID"
+msgstr ""
+
+#: templates/steps/step-3.php:26
+msgid "Display name"
+msgstr ""
+
+#: templates/steps/step-3.php:28
+msgid "Reassign user ID"
+msgstr ""
+
+#: assets/admin/admin.js:32
+msgid "Search for users"
+msgstr ""
+
+#: assets/admin/admin.js:84
+msgid "Select meta field"
+msgstr ""
+
+#: assets/admin/admin.js:89
+msgid "Select user roles"
+msgstr ""
+
+#: assets/admin/admin.js:101
+msgid "Select registration date"
+msgstr ""
+
+#: assets/admin/admin.js:428
+#: assets/admin/admin.js:599
+#: assets/admin/logs.js:25
+#: assets/admin/logs.js:35
+msgid "An unexpected error occurred."
+msgstr ""
+
+#: assets/admin/admin.js:615
+#: assets/admin/logs.js:73
+msgid "Dismiss this notice."
 msgstr ""

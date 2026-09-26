@@ -54,7 +54,7 @@ class UbdwpValidation {
 	 * @return void
 	 */
 	public function validate_user_search_for_existing_users( array $request ): void {
-		$user_search = array_unique( array_map( 'intval', $request['user_search'] ?? array() ) );
+		$user_search = array_filter( array_unique( array_map( 'intval', (array) ( $request['user_search'] ?? array() ) ) ) );
 
 		if ( empty( $user_search ) ) {
 			$this->send_error_response( 'no_users_found' );
@@ -69,7 +69,7 @@ class UbdwpValidation {
 	 * @return void
 	 */
 	public function validate_find_user_form( array $request ): void {
-		$user_role         = array_unique( array_map( 'sanitize_text_field', $request['user_role'] ?? [] ) );
+		$user_role         = array_unique( array_map( 'sanitize_text_field', (array) ( $request['user_role'] ?? [] ) ) );
 		$user_email        = sanitize_text_field( $request['user_email'] ?? '' );
 		$registration_date = sanitize_text_field( $request['registration_date'] ?? '' );
 		$user_meta         = sanitize_text_field( $request['user_meta'] ?? '' );
@@ -101,7 +101,7 @@ class UbdwpValidation {
 	 * @return void
 	 */
 	public function validate_woocommerce_filters( array $request ): void {
-		$products = array_unique( array_map( 'intval', $request['products'] ?? array() ) );
+		$products = array_filter( array_unique( array_map( 'intval', (array) ( $request['products'] ?? array() ) ) ) );
 
 		if ( empty( $products ) ) {
 			$this->send_error_response( 'at_least_one_required' );

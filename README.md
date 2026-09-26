@@ -7,8 +7,8 @@
 **Contributors**: maksymvasylchuk  
 **Tags**: bulk delete, users delete with preview, users bulk delete with preview, users bulk clean with preview  
 **Requires at least**: 6.2  
-**Tested up to**: 7.0  
-**Stable tag**: 2.2.0  
+**Tested up to**: 7.1.2  
+**Stable tag**: 2.2.1  
 **Requires PHP**: 8.0  
 **License**: GPLv2 or later  
 **License URI**: [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -41,7 +41,7 @@ Introducing the **Users Bulk Delete With Preview** plugin – the ultimate solut
    On single-site installations, selected users are deleted from the site. On multisite installations, selected users are safely removed from the current site without deleting their network account.
 
 7. **Export and Audit Tools**  
-   Export selected users before taking action, keep a log of deletion operations, and rely on hardened export file handling to reduce the risk of stale or predictable CSV files.
+   Export selected users to CSV before taking action and keep a log of deletion operations. Exports are generated on demand and downloaded directly, so user data is never left in public upload folders.
 
 ## Minimum Requirements
 
@@ -91,10 +91,16 @@ Yes, the plugin is compatible with WooCommerce and allows filtering users who ha
 ### How does the plugin work on WordPress multisite?
 On multisite, the plugin works in the current site context. It removes selected users from the current site instead of deleting their network account, helping network administrators avoid removing users from other sites by mistake.
 
+### What happens to the content of deleted users?
+For each user you can reassign their posts to another user, remove all their related content, or leave the default. On single-site installations the default follows WordPress core: the user's posts are deleted. On multisite, the user is only removed from the current site and their content stays in place unless you choose to reassign or remove it.
+
 ### Does the plugin support network activation?
 Yes. When network activated, the plugin creates its log table for each site and initializes the table automatically for newly created sites.
 
 ## Upgrade Notice
+
+### 2.2.1
+Important bug fix and security release, tested with WordPress 7.1.2 and PHP 8.4. Fixes deletion of selected users across table pages and user meta filters that could match the wrong users. CSV exports are no longer stored on the server. No manual upgrade steps are required.
 
 ### 2.2.0
 Adds single-site and multisite-aware user management, network activation support, safer current-site user removal, and hardened CSV export handling. No manual upgrade steps are required.
@@ -125,6 +131,36 @@ This plugin uses the following third-party libraries:
 - [Select2](https://select2.org/) – Licensed under MIT License.
 
 ## Changelog
+### 2.2.1
+*Release Date - 26 September 2026*
+* Tested compatibility with WordPress 7.1.2 and PHP 8.4
+* Fixed bulk deletion processing unchecked rows and stopping with an error
+* Fixed selected users on other table pages being ignored by deletion and export
+* Fixed user meta filter stripping characters from meta keys, which could match the wrong users
+* Fixed number and date user meta comparisons being compared as strings
+* Prevented reassigning content to users that are being deleted, and skipped users with an invalid reassign target instead of deleting their content
+* Added per-user delete/remove capability checks
+* CSV export is now generated in memory and downloaded directly, without storing files in uploads
+* Removed leftover CSV export files from previous versions
+* Improved CSV formula injection protection
+* Escaped user data rendered in admin tables
+* Fixed WooCommerce product filter for stores without HPOS (legacy order storage)
+* Fixed log tables of deleted multisite sites being left in the database
+* Limited user meta key search to current-site users on multisite
+* Remove all related content now also deletes trashed posts, auto-drafts and comments in any status
+* Replaced the per-row reassign user list with an AJAX user search for large sites
+* Limited existing users autocomplete results on large sites
+* Fixed success message and progress bar counts after deletion
+* Kept deletion logs visible when the acting administrator is deleted
+* Skipped empty deletion log entries
+* Fixed PHP 8.4 fputcsv() deprecation notice
+* Fixed wpdb::prepare() _doing_it_wrong notice in the logs table that could break its AJAX response with WP_DEBUG_DISPLAY enabled
+* Hardened request handling against malformed input and improved AJAX error messages
+* Fixed plugin header requirements parsing
+* Fixed DataTables translations not being applied
+* Translated step 3 table headers and deletion result messages
+* Added JavaScript translations loading and updated the translation template and Ukrainian translation
+
 ### 2.2.0
 *Release Date - 05 July 2026*
 * Added multisite-aware activation for network-wide installs

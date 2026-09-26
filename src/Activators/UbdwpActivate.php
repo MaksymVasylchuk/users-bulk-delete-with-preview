@@ -70,6 +70,22 @@ class UbdwpActivate {
 	}
 
 	/**
+	 * Drop the plugin log table together with a deleted multisite site.
+	 *
+	 * @param array<string> $tables  Tables WordPress will drop for the site.
+	 * @param int           $site_id ID of the site being deleted.
+	 *
+	 * @return array<string> Tables to drop.
+	 */
+	public static function ubdwp_drop_site_tables( array $tables, int $site_id ): array {
+		global $wpdb;
+
+		$tables[] = $wpdb->get_blog_prefix( $site_id ) . 'ubdwp_logs';
+
+		return $tables;
+	}
+
+	/**
 	 * Ensure the current site's plugin data is up to date after plugin updates.
 	 *
 	 * @return void
@@ -111,8 +127,40 @@ class UbdwpActivate {
 		// Create or update the database table.
 		dbDelta( $sql );
 
+		self::remove_legacy_export_files();
+
 		// Set the plugin version in the options table.
-			update_option( 'ubdwp_plugin_db_version', WPUBDP_PLUGIN_VERSION );
+		update_option( 'ubdwp_plugin_db_version', WPUBDP_PLUGIN_VERSION );
+	}
+
+	/**
+	 * Remove CSV exports stored in uploads by plugin versions before 2.2.1.
+	 *
+	 * @return void
+	 */
+	private static function remove_legacy_export_files(): void {
+		$upload_dir = wp_upload_dir( null, false );
+
+		if ( empty( $upload_dir['basedir'] ) ) {
+			return;
+		}
+
+		$export_dir = trailingslashit( $upload_dir['basedir'] ) . 'ubdwp-exports';
+
+		if ( ! is_dir( $export_dir ) ) {
+			return;
+		}
+
+		$files = array_merge(
+			glob( trailingslashit( $export_dir ) . 'users_export_*.csv' ) ?: array(),
+			glob( trailingslashit( $export_dir ) . 'index.php' ) ?: array()
+		);
+
+		foreach ( $files as $file ) {
+			wp_delete_file( $file );
+		}
+
+		@rmdir( $export_dir ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Directory is only removed when empty.
 	}
 
 	/**

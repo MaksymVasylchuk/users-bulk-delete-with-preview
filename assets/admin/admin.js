@@ -1,11 +1,13 @@
 (function ($) {
     'use strict';
 
-    const {__, _x, _n, _nx} = wp.i18n;
+    const {__, _x, _n, _nx, sprintf} = wp.i18n;
 
     // Variables
-    const form      = '#search_users_form'; // The ID of the user search form
-    let currentStep = 1; // Tracks the current step in a multi-step process
+    const form         = '#search_users_form'; // The ID of the user search form
+    const translations = localizedData.translations || {}; // Server-side translated strings
+    let currentStep    = 1; // Tracks the current step in a multi-step process
+    let previewUserIds = []; // IDs of all users shown in the preview table
 
     /**
      * Initialize the script when the document is ready
@@ -41,7 +43,7 @@
                     }),
                     processResults: data => {
                         clearErrors( form ); // Clear any existing errors
-                        return {results: data.data.results};
+                        return {results: data.success ? data.data.results : []};
                     }
                 }
             }
@@ -77,7 +79,7 @@
                         q: params.term,
                         nonce: $( '#search_user_meta_nonce' ).val()
                     }),
-                    processResults: data => ({results: data.data})
+                    processResults: data => ({results: data.success && Array.isArray( data.data ) ? data.data : []})
                 },
                 placeholder: __( 'Select meta field', 'users-bulk-delete-with-preview' ),
                 minimumInputLength: 1
@@ -175,6 +177,12 @@
                             },
                             success: function (data) {
                                 hideLoader();
+
+                                if ( ! data.success) {
+                                    handleErrorResponse( data );
+                                    return;
+                                }
+
                                 const allIds     = data.data.results.map(
                                     item => {
                                         const option = new Option( item.text, item.id, true, true );
@@ -293,20 +301,27 @@
                                 handleErrorResponse( response );
                             }
                         },
-                        error: hideLoader
+                        error: function () {
+                            hideLoader();
+                            createWordpressError( __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );
+                        }
                     }
                 );
             }
         );
-
-        let deletedCount = 0; // Declare deletedCount in the outer scope
-        let batchSize = 10; // Number of users processed per batch
 
         // Show confirmation modal before delete
         $( document ).on(
             'click',
             '.deleteButton',
             () => {
+                clearWordpressError();
+
+                if ( ! getCheckedUsers().length) {
+                    createWordpressError( translations.selectAnyUser );
+                    return;
+                }
+
                 $( '#confirmModal' ).modal( 'show' );
             }
         );
@@ -317,96 +332,111 @@
             '#confirmDelete',
             () => {
                 $( '#confirmModal' ).modal( 'hide' );
+
+                const users = getCheckedUsers();
+
+                if ( ! users.length) {
+                    createWordpressError( translations.selectAnyUser );
+                    return;
+                }
+
                 showProgressBar();
                 disableButtonsOnTheSecondStep();
+                $( '#user_delete_success_list' ).empty();
 
-                let users = extractUsersFromForm();
-                let totalUsers = users.length;
+                const totalUsers = users.length;
+                const state      = {
+                    users: users,
+                    totalUsers: totalUsers,
+                    batchSize: totalUsers > 10 ? 10 : (totalUsers < 5 ? 1 : 5),
+                    processed: 0,
+                    deleted: 0,
+                    failed: 0
+                };
 
-                batchSize = totalUsers > 10 ? 10 : (totalUsers < 5 ? 1 : 5);
-
-                // Reset deletedCount before starting
-                deletedCount = 0;
-
-                // Start processing the first batch
-                let firstBatch = users.slice(0, batchSize);
-                processUsersDeletionBatch(firstBatch, users, batchSize, totalUsers);
+                updateProgressOfUserDeletion( 0, totalUsers );
+                processUsersDeletionBatch( state );
             }
         );
 
-        // Extract serialized user data from the form
-        function extractUsersFromForm() {
-            const formData = $('#select_users_for_delete').serializeArray();
-            let users = {};
+        // Process the next batch of checked users
+        function processUsersDeletionBatch(state) {
+            const batch = state.users.slice( state.processed, state.processed + state.batchSize );
 
-            formData.forEach(field => {
-                const match = field.name.match(/users\[(\d+)\]\[(\w+)\]/);
-                if (match) {
-                    const [_, userId, fieldName] = match;
-                    users[userId] = users[userId] || {}; // Initialize if doesn't exist
-                    users[userId][fieldName] = field.value; // Assign value
-                }
-            });
-
-            return Object.values(users); // Return users as an array
-        }
-
-        // Function to process each batch of users
-        function processUsersDeletionBatch(batch, usersArray, batchSize, totalUsers) {
-            $.ajax({
-                url: localizedData.ajaxurl,
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    action: $('#delete_users_action').val(),
-                    delete_users_nonce: $('#delete_users_nonce').val(),
-                    users: batch
-                },
-                success: function(response) {
-                    if (response.success) {
-                        deletedCount += batch.length; // Increment deletedCount
-                        updateProgressOfUserDeletion(deletedCount, totalUsers); // Update progress bar and count
-
-                        if (deletedCount < totalUsers) {
-                            let nextBatch = usersArray.slice(deletedCount, deletedCount + batchSize);
-                            $('#user_delete_success_list').append(response.data.template);
-                            processUsersDeletionBatch(nextBatch, usersArray, batchSize, totalUsers); // Run next batch
-                        } else {
-                            finishBatchProcess(response, usersArray); // Finish processing
+            $.ajax(
+                {
+                    url: localizedData.ajaxurl,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action: $( '#delete_users_action' ).val(),
+                        delete_users_nonce: $( '#delete_users_nonce' ).val(),
+                        users: batch
+                    },
+                    success: function (response) {
+                        if ( ! response.success) {
+                            handleUsersDeletionFailure( state, response );
+                            return;
                         }
-                    } else {
-                        handleUsersDeletionFailure(response);
+
+                        state.processed += batch.length;
+                        state.deleted   += parseInt( response.data.deleted_count, 10 ) || 0;
+                        state.failed    += parseInt( response.data.failed_count, 10 ) || 0;
+
+                        $( '#user_delete_success_list' ).append( response.data.template );
+                        updateProgressOfUserDeletion( state.processed, state.totalUsers );
+
+                        if (state.processed < state.totalUsers) {
+                            processUsersDeletionBatch( state );
+                        } else {
+                            finishBatchProcess( state );
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error( 'AJAX error:', textStatus, errorThrown );
+                        handleUsersDeletionFailure( state, null );
                     }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error('AJAX error:', textStatus, errorThrown);
-                    handleUsersDeletionFailure();
                 }
-            });
+            );
         }
 
-        function updateProgressOfUserDeletion(deletedCount, totalUsers) {
-            const percentComplete = (deletedCount / totalUsers) * 100;
-            $('#progressBarInner').css('width', percentComplete + '%');
-            $('#deletedCount').text(`${deletedCount} / ${totalUsers} (${Math.round(percentComplete)}%)`);
+        function updateProgressOfUserDeletion(processed, totalUsers) {
+            const percentComplete = totalUsers ? (processed / totalUsers) * 100 : 0;
+            $( '#progressBarInner' ).css( 'width', percentComplete + '%' );
+            $( '#deletedCount' ).text( `${processed} / ${totalUsers} (${Math.round( percentComplete )}%)` );
         }
 
-        function finishBatchProcess(response, usersArray) {
+        function finishBatchProcess(state) {
             activateButtonsOnTheSecondStep();
             hideProgressBar();
-            $('#user_delete_success_list').append(response.data.template);
-            let message = `Success! All selected users (${usersArray.length}) were removed!`;
-            $('#user_delete_success_heading').html(message);
+
+            let message = sprintf( translations.deleteSuccess, state.deleted );
+
+            if (state.failed > 0) {
+                message += ' ' + sprintf( translations.deleteFailed, state.failed );
+            }
+
+            $( '#user_delete_success_heading' ).text( message );
             currentStep = 3;
-            showStep(currentStep);
+            showStep( currentStep );
         }
 
-        function handleUsersDeletionFailure(response = null) {
-            activateButtonsOnTheSecondStep();
-            hideProgressBar();
-            if (response) handleErrorResponse(response);
-        }
+        function handleUsersDeletionFailure(state, response) {
+            // Users from earlier batches are already gone, so show them instead of hiding the result.
+            if (state.deleted > 0) {
+                state.failed += state.totalUsers - state.processed;
+                finishBatchProcess( state );
+            } else {
+                activateButtonsOnTheSecondStep();
+                hideProgressBar();
+            }
 
+            if (response) {
+                handleErrorResponse( response );
+            } else {
+                createWordpressError( __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );
+            }
+        }
 
         // Handle export button click
         $( document ).on(
@@ -414,6 +444,15 @@
             '.export-users-button',
             function (e) {
                 e.preventDefault();
+                clearWordpressError();
+
+                const users = getCheckedUsers();
+
+                if ( ! users.length) {
+                    createWordpressError( translations.selectAnyUser );
+                    return;
+                }
+
                 showLoader();
                 $.ajax(
                     {
@@ -423,48 +462,85 @@
                         data: {
                             action: 'custom_export_users',
                             export_users_nonce: $( '#export_users_nonce' ).val(),
-                            users: $( '.user-checkbox:checked' ).serializeArray()
+                            users: users.map( user => ({value: user.id}) )
                         },
                         success: function (response) {
+                            hideLoader();
+
                             if (response.success) {
-                                var fileUrl = response.data.file_url;
-
-                                // Trigger download
-                                window.location.href = fileUrl;
-
-                                // Delete the file after download
-                                setTimeout(
-                                    function () {
-                                        $.ajax(
-                                            {
-                                                url: ajaxurl,
-                                                type: 'POST',
-	                                                data: {
-	                                                    action: 'delete_exported_file',
-	                                                    nonce: localizedData.customExportUsersNonce,
-	                                                    file_path: response.data.file_path
-	                                                },
-                                                success: function (response) {
-                                                    hideLoader();
-                                                },
-                                                error: hideLoader
-                                            }
-                                        );
-                                    },
-                                    1000
-                                ); // Wait for download to complete
+                                downloadFile( response.data.content, response.data.file_name, 'text/csv;charset=utf-8' );
                             } else {
                                 handleErrorResponse( response );
                             }
-
                         },
-                        error: function (data) {
+                        error: function () {
                             hideLoader();
+                            createWordpressError( __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );
                         }
                     }
                 );
             }
         );
+    }
+
+    /**
+     * Download text content as a file without storing it on the server
+     *
+     * @param {string} content - File content
+     * @param {string} fileName - File name
+     * @param {string} mimeType - File MIME type
+     */
+    function downloadFile(content, fileName, mimeType) {
+        const url  = URL.createObjectURL( new Blob( [content], {type: mimeType} ) );
+        const link = document.createElement( 'a' );
+
+        link.href     = url;
+        link.download = fileName;
+        document.body.appendChild( link );
+        link.click();
+        link.remove();
+
+        setTimeout( () => URL.revokeObjectURL( url ), 1000 );
+    }
+
+    /**
+     * Get row nodes of the preview table, including rows on other pages
+     *
+     * @return {jQuery} Row nodes
+     */
+    function getTableRowNodes() {
+        if ( ! $.fn.DataTable.isDataTable( '#userTable' )) {
+            return $();
+        }
+
+        return $( $( '#userTable' ).DataTable().rows().nodes() );
+    }
+
+    /**
+     * Collect checked users from all pages of the preview table
+     *
+     * @return {Array<object>} Checked users
+     */
+    function getCheckedUsers() {
+        const users = [];
+
+        getTableRowNodes().find( 'input.user-checkbox:checked' ).each(
+            function () {
+                const $row = $( this ).closest( 'tr' );
+                const id   = String( $( this ).val() );
+
+                users.push(
+                    {
+                        id: id,
+                        reassign: $row.find( 'select.user-select' ).val() || '',
+                        email: $row.find( 'input[name="users[' + id + '][email]"]' ).val() || '',
+                        display_name: $row.find( 'input[name="users[' + id + '][display_name]"]' ).val() || ''
+                    }
+                );
+            }
+        );
+
+        return users;
     }
 
     /**
@@ -529,10 +605,10 @@
         hideLoader();
         clearErrors( form );
 
-        if (response.data && response.data.errors) {
+        if (response && response.data && response.data.errors) {
             showErrorsUnderInputs( form, response.data.errors );
         } else {
-            createWordpressError( response.data.message || __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );
+            createWordpressError( (response && response.data && response.data.message) || __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );
         }
     }
 
@@ -548,7 +624,7 @@
             '<button>',
             {
                 class: 'notice-dismiss',
-                html: '<span class="screen-reader-text">Dismiss this notice.</span>',
+                html: $( '<span class="screen-reader-text">' ).text( __( 'Dismiss this notice.', 'users-bulk-delete-with-preview' ) ),
                 click: () => errorDiv.hide()
             }
         );
@@ -619,9 +695,15 @@
             $( '#userTable' ).DataTable().clear().destroy();
         }
 
+        previewUserIds = data.map( user => user.ID );
+
+        const escapeText = $.fn.dataTable.render.text();
+
         let usersTable = $( '#userTable' ).DataTable(
             {
                 data: data,
+                // Row nodes of all pages must exist so checked users and reassign values survive paging.
+                deferRender: false,
                 responsive: true,
                 columns: [
                     {
@@ -630,28 +712,28 @@
                         orderable: false,
                         searchable: false
                     },
-                    {title: localizedData.id, data: 'ID'},
-                    {title: localizedData.username, data: 'user_login'},
-                    {title: localizedData.email, data: 'user_email'},
-                    {title: localizedData.registered, data: 'user_registered'},
-                    {title: localizedData.role, data: 'user_role'},
+                    {title: translations.id, data: 'ID', render: escapeText},
+                    {title: translations.username, data: 'user_login', render: escapeText},
+                    {title: translations.email, data: 'user_email', render: escapeText},
+                    {title: translations.registered, data: 'user_registered', render: escapeText},
+                    {title: translations.role, data: 'user_role', render: escapeText},
                     {
-                        title: localizedData.assignContent,
+                        title: translations.assignContent,
                         data: 'select',
                         orderable: false,
                         searchable: false
                     }
                 ],
                 language: {
-                    emptyTable: localizedData.emptyTable,
-                    info: localizedData.info,
-                    infoEmpty: localizedData.infoEmpty,
-                    infoFiltered: localizedData.infoFiltered,
-                    lengthMenu: localizedData.lengthMenu,
-                    loadingRecords: localizedData.loadingRecords,
-                    processing: localizedData.processing,
-                    search: localizedData.search,
-                    zeroRecords: localizedData.zeroRecords
+                    emptyTable: translations.emptyTable,
+                    info: translations.info,
+                    infoEmpty: translations.infoEmpty,
+                    infoFiltered: translations.infoFiltered,
+                    lengthMenu: translations.lengthMenu,
+                    loadingRecords: translations.loadingRecords,
+                    processing: translations.processing,
+                    search: translations.search,
+                    zeroRecords: translations.zeroRecords
                 },
                 order: [[1, 'asc']],
                 lengthMenu: [
@@ -668,38 +750,95 @@
             }
         );
 
-        initializeGeneralSelectOptions( data );
+        initializeGeneralSelectOptions();
+        initializeVisibleReassignSelects();
 
-        // Listen for DataTable redraw event
-        usersTable.on('draw', function() {
-            // Check if Select2 is initialized on this element
-            $('.user-select').each(function() {
-                // Check if Select2 is initialized on this element
-                if ($(this).data('select2')) {
-                    $(this).select2('destroy'); // Destroy only if Select2 is initialized
-                }
-            });
-
-            $('.user-select').select2( {width: '200px'} );
-        });
+        // Rows on other pages are initialized when they are drawn
+        usersTable.on( 'draw', initializeVisibleReassignSelects );
 
         // Trigger resize event
-        $(window).trigger('resize');
+        $( window ).trigger( 'resize' );
+    }
+
+    /**
+     * Select2 options for searching reassign target users via AJAX
+     *
+     * @param {string} width - Select width
+     *
+     * @return {object} Select2 options
+     */
+    function getReassignSelect2Options(width) {
+        return {
+            width: width,
+            ajax: {
+                url: localizedData.ajaxurl,
+                type: 'POST',
+                dataType: 'json',
+                delay: 250,
+                data: params => ({
+                    action: 'search_reassign_users',
+                    q: params.term || '',
+                    nonce: localizedData.reassignUsersNonce,
+                    exclude: previewUserIds
+                }),
+                processResults: data => ({
+                    results: [
+                        {id: '', text: translations.selectUser},
+                        {id: 'remove_all_related_content', text: translations.removeContent}
+                    ].concat( data.success ? data.data.results : [] )
+                })
+            }
+        };
+    }
+
+    /**
+     * Initialize Select2 on reassign selects of the currently drawn rows
+     */
+    function initializeVisibleReassignSelects() {
+        $( '#userTable tbody select.user-select' ).each(
+            function () {
+                if ( ! $( this ).data( 'select2' )) {
+                    $( this ).select2( getReassignSelect2Options( '200px' ) );
+                }
+            }
+        );
+    }
+
+    /**
+     * Set a value on a reassign select, adding the option if it was loaded via AJAX
+     *
+     * @param {jQuery} $select - Select element
+     * @param {string} value - Option value
+     * @param {string} text - Option label
+     */
+    function setReassignSelectValue($select, value, text) {
+        if ( ! $select.find( 'option' ).filter( (index, option) => option.value === value ).length) {
+            $select.append( new Option( text, value, false, false ) );
+        }
+
+        $select.val( value ).trigger( 'change' );
     }
 
     /**
      * Initialize general select options for the user table
-     *
-     * @param {array} data - The data for the table
      */
-    function initializeGeneralSelectOptions(data) {
-        const firstRowSelectOptions = $( data[0].select ).html();
-        $( '#generalSelect' ).html( firstRowSelectOptions ).select2();
-        $( '.user-select' ).select2( {width: '200px'} );
+    function initializeGeneralSelectOptions() {
+        const $generalSelect = $( '#generalSelect' );
+
+        if ($generalSelect.data( 'select2' )) {
+            $generalSelect.select2( 'destroy' );
+        }
+
+        $generalSelect
+            .off( '.ubdwp' )
+            .empty()
+            .append( new Option( translations.selectUser, '', true, true ) )
+            .append( new Option( translations.removeContent, 'remove_all_related_content', false, false ) )
+            .select2( getReassignSelect2Options( '400px' ) );
 
         // Handle the "Select All" checkbox
-        $( '#select-all' ).on(
-            'click',
+        $( '#select-all' ).off( '.ubdwp' ).on(
+            'click.ubdwp',
             function () {
                 const rows = $( '#userTable' ).DataTable().rows( {'search': 'applied'} ).nodes();
                 $( 'input[type="checkbox"]', rows ).prop( 'checked', this.checked );
@@ -707,8 +846,8 @@
         );
 
         // Handle individual user checkbox click
-        $( '#userTable tbody' ).on(
-            'click',
+        $( '#userTable tbody' ).off( '.ubdwp' ).on(
+            'click.ubdwp',
             'input.user-checkbox',
             function () {
                 if ( ! this.checked) {
@@ -720,13 +859,18 @@
             }
         );
 
-        // Handle general select change event
-        $( '#generalSelect' ).on(
-            'change',
+        // Apply the general value to user selects on all table pages
+        $generalSelect.on(
+            'change.ubdwp',
             function () {
-                const selectedValue = $( this ).val();
-                // Apply the selected value to all user selects in the table
-                $( '.user-select' ).val( selectedValue ).trigger( 'change' );
+                const value = String( $( this ).val() || '' );
+                const text  = $( this ).find( 'option:selected' ).text();
+
+                getTableRowNodes().find( 'select.user-select' ).each(
+                    function () {
+                        setReassignSelectValue( $( this ), value, text );
+                    }
+                );
             }
         );
     }
