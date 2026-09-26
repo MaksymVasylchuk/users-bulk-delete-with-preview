@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</select>
 </div>
 <input type="hidden" id="delete_users_nonce" name="delete_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'delete_users_nonce' ) ); ?>">
-<input type="hidden" name="action" value="delete_users_action" id="delete_users_action">
+<input type="hidden" name="action" value="ubdwp_delete_users" id="delete_users_action">
 <input type="hidden" id="export_users_nonce" name="export_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'export_users_nonce' ) ); ?>">
 
 <form action="#" method="post" id="select_users_for_delete">

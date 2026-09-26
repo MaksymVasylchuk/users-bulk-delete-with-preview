@@ -350,7 +350,7 @@ class UbdwpHelper {
 	 * @return void
 	 */
 	public function localize_scripts( string $script_handle, array $localizations ): void {
-		wp_localize_script( $script_handle, 'localizedData', $localizations );
+		wp_localize_script( $script_handle, 'ubdwpData', $localizations );
 	}
 
 	/**

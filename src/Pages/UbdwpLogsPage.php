@@ -31,7 +31,7 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 	public function __construct() {
 		$this->handler = new UbdwpLogsHandler( $this->get_current_user_id() );
 		$this->register_ajax_call(
-			'logs_datatables',
+			'ubdwp_logs_datatables',
 			array( $this, 'handle_ajax_requests' )
 		);
 	}
@@ -82,7 +82,7 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 	 * @return void
 	 */
 	public function handle_ajax_requests(): void {
-		$capabilities = array( self::MANAGE_OPTIONS_CAP );
+		$capabilities = array( self::MANAGE_OPTIONS_CAP, self::LIST_USERS_CAP );
 
 		$this->handle_ajax_request(
 			'logs_datatable_nonce',

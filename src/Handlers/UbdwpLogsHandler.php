@@ -56,7 +56,7 @@ class UbdwpLogsHandler {
 	 * @return array<string, mixed> Prepared logs data including metadata for DataTables.
 	 */
 	public function prepare_logs_data( array $request ): array {
-		$limit        = UbdwpValidationFacade::validate_positive_integer( $request['length'] ?? 10, 10 );
+		$limit        = min( 100, UbdwpValidationFacade::validate_positive_integer( $request['length'] ?? 10, 10 ) );
 		$offset       = UbdwpValidationFacade::validate_positive_integer( $request['start'] ?? 0, 0 );
 		$search_value = sanitize_text_field( $request['search']['value'] ?? '' );
 
