@@ -69,7 +69,7 @@ abstract class UbdwpAbstractBaseRepository {
 	 * @return array Results as objects.
 	 */
 	protected function select( string $query, array $params = array() ): array {
-		return $this->wpdb->get_results( $this->wpdb->prepare( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used here.
+		return $this->wpdb->get_results( $this->prepare_query( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  Query is prepared in "prepare_query".
 	}
 
 	/**
@@ -81,7 +81,7 @@ abstract class UbdwpAbstractBaseRepository {
 	 * @return array Results as a single column array.
 	 */
 	protected function get_col( string $query, array $params = array() ): array {
-		return $this->wpdb->get_col( $this->wpdb->prepare( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used here.
+		return $this->wpdb->get_col( $this->prepare_query( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  Query is prepared in "prepare_query".
 	}
 
 	/**
@@ -93,7 +93,26 @@ abstract class UbdwpAbstractBaseRepository {
 	 * @return mixed Single value result.
 	 */
 	protected function get_var( string $query, array $params = array() ): mixed {
-		return $this->wpdb->get_var( $this->wpdb->prepare( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  "prepare" is used here.
+		return $this->wpdb->get_var( $this->prepare_query( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  Query is prepared in "prepare_query".
+	}
+
+	/**
+	 * Prepare a query only when it has parameters to bind.
+	 *
+	 * Calling wpdb::prepare() without placeholders triggers a _doing_it_wrong() notice,
+	 * so queries built only from escaped table names and already prepared clauses are used as is.
+	 *
+	 * @param string $query SQL query with placeholders.
+	 * @param array $params Parameters to bind to the query.
+	 *
+	 * @return string SQL query.
+	 */
+	private function prepare_query( string $query, array $params ): string {
+		if ( empty( $params ) ) {
+			return $query;
+		}
+
+		return $this->wpdb->prepare( $query, $params ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query comes from repository methods with placeholders for all dynamic values.
 	}
 
 	/**

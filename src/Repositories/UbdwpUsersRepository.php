@@ -48,11 +48,27 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 * @return array<int, string> List of meta keys matching the search term.
 	 */
 	public function search_usermeta_ajax( string $search ): array {
+		$params = array( '%' . $this->wpdb->esc_like( $search ) . '%' );
+
+		if ( is_multisite() ) {
+			// Only offer meta keys of users that belong to the current site.
+			$query    = "
+                SELECT DISTINCT um.meta_key
+                FROM {$this->wpdb->usermeta} um
+                INNER JOIN {$this->wpdb->usermeta} cap ON cap.user_id = um.user_id AND cap.meta_key = %s
+                WHERE um.meta_key LIKE %s
+                LIMIT 10
+            ";
+			$params = array( $this->wpdb->get_blog_prefix() . 'capabilities', $params[0] );
+
+			return $this->select( $query, $params );
+		}
+
 		$query = "
             SELECT DISTINCT meta_key FROM {$this->wpdb->usermeta} WHERE meta_key LIKE %s LIMIT 10
         ";
 
-		return $this->select( $query, array( '%' . $this->wpdb->esc_like( $search ) . '%' ) );
+		return $this->select( $query, $params );
 	}
 
 	/**
@@ -93,23 +109,6 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	}
 
 	/**
-	 * Get users excluding specified IDs.
-	 *
-	 * @param array<int> $exclude_ids IDs to exclude.
-	 *
-	 * @return array<\WP_User> List of users excluding the specified IDs.
-	 */
-	public function get_users_exclude_ids( array $exclude_ids ): array {
-		return get_users( array(
-			'blog_id' => get_current_blog_id(),
-			'exclude' => array_unique( array_map( 'absint', $exclude_ids ) ),
-			'number'  => - 1,
-			'orderby' => 'ID',
-			'order'   => 'ASC',
-		) );
-	}
-
-	/**
 	 * Get users who purchased a specific WooCommerce product.
 	 *
 	 * @param array<int> $products_ids List of product IDs.
@@ -140,11 +139,32 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 		$order_items            = array_map( 'intval', $order_items );
 		$order_ids_placeholders = implode( ',', array_fill( 0, count( $order_items ), '%d' ) );
 
-		$order_query = "SELECT DISTINCT customer_id 
-            FROM {$this->wpdb->prefix}wc_orders 
-            WHERE id IN ($order_ids_placeholders) AND status IN ('wc-completed', 'wc-processing', 'wc-on-hold')";
+		if ( $this->is_woocommerce_hpos_enabled() ) {
+			$order_query = "SELECT DISTINCT customer_id
+                FROM {$this->wpdb->prefix}wc_orders
+                WHERE id IN ($order_ids_placeholders) AND status IN ('wc-completed', 'wc-processing', 'wc-on-hold')";
+		} else {
+			// Legacy order storage keeps orders in the posts table and the customer in post meta.
+			$order_query = "SELECT DISTINCT pm.meta_value
+                FROM {$this->wpdb->posts} p
+                INNER JOIN {$this->wpdb->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = '_customer_user'
+                WHERE p.ID IN ($order_ids_placeholders) AND p.post_type = 'shop_order' AND p.post_status IN ('wc-completed', 'wc-processing', 'wc-on-hold')";
+		}
 
-		return $this->get_col( $order_query, $order_items );
+		return array_map( 'intval', $this->get_col( $order_query, $order_items ) );
+	}
+
+	/**
+	 * Check whether WooCommerce stores orders in its custom (HPOS) tables.
+	 *
+	 * @return bool True when HPOS is the authoritative order storage.
+	 */
+	private function is_woocommerce_hpos_enabled(): bool {
+		if ( class_exists( '\Automattic\WooCommerce\Utilities\OrderUtil' ) ) {
+			return \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
+		}
+
+		return false;
 	}
 
 	/**
@@ -203,7 +223,7 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 */
 	private function apply_role_filter( array &$args, array $request ): void {
 		if ( ! empty( $request['user_role'] ) ) {
-			$args['role__in'] = array_map( 'sanitize_text_field', $request['user_role'] );
+			$args['role__in'] = array_map( 'sanitize_text_field', (array) $request['user_role'] );
 		}
 	}
 
@@ -261,11 +281,11 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 					return;
 				}
 
-				$compare = UbdwpHelperFacade::get_meta_compare_operator( $compare_type );
 				$args['meta_query'][] = [
 					'key'     => $key,
 					'value'   => $value,
-					'compare' => $compare,
+					'compare' => UbdwpHelperFacade::get_meta_compare_operator( $compare_type ),
+					'type'    => UbdwpHelperFacade::get_meta_compare_type( $compare_type ),
 				];
 				break;
 		}

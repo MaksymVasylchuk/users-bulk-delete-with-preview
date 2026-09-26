@@ -62,7 +62,8 @@ class UbdwpUsersHandler {
 		if ( $select_all ) {
 			$args['number'] = - 1; // Fetch all users.
 		} else {
-			$args['search'] = '*' . esc_attr( $search_term ) . '*';
+			$args['search'] = '*' . $search_term . '*';
+			$args['number'] = 50; // Limit autocomplete results on large sites.
 		}
 
 		$user_query = $this->repository->search_users_ajax( $args );
@@ -95,10 +96,47 @@ class UbdwpUsersHandler {
 
 		return array_map( static function ( $result ) {
 			return array(
-				'id'   => sanitize_key( $result->meta_key ),
+				'id'   => sanitize_text_field( $result->meta_key ),
 				'text' => sanitize_text_field( $result->meta_key ),
 			);
 		}, $results );
+	}
+
+	/**
+	 * Handle AJAX request to search users that can receive reassigned content.
+	 *
+	 * @param array<string, mixed> $request Request parameters.
+	 *
+	 * @return array<int, array<string, string>> List of matching users.
+	 */
+	public function search_reassign_users_ajax( array $request ): array {
+		$search_term = $request['q'] ?? '';
+		$exclude     = array_filter( array_unique( array_map( 'absint', $request['exclude'] ?? array() ) ) );
+
+		$args = array(
+			'search_columns' => array( 'user_login', 'user_email', 'display_name' ),
+			'fields'         => array( 'ID', 'user_login', 'display_name' ),
+			'exclude'        => $exclude, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- Users selected for deletion must not receive reassigned content.
+			'number'         => 20,
+			'orderby'        => 'user_login',
+			'order'          => 'ASC',
+		);
+
+		if ( $search_term !== '' ) {
+			$args['search'] = '*' . $search_term . '*';
+		}
+
+		$user_query = $this->repository->search_users_ajax( $args );
+		$results    = array();
+
+		foreach ( $user_query->get_results() as $user ) {
+			$results[] = array(
+				'id'   => (string) $user->ID,
+				'text' => sprintf( '%s (%s)', sanitize_user( $user->user_login ), sanitize_text_field( $user->display_name ) ),
+			);
+		}
+
+		return $results;
 	}
 
 	/**
@@ -117,7 +155,7 @@ class UbdwpUsersHandler {
 		$users    = $this->repository->get_users_by_ids( $user_ids );
 
 		if ( ! empty( $users ) ) {
-			return UbdwpHelperFacade::prepare_users_for_table( $users, $this->repository );
+			return UbdwpHelperFacade::prepare_users_for_table( $users );
 		}
 
 		return new \WP_Error( 'no_users_found', UbdwpValidationFacade::get_error_message( 'no_users_found' ) );
@@ -144,7 +182,7 @@ class UbdwpUsersHandler {
 		}
 
 		if ( ! empty( $user_query->get_results() ) ) {
-			return UbdwpHelperFacade::prepare_users_for_table( $user_query->get_results(), $this->repository );
+			return UbdwpHelperFacade::prepare_users_for_table( $user_query->get_results() );
 		}
 
 		return new \WP_Error( 'no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message( 'no_users_found_with_given_filters' ) );
@@ -158,7 +196,7 @@ class UbdwpUsersHandler {
 	 * @return array|\WP_Error List of users or error on failure.
 	 */
 	public function get_users_by_woocommerce_filters( array $request ) {
-		$products = array_unique( array_map( 'absint', $request['products'] ?? array() ) );
+		$products = array_unique( array_map( 'absint', (array) ( $request['products'] ?? array() ) ) );
 		$user_ids = $this->repository->get_users_by_product_purchase( $products );
 
 		$user_ids = array_filter( $user_ids, static fn( $value ) => $value !== 0 && $value !== '0' );
@@ -167,7 +205,7 @@ class UbdwpUsersHandler {
 			$user_ids = array_unique( $user_ids );
 			$users    = $this->repository->get_users_by_ids( $user_ids );
 
-			return UbdwpHelperFacade::prepare_users_for_table( $users, $this->repository );
+			return UbdwpHelperFacade::prepare_users_for_table( $users );
 		}
 
 		return new \WP_Error( 'no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message( 'no_users_found_with_given_filters' ) );
@@ -183,6 +221,9 @@ class UbdwpUsersHandler {
 	public function generate_csv( array $users ): string {
 		// Create a temporary file object in memory.
 		$temp_file = new \SplTempFileObject();
+
+		// Explicit CSV control avoids the PHP 8.4 fputcsv() $escape deprecation.
+		$temp_file->setCsvControl( ',', '"', '' );
 
 		// Add CSV header.
 		$temp_file->fputcsv( array( 'ID', 'Username', 'Email', 'First Name', 'Last Name', 'Role' ) );
@@ -210,45 +251,12 @@ class UbdwpUsersHandler {
 	}
 
 	/**
-	 * Save the generated CSV content to a file.
+	 * Build a file name for the CSV export download.
 	 *
-	 * @param string $csv_output The CSV content.
-	 *
-	 * @return array<string, string>|\WP_Error URL and path of the saved file or error on failure.
+	 * @return string CSV file name.
 	 */
-	public function save_csv_file( string $csv_output ) {
-		global $wp_filesystem;
-		if ( ! function_exists( 'WP_Filesystem' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-		}
-
-		WP_Filesystem();
-
-		$upload_dir = wp_upload_dir();
-		$export_dir = $this->get_export_dir();
-
-		if ( ! wp_mkdir_p( $export_dir ) ) {
-			return new \WP_Error( 'file_write_error', __( 'Failed to create the CSV export directory.', 'users-bulk-delete-with-preview' ) );
-		}
-
-		$this->cleanup_old_export_files( $export_dir );
-
-		$index_file = trailingslashit( $export_dir ) . 'index.php';
-		if ( ! file_exists( $index_file ) ) {
-			$wp_filesystem->put_contents( $index_file, "<?php\n// Silence is golden.\n", FS_CHMOD_FILE );
-		}
-
-		$file_name = wp_unique_filename( $export_dir, 'users_export_' . time() . '_' . wp_generate_password( 12, false ) . '.csv' );
-		$file_path = trailingslashit( $export_dir ) . $file_name;
-
-		if ( ! $wp_filesystem->put_contents( $file_path, $csv_output, FS_CHMOD_FILE ) ) {
-			return new \WP_Error( 'file_write_error', __( 'Failed to write the CSV file.', 'users-bulk-delete-with-preview' ) );
-		}
-
-		return array(
-			'file_url'  => trailingslashit( $upload_dir['baseurl'] ) . 'ubdwp-exports/' . basename( $file_path ),
-			'file_path' => $file_path,
-		);
+	public function get_csv_file_name(): string {
+		return 'users_export_' . gmdate( 'Y-m-d_H-i-s' ) . '.csv';
 	}
 
 	/**
@@ -260,35 +268,47 @@ class UbdwpUsersHandler {
 	 */
 	public function delete_users( array $sanitized_users ): array {
 		$deleted_users = array();
+		$failed_users  = array();
+		$batch_ids     = array_map( 'intval', array_column( $sanitized_users, 'id' ) );
 
 		foreach ( $sanitized_users as $user ) {
 			$user_id = (int) $user['id'];
 
 			if ( ! $this->can_manage_user_for_current_site( $user_id ) ) {
+				$failed_users[] = $user_id;
 				continue;
 			}
 
-			$reassign = $this->normalize_reassign_user_id( $user['reassign'] ?? null, $user_id );
-			$remove_related_content = isset( $user['reassign'] ) && $user['reassign'] === 'remove_all_related_content';
+			$reassign_raw           = (string) ( $user['reassign'] ?? '' );
+			$remove_related_content = $reassign_raw === 'remove_all_related_content';
+			$reassign               = null;
 
-			if ( $user_id > 0 ) {
-				if ( $remove_related_content ) {
-					$this->delete_related_content( $user_id );
-					$reassign = null;
-				}
+			if ( ! $remove_related_content && $reassign_raw !== '' ) {
+				$reassign = $this->normalize_reassign_user_id( $reassign_raw, $user_id, $batch_ids );
 
-				if ( ! $this->remove_or_delete_user( $user_id, $reassign ) ) {
+				// Never fall back to deleting content when an explicit reassign target is invalid.
+				if ( null === $reassign ) {
+					$failed_users[] = $user_id;
 					continue;
 				}
-
-				$deleted_users[ $user_id ] = array(
-					'user_id'      => $user_id,
-					'email'        => $user['email'],
-					'display_name' => $user['display_name'],
-					'reassign'     => $remove_related_content ? 'remove_all_related_content' : ( $reassign ?? '' ),
-					'action'       => is_multisite() ? 'removed_from_site' : 'deleted',
-				);
 			}
+
+			if ( $remove_related_content ) {
+				$this->delete_related_content( $user_id );
+			}
+
+			if ( ! $this->remove_or_delete_user( $user_id, $reassign ) ) {
+				$failed_users[] = $user_id;
+				continue;
+			}
+
+			$deleted_users[ $user_id ] = array(
+				'user_id'      => $user_id,
+				'email'        => $user['email'],
+				'display_name' => $user['display_name'],
+				'reassign'     => $remove_related_content ? 'remove_all_related_content' : ( $reassign ?? '' ),
+				'action'       => is_multisite() ? 'removed_from_site' : 'deleted',
+			);
 		}
 
 		$template = UbdwpViewsFacade::render_template(
@@ -301,28 +321,9 @@ class UbdwpUsersHandler {
 
 		return array(
 			'deleted_users' => $deleted_users,
+			'failed_users'  => $failed_users,
 			'template'      => $template,
 		);
-	}
-
-	/**
-	 * Delete a CSV file from the server.
-	 *
-	 * @param string $file_path Path to the file to delete.
-	 */
-	public function delete_csv_file( string $file_path ): void {
-		$real_file_path = realpath( $file_path );
-		$real_export_dir = realpath( $this->get_export_dir() );
-
-		if (
-			$real_file_path &&
-			$real_export_dir &&
-			str_starts_with( $real_file_path, trailingslashit( $real_export_dir ) ) &&
-			str_ends_with( $real_file_path, '.csv' ) &&
-			file_exists( $real_file_path )
-		) {
-			wp_delete_file( $real_file_path );
-		}
 	}
 
 	/**
@@ -333,53 +334,27 @@ class UbdwpUsersHandler {
 	 * @return string Safe CSV cell value.
 	 */
 	private function escape_csv_cell( string $value ): string {
-		return preg_match( '/^[=+\-@]/', $value ) ? "'" . $value : $value;
-	}
-
-	/**
-	 * Get the plugin export directory inside uploads.
-	 *
-	 * @return string Export directory path.
-	 */
-	private function get_export_dir(): string {
-		$upload_dir = wp_upload_dir();
-
-		return trailingslashit( $upload_dir['basedir'] ) . 'ubdwp-exports';
-	}
-
-	/**
-	 * Remove old export files from the plugin export directory.
-	 *
-	 * @param string $export_dir Export directory path.
-	 *
-	 * @return void
-	 */
-	private function cleanup_old_export_files( string $export_dir ): void {
-		$files = glob( trailingslashit( $export_dir ) . 'users_export_*.csv' );
-
-		if ( ! is_array( $files ) ) {
-			return;
-		}
-
-		foreach ( $files as $file ) {
-			if ( is_file( $file ) && ( time() - filemtime( $file ) ) > HOUR_IN_SECONDS ) {
-				wp_delete_file( $file );
-			}
-		}
+		return preg_match( '/^[=+\-@\t\r]/', $value ) ? "'" . $value : $value;
 	}
 
 	/**
 	 * Normalize the reassign target for wp_delete_user().
 	 *
-	 * @param mixed $reassign Reassign value from request.
-	 * @param int   $deleted_user_id User being deleted.
+	 * @param mixed      $reassign Reassign value from request.
+	 * @param int        $deleted_user_id User being deleted.
+	 * @param array<int> $batch_ids Users being deleted in the same request.
 	 *
 	 * @return int|null Reassign user ID or null.
 	 */
-	private function normalize_reassign_user_id( mixed $reassign, int $deleted_user_id ): ?int {
+	private function normalize_reassign_user_id( mixed $reassign, int $deleted_user_id, array $batch_ids = array() ): ?int {
 		$reassign_id = absint( $reassign );
 
-		if ( $reassign_id <= 0 || $reassign_id === $deleted_user_id || ! get_userdata( $reassign_id ) ) {
+		if (
+			$reassign_id <= 0 ||
+			$reassign_id === $deleted_user_id ||
+			in_array( $reassign_id, $batch_ids, true ) ||
+			! get_userdata( $reassign_id )
+		) {
 			return null;
 		}
 
@@ -403,10 +378,10 @@ class UbdwpUsersHandler {
 		}
 
 		if ( ! is_multisite() ) {
-			return true;
+			return current_user_can( 'delete_user', $user_id );
 		}
 
-		if ( ! is_user_member_of_blog( $user_id, get_current_blog_id() ) ) {
+		if ( ! is_user_member_of_blog( $user_id, get_current_blog_id() ) || ! current_user_can( 'remove_user', $user_id ) ) {
 			return false;
 		}
 
@@ -443,19 +418,25 @@ class UbdwpUsersHandler {
 	 * @return void
 	 */
 	private function delete_related_content( int $user_id ): void {
+		// Post type "any" intentionally skips internal types (e.g. WooCommerce orders, scheduled actions),
+		// but status "any" would skip trashed posts and auto-drafts, so all statuses are listed explicitly.
 		$user_posts = get_posts( array(
-			'author'      => $user_id,
-			'post_type'   => 'any',
-			'post_status' => 'any',
-			'numberposts' => -1,
-			'fields'      => 'ids',
+			'author'           => $user_id,
+			'post_type'        => 'any',
+			'post_status'      => array_keys( get_post_stati() ),
+			'numberposts'      => -1,
+			'fields'           => 'ids',
+			'suppress_filters' => true,
 		) );
 
 		foreach ( $user_posts as $post_id ) {
 			wp_delete_post( $post_id, true );
 		}
 
-		$user_comments = get_comments( array( 'user_id' => $user_id ) );
+		$user_comments = get_comments( array(
+			'user_id' => $user_id,
+			'status'  => 'any',
+		) );
 
 		foreach ( $user_comments as $comment ) {
 			wp_delete_comment( $comment->comment_ID, true );
@@ -494,7 +475,7 @@ class UbdwpUsersHandler {
 		switch ( $type ) {
 			case 'select_existing':
 				UbdwpValidationFacade::validate_user_search_for_existing_users( $sanitized_data );
-				$results = $this->get_users_by_ids( array_unique( array_map( 'intval', $request['user_search'] ?? array() ) ) );
+				$results = $this->get_users_by_ids( $sanitized_data['user_search'] ?? array() );
 				break;
 			case 'find_users':
 				UbdwpValidationFacade::validate_find_user_form( $sanitized_data );

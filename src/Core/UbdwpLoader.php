@@ -60,6 +60,7 @@ class UbdwpLoader {
 
 		if ( is_multisite() ) {
 			add_action( 'wp_initialize_site', array( UbdwpActivate::class, 'ubdwp_initialize_new_site' ) );
+			add_filter( 'wpmu_drop_tables', array( UbdwpActivate::class, 'ubdwp_drop_site_tables' ), 10, 2 );
 		}
 
 		// Initialize page objects.
@@ -205,7 +206,7 @@ class UbdwpLoader {
 		defined( 'WPUBDP_PLUGIN_DIR' ) || define( 'WPUBDP_PLUGIN_DIR', $plugin_root . '/' );
 		defined( 'WPUBDP_PLUGIN_FILE' ) || define( 'WPUBDP_PLUGIN_FILE', $plugin_root . '/ubdwp-users-bulk-delete-with-preview.php' );
 		defined( 'WPUBDP_PLUGIN_URL' ) || define( 'WPUBDP_PLUGIN_URL', plugin_dir_url( WPUBDP_PLUGIN_FILE ) );
-		defined( 'WPUBDP_PLUGIN_VERSION' ) || define( 'WPUBDP_PLUGIN_VERSION', '2.2.0' );
+		defined( 'WPUBDP_PLUGIN_VERSION' ) || define( 'WPUBDP_PLUGIN_VERSION', '2.2.1' );
 		defined( 'WPUBDP_BASE_NAME' ) || define( 'WPUBDP_BASE_NAME', plugin_basename( WPUBDP_PLUGIN_FILE ) );
 	}
 }

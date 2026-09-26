@@ -53,7 +53,7 @@ class UbdwpLogsRepository extends UbdwpAbstractBaseRepository {
 		$query = "
             SELECT t.ID, t.user_id, u.display_name, t.user_deleted_data, t.deletion_time
             FROM {$this->table_name} t
-            INNER JOIN {$this->wpdb->users} u ON t.user_id = u.ID
+            LEFT JOIN {$this->wpdb->users} u ON t.user_id = u.ID
             WHERE 1=1 {$where}
             ORDER BY t.deletion_time DESC
             LIMIT %d OFFSET %d
@@ -82,7 +82,7 @@ class UbdwpLogsRepository extends UbdwpAbstractBaseRepository {
 		$query = "
             SELECT COUNT(*)
             FROM {$this->table_name} t
-            INNER JOIN {$this->wpdb->users} u ON t.user_id = u.ID
+            LEFT JOIN {$this->wpdb->users} u ON t.user_id = u.ID
             WHERE 1=1 {$where}
         ";
 
