@@ -5,7 +5,7 @@
 
     // Variables
     const form         = '#search_users_form'; // The ID of the user search form
-    const translations = localizedData.translations || {}; // Server-side translated strings
+    const translations = ubdwpData.translations || {}; // Server-side translated strings
     let currentStep    = 1; // Tracks the current step in a multi-step process
     let previewUserIds = []; // IDs of all users shown in the preview table
 
@@ -32,12 +32,12 @@
                 placeholder: __( 'Search for users', 'users-bulk-delete-with-preview' ),
                 width: '400px',
                 ajax: {
-                    url: localizedData.ajaxurl,
+                    url: ubdwpData.ajaxurl,
                     type: 'POST',
                     dataType: 'json',
                     delay: 250,
                     data: params => ({
-                        action: 'search_users',
+                        action: 'ubdwp_search_users',
                         q: params.term,
                         nonce: $( '#search_user_existing_nonce' ).val()
                     }),
@@ -70,12 +70,12 @@
                 width: '400px',
                 tags: true,
                 ajax: {
-                    url: localizedData.ajaxurl,
+                    url: ubdwpData.ajaxurl,
                     type: 'POST',
                     dataType: 'json',
                     delay: 250,
                     data: params => ({
-                        action: 'search_usermeta',
+                        action: 'ubdwp_search_usermeta',
                         q: params.term,
                         nonce: $( '#search_user_meta_nonce' ).val()
                     }),
@@ -166,11 +166,11 @@
                     showLoader();
                     $.ajax(
                         {
-                            url: localizedData.ajaxurl,
+                            url: ubdwpData.ajaxurl,
                             type: 'POST',
                             dataType: 'json',
                             data: {
-                                action: 'search_users',
+                                action: 'ubdwp_search_users',
                                 q: '',
                                 nonce: $( '#search_user_existing_nonce' ).val(),
                                 select_all: true
@@ -287,16 +287,17 @@
 
                 $.ajax(
                     {
-                        url: localizedData.ajaxurl,
+                        url: ubdwpData.ajaxurl,
                         type: 'POST',
                         dataType: 'json',
                         data: $( form ).serialize(),
                         success: function (response) {
                             hideLoader();
                             if (response.success) {
-                                setupUserTable( response.data );
+                                // Show step 2 first: DataTables measures the container to size paging and columns.
                                 currentStep = 2;
                                 showStep( currentStep );
+                                setupUserTable( response.data );
                             } else {
                                 handleErrorResponse( response );
                             }
@@ -365,7 +366,7 @@
 
             $.ajax(
                 {
-                    url: localizedData.ajaxurl,
+                    url: ubdwpData.ajaxurl,
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -456,11 +457,11 @@
                 showLoader();
                 $.ajax(
                     {
-                        url: localizedData.ajaxurl,
+                        url: ubdwpData.ajaxurl,
                         type: 'POST',
                         dataType: 'json',
                         data: {
-                            action: 'custom_export_users',
+                            action: 'ubdwp_export_users',
                             export_users_nonce: $( '#export_users_nonce' ).val(),
                             users: users.map( user => ({value: user.id}) )
                         },
@@ -771,14 +772,14 @@
         return {
             width: width,
             ajax: {
-                url: localizedData.ajaxurl,
+                url: ubdwpData.ajaxurl,
                 type: 'POST',
                 dataType: 'json',
                 delay: 250,
                 data: params => ({
-                    action: 'search_reassign_users',
+                    action: 'ubdwp_search_reassign_users',
                     q: params.term || '',
-                    nonce: localizedData.reassignUsersNonce,
+                    nonce: ubdwpData.reassignUsersNonce,
                     exclude: previewUserIds
                 }),
                 processResults: data => ({

@@ -91,6 +91,36 @@ class UbdwpValidation {
 		) {
 			$this->send_error_response( 'at_least_one_required' );
 		}
+
+		// An unparsable value would silently drop the filter and widen the result to more users.
+		if ( '' !== $registration_date && ! $this->is_valid_date( $registration_date ) ) {
+			$this->send_error_response( 'invalid_date' );
+		}
+
+		if ( $has_meta_filter && '' !== $user_meta_value ) {
+			if ( str_ends_with( $user_meta_equal, '_date' ) && ! $this->is_valid_date( $user_meta_value ) ) {
+				$this->send_error_response( 'invalid_date' );
+			}
+
+			if ( str_ends_with( $user_meta_equal, '_number' ) && ! is_numeric( $user_meta_value ) ) {
+				$this->send_error_response( 'invalid_number' );
+			}
+		}
+	}
+
+	/**
+	 * Check that a value is a real calendar date in YYYY-MM-DD format.
+	 *
+	 * @param string $value Date string.
+	 *
+	 * @return bool True for a valid date.
+	 */
+	private function is_valid_date( string $value ): bool {
+		if ( ! preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $value, $parts ) ) {
+			return false;
+		}
+
+		return checkdate( (int) $parts[2], (int) $parts[3], (int) $parts[1] );
 	}
 
 	/**
@@ -171,6 +201,14 @@ class UbdwpValidation {
 			),
 			'file_write_error'                  => esc_html__(
 				'Failed to create the export file.',
+				'users-bulk-delete-with-preview'
+			),
+			'invalid_date'                      => esc_html__(
+				'Please enter a valid date in YYYY-MM-DD format.',
+				'users-bulk-delete-with-preview'
+			),
+			'invalid_number'                    => esc_html__(
+				'Please enter a valid number for the selected comparison.',
 				'users-bulk-delete-with-preview'
 			),
 		);

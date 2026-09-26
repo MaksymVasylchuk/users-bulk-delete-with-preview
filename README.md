@@ -8,7 +8,7 @@
 **Tags**: bulk delete, users delete with preview, users bulk delete with preview, users bulk clean with preview  
 **Requires at least**: 6.2  
 **Tested up to**: 7.1.2  
-**Stable tag**: 2.2.1  
+**Stable tag**: 2.2.2  
 **Requires PHP**: 8.0  
 **License**: GPLv2 or later  
 **License URI**: [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -80,7 +80,7 @@ The manual installation method requires downloading the Users Bulk Delete With P
 ## Frequently Asked Questions
 
 ### Does this plugin permanently delete users?
-Yes, once the deletion process is confirmed, the selected users are permanently removed from your WordPress site.
+On single-site installations, yes: once the deletion is confirmed, the selected users are permanently deleted. On multisite, the selected users are only removed from the current site; their network account and their access to other sites are kept.
 
 ### Can I restore deleted users?
 No, once users are deleted, they cannot be restored. Please make sure to verify the list during the preview step.
@@ -92,12 +92,15 @@ Yes, the plugin is compatible with WooCommerce and allows filtering users who ha
 On multisite, the plugin works in the current site context. It removes selected users from the current site instead of deleting their network account, helping network administrators avoid removing users from other sites by mistake.
 
 ### What happens to the content of deleted users?
-For each user you can reassign their posts to another user, remove all their related content, or leave the default. On single-site installations the default follows WordPress core: the user's posts are deleted. On multisite, the user is only removed from the current site and their content stays in place unless you choose to reassign or remove it.
+For each user you can reassign their posts to another user, permanently remove all their related content (posts in any status and comments), or leave the default. On single-site installations the default follows WordPress core: the user's posts and pages are moved to the trash. On multisite, the user is only removed from the current site and their content stays in place unless you choose to reassign or remove it.
 
 ### Does the plugin support network activation?
 Yes. When network activated, the plugin creates its log table for each site and initializes the table automatically for newly created sites.
 
 ## Upgrade Notice
+
+### 2.2.2
+Recommended security and bug fix release. Rejects invalid date and number filters instead of ignoring them, logs real user data, tightens permissions, fixes preview pagination and logs ordering, and adds Ukrainian JS translations. No manual upgrade steps are required.
 
 ### 2.2.1
 Important bug fix and security release, tested with WordPress 7.1.2 and PHP 8.4. Fixes deletion of selected users across table pages and user meta filters that could match the wrong users. CSV exports are no longer stored on the server. No manual upgrade steps are required.
@@ -131,6 +134,20 @@ This plugin uses the following third-party libraries:
 - [Select2](https://select2.org/) – Licensed under MIT License.
 
 ## Changelog
+### 2.2.2
+*Release Date - 27 September 2026*
+* Fixed preview table pagination showing only one page on first load
+* Fixed logs table ordering so entries created in the same second are not repeated or skipped between pages
+* Added missing Ukrainian JavaScript translation files
+* Reject invalid registration dates and invalid number/date user meta values instead of silently ignoring the filter
+* Prefixed AJAX actions and the localized JavaScript object to avoid conflicts with other plugins
+* Always return a JSON error response for unexpected server errors
+* Escaped plugin action links
+* Limited the logs page size to 100 entries per request
+* Deletion logs now record user data from the database instead of values sent by the browser
+* Duplicate user IDs in one request are processed only once
+* Plugin pages and logs now also require the list_users capability
+
 ### 2.2.1
 *Release Date - 26 September 2026*
 * Tested compatibility with WordPress 7.1.2 and PHP 8.4

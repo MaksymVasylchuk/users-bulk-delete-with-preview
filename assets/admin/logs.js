@@ -2,7 +2,7 @@
     'use strict';
 
     const {__, _x, _n, _nx} = wp.i18n;
-    const translations = localizedData.translations || {};
+    const translations = ubdwpData.translations || {};
     const escapeText   = $.fn.dataTable.render.text();
 
     // Initialize DataTable for logs
@@ -15,9 +15,9 @@
             "responsive": true,          // Make the table responsive to different screen sizes
             "ordering": false,           // Disable column ordering
             "ajax": {
-                "url": localizedData.ajaxurl,   // URL to fetch data from
+                "url": ubdwpData.ajaxurl,   // URL to fetch data from
                 "data": {
-                    "action": 'logs_datatables', // Action to be handled by the server-side script
+                    "action": 'ubdwp_logs_datatables', // Action to be handled by the server-side script
                     "logs_datatable_nonce": $('#logs_datatable_nonce').val()
                 },
                 "dataSrc": function ( json ) {
