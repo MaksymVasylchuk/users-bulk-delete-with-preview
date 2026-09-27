@@ -35,11 +35,11 @@ msgstr "Виберіть ролі користувачів"
 msgid "Select products that bought user"
 msgstr "Виберіть продукти, які купив користувач"
 
-#: assets/admin/admin.js:319
-#: assets/admin/admin.js:364
-#: assets/admin/admin.js:576
-#: assets/admin/admin.js:617
-#: assets/admin/admin.js:748
+#: assets/admin/admin.js:326
+#: assets/admin/admin.js:371
+#: assets/admin/admin.js:583
+#: assets/admin/admin.js:624
+#: assets/admin/admin.js:755
 #: assets/admin/logs.js:25
 #: assets/admin/logs.js:35
 msgid "An unexpected error occurred."
@@ -315,10 +315,6 @@ msgstr "Мета користувача"
 msgid "Meta does not exist"
 msgstr "Meta does not exist"
 
-#: templates/partials/_find_user_form.php:77
-msgid "Meta is empty"
-msgstr "Meta is empty"
-
 #: templates/partials/_find_user_form.php:82
 msgid "Equal to (date)"
 msgstr "Equal to (date)"
@@ -458,7 +454,7 @@ msgstr "ID користувача"
 msgid "Display name"
 msgstr "Відображуване ім'я"
 
-#: assets/admin/admin.js:764
+#: assets/admin/admin.js:771
 #: assets/admin/logs.js:73
 msgid "Dismiss this notice."
 msgstr "Закрити це повідомлення."
@@ -638,14 +634,28 @@ msgstr "Залишено на цьому сайті"
 msgid "Posts moved to the trash"
 msgstr "Записи переміщено в кошик"
 
-#: templates/partials/_find_user_form.php:102
+#: templates/partials/_find_user_form.php:103
 msgid "Content"
 msgstr "Вміст"
 
-#: templates/partials/_find_user_form.php:107
+#: templates/partials/_find_user_form.php:108
 msgid "Only users without posts or comments on this site"
 msgstr "Лише користувачі без записів і коментарів на цьому сайті"
 
 #: templates/steps/step-3.php:28
 msgid "Related content"
 msgstr "Пов’язаний вміст"
+
+#. translators: 1: number of users shown, 2: number of matching users.
+#: src/Handlers/UbdwpUsersHandler.php:234
+#, php-format
+msgid "Showing the first %1$d of %2$d matching users. Delete them, then run the preview again for the rest, or narrow down the filters."
+msgstr "Показано перших %1$d із %2$d знайдених користувачів. Видаліть їх і запустіть попередній перегляд ще раз для решти або звузьте фільтри."
+
+#: templates/partials/_find_user_form.php:77
+msgid "Meta is empty or missing"
+msgstr "Мета-поле порожнє або відсутнє"
+
+#: templates/partials/_find_user_form.php:96
+msgid "Tip: WordPress stores profile fields such as first_name for every user, even when they are blank. To find users who left a field empty, choose \"Meta is empty or missing\"."
+msgstr "Порада: WordPress зберігає поля профілю, як-от first_name, для кожного користувача, навіть якщо вони порожні. Щоб знайти користувачів із незаповненим полем, виберіть \"Мета-поле порожнє або відсутнє\"."

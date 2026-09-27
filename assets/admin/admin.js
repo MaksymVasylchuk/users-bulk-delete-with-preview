@@ -307,9 +307,16 @@
                             hideLoader();
                             if (response.success) {
                                 // Show step 2 first: DataTables measures the container to size paging and columns.
+                                const preview = Array.isArray( response.data ) ? {rows: response.data} : response.data;
+
                                 currentStep = 2;
                                 showStep( currentStep );
-                                setupUserTable( response.data );
+                                setupUserTable( preview.rows );
+
+                                // Very large result sets are loaded in parts to keep the page responsive
+                                if (preview.truncated && preview.message) {
+                                    createWordpressError( preview.message, 'warning' );
+                                }
                             } else {
                                 handleErrorResponse( response );
                             }
@@ -754,8 +761,8 @@
      *
      * @param {string} message - The error message
      */
-    function createWordpressError(message) {
-        const errorDiv         = $( '<div>', {class: 'notice notice-error is-dismissible'} );
+    function createWordpressError(message, type = 'error') {
+        const errorDiv         = $( '<div>', {class: 'notice notice-' + ('warning' === type ? 'warning' : 'error') + ' is-dismissible'} );
         const messageParagraph = $( '<p>' ).text( message );
         const dismissButton    = $(
             '<button>',

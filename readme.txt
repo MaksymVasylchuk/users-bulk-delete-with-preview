@@ -89,6 +89,10 @@ Yes, the plugin is compatible with WooCommerce and allows filtering users who ha
 
 On multisite, the plugin works in the current site context. It removes selected users from the current site instead of deleting their network account, helping network administrators avoid removing users from other sites by mistake.
 
+= How do I delete spam users who have no first name? =
+
+Choose "Find users according to certain criteria", set User Role to Subscriber, pick the first_name field under User Meta and choose "Meta is empty or missing". WordPress stores an empty first_name for every user who did not fill it in, so "Meta does not exist" will not find them. You can also tick "Only users without posts or comments on this site" to target accounts that never contributed anything.
+
 = Can I delete administrators with this plugin? =
 
 No. Administrators, users who can manage other users and super admins are protected: they are marked in the preview and skipped during deletion. Use the standard WordPress Users screen for them. Developers can change which users are protected with the ubdwp_is_protected_user filter.
@@ -161,6 +165,9 @@ This plugin uses the following third-party libraries:
 * New filter: only users without posts or comments on the site
 * The results step shows what happened to each user's content instead of a user ID
 * The confirmation field gets focus automatically and Enter confirms once the number matches
+* "Meta is empty or missing" now also matches users who do not have the meta key at all
+* Added a hint explaining how to find users with blank profile fields such as first_name
+* Very large previews are loaded in parts of 10,000 users (filterable with ubdwp_preview_limit) with a notice, so the preview no longer fails on sites with tens of thousands of users
 * Removed hidden email and display name fields from the preview form
 * Prefixed nonce actions
 

@@ -74,7 +74,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<select class="regular-text" name="user_meta" id="user_meta"></select>
 		<select name="user_meta_equal" id="user_meta_equal">
             <option value="meta_not_exists"><?php esc_html_e( 'Meta does not exist', 'users-bulk-delete-with-preview' ); ?></option>
-            <option value="meta_is_empty"><?php esc_html_e( 'Meta is empty', 'users-bulk-delete-with-preview' ); ?></option>
+            <option value="meta_is_empty"><?php esc_html_e( 'Meta is empty or missing', 'users-bulk-delete-with-preview' ); ?></option>
             <option value="equal_to_str"><?php esc_html_e( 'Equal to (string)', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="notequal_to_str"><?php esc_html_e( 'Not equal to (string)', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="like_str"><?php esc_html_e( 'Like (string)', 'users-bulk-delete-with-preview' ); ?></option>
@@ -93,6 +93,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<option value="greaterthenequal_number"><?php esc_html_e( 'Greater than or equal to (number)', 'users-bulk-delete-with-preview' ); ?></option>
 		</select>
 		<input type="text" id="user_meta_value" name="user_meta_value" class="regular-text" placeholder="<?php esc_attr_e( 'Enter user meta value', 'users-bulk-delete-with-preview' ); ?>">
+		<p class="description"><?php esc_html_e( 'Tip: WordPress stores profile fields such as first_name for every user, even when they are blank. To find users who left a field empty, choose "Meta is empty or missing".', 'users-bulk-delete-with-preview' ); ?></p>
 	</td>
 </tr>
 <!-- User Meta -->

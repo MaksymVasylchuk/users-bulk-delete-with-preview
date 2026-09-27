@@ -151,11 +151,11 @@ class UbdwpUsersHandler {
 			return new \WP_Error( 'invalid_input', UbdwpValidationFacade::get_error_message( 'invalid_input' ) );
 		}
 
-		$user_ids = array_unique( array_map( 'intval', $user_ids ) );
-		$users    = $this->repository->get_users_by_ids( $user_ids );
+		$user_ids   = array_unique( array_map( 'intval', $user_ids ) );
+		$user_query = $this->repository->query_users_by_ids( $user_ids, $this->get_preview_limit() );
 
-		if ( ! empty( $users ) ) {
-			return $this->prepare_users_for_table( $users );
+		if ( ! empty( $user_query->get_results() ) ) {
+			return $this->build_preview_response( $user_query );
 		}
 
 		return new \WP_Error( 'no_users_found', UbdwpValidationFacade::get_error_message( 'no_users_found' ) );
@@ -184,8 +184,10 @@ class UbdwpUsersHandler {
 	public function get_users_by_filters( array $request ) {
 		$args = array(
 			'exclude'    => $this->current_user_id, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude --  In this case we need to exclude current user.
-			'meta_query' => array(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query --  DB call is OK.
-			'date_query' => array(),
+			'meta_query'  => array(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query --  DB call is OK.
+			'date_query'  => array(),
+			'number'      => $this->get_preview_limit(),
+			'count_total' => true,
 		);
 
 		$user_query = $this->repository->get_users_by_filters( $args, $request );
@@ -195,10 +197,43 @@ class UbdwpUsersHandler {
 		}
 
 		if ( ! empty( $user_query->get_results() ) ) {
-			return $this->prepare_users_for_table( $user_query->get_results() );
+			return $this->build_preview_response( $user_query );
 		}
 
 		return new \WP_Error( 'no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message( 'no_users_found_with_given_filters' ) );
+	}
+
+	/**
+	 * Maximum number of users loaded into one preview.
+	 *
+	 * Keeps memory use and response size bounded on sites with very many users.
+	 *
+	 * @return int Limit.
+	 */
+	private function get_preview_limit(): int {
+		return max( 1, (int) apply_filters( 'ubdwp_preview_limit', 10000 ) );
+	}
+
+	/**
+	 * Build the preview response with table rows and the total number of matching users.
+	 *
+	 * @param \WP_User_Query $user_query Executed query with count_total enabled.
+	 *
+	 * @return array<string, mixed> Preview data.
+	 */
+	private function build_preview_response( \WP_User_Query $user_query ): array {
+		$rows  = $this->prepare_users_for_table( $user_query->get_results() );
+		$total = max( count( $rows ), (int) $user_query->get_total() );
+
+		return array(
+			'rows'      => $rows,
+			'total'     => $total,
+			'truncated' => $total > count( $rows ),
+			'message'   => $total > count( $rows )
+				/* translators: 1: number of users shown, 2: number of matching users. */
+				? sprintf( __( 'Showing the first %1$d of %2$d matching users. Delete them, then run the preview again for the rest, or narrow down the filters.', 'users-bulk-delete-with-preview' ), count( $rows ), $total )
+				: '',
+		);
 	}
 
 	/**
@@ -215,10 +250,11 @@ class UbdwpUsersHandler {
 		$user_ids = array_filter( $user_ids, static fn( $value ) => $value !== 0 && $value !== '0' );
 
 		if ( ! empty( $user_ids ) ) {
-			$user_ids = array_unique( $user_ids );
-			$users    = $this->repository->get_users_by_ids( $user_ids );
+			$user_query = $this->repository->query_users_by_ids( array_unique( $user_ids ), $this->get_preview_limit() );
 
-			return $this->prepare_users_for_table( $users );
+			if ( ! empty( $user_query->get_results() ) ) {
+				return $this->build_preview_response( $user_query );
+			}
 		}
 
 		return new \WP_Error( 'no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message( 'no_users_found_with_given_filters' ) );

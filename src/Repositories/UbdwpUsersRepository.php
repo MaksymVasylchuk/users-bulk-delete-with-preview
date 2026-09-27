@@ -86,6 +86,23 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	}
 
 	/**
+	 * Query users by IDs for the preview, limited to a number of results.
+	 *
+	 * @param array<int> $user_ids User IDs.
+	 * @param int        $limit    Maximum number of users to load.
+	 *
+	 * @return \WP_User_Query Query with results and total count.
+	 */
+	public function query_users_by_ids( array $user_ids, int $limit ): \WP_User_Query {
+		return new \WP_User_Query( array(
+			'blog_id'     => get_current_blog_id(),
+			'include'     => $user_ids,
+			'number'      => $limit,
+			'count_total' => true,
+		) );
+	}
+
+	/**
 	 * Get users by various filters.
 	 *
 	 * @param array<string, mixed> $args Query arguments.
@@ -391,11 +408,18 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 				break;
 
 			case 'meta_is_empty':
+				// WordPress stores empty profile fields (e.g. first_name) for every user, while other plugins may
+				// not store the key at all. Both mean "no value", so match either.
 				$args['meta_query'][] = [
+					'relation' => 'OR',
 					[
 						'key'     => $key,
 						'value'   => '',
 						'compare' => '=',
+					],
+					[
+						'key'     => $key,
+						'compare' => 'NOT EXISTS',
 					],
 				];
 				break;
