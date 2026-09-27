@@ -269,15 +269,22 @@ class UbdwpUsersHandler {
 	public function delete_users( array $sanitized_users ): array {
 		$deleted_users = array();
 		$failed_users  = array();
-		$batch_ids     = array_map( 'intval', array_column( $sanitized_users, 'id' ) );
 
+		// Process each user once, even if the request repeats an ID.
+		$unique_users = array();
 		foreach ( $sanitized_users as $user ) {
-			$user_id = (int) $user['id'];
+			$unique_users[ (int) $user['id'] ] ??= $user;
+		}
+		$batch_ids = array_keys( $unique_users );
 
+		foreach ( $unique_users as $user_id => $user ) {
 			if ( ! $this->can_manage_user_for_current_site( $user_id ) ) {
 				$failed_users[] = $user_id;
 				continue;
 			}
+
+			// Log what is actually stored, never values sent by the browser.
+			$user_data = get_userdata( $user_id );
 
 			$reassign_raw           = (string) ( $user['reassign'] ?? '' );
 			$remove_related_content = $reassign_raw === 'remove_all_related_content';
@@ -304,8 +311,8 @@ class UbdwpUsersHandler {
 
 			$deleted_users[ $user_id ] = array(
 				'user_id'      => $user_id,
-				'email'        => $user['email'],
-				'display_name' => $user['display_name'],
+				'email'        => sanitize_email( $user_data->user_email ),
+				'display_name' => sanitize_text_field( $user_data->display_name ),
 				'reassign'     => $remove_related_content ? 'remove_all_related_content' : ( $reassign ?? '' ),
 				'action'       => is_multisite() ? 'removed_from_site' : 'deleted',
 			);

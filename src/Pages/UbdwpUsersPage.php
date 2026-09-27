@@ -297,12 +297,12 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 	 */
 	private function register_ajax_calls(): void {
 		$ajax_calls = array(
-			'search_users'            => 'search_existing_users_ajax',
-			'search_usermeta'         => 'search_usermeta_ajax',
-			'search_users_for_delete' => 'search_users_for_delete_ajax',
-			'delete_users_action'     => 'delete_users_action',
-			'search_reassign_users'   => 'search_reassign_users_ajax',
-			'custom_export_users'     => 'custom_export_users_action',
+			'ubdwp_search_users'            => 'search_existing_users_ajax',
+			'ubdwp_search_usermeta'         => 'search_usermeta_ajax',
+			'ubdwp_search_users_for_delete' => 'search_users_for_delete_ajax',
+			'ubdwp_delete_users'            => 'delete_users_action',
+			'ubdwp_search_reassign_users'   => 'search_reassign_users_ajax',
+			'ubdwp_export_users'            => 'custom_export_users_action',
 		);
 
 		foreach ( $ajax_calls as $action => $method ) {

@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<!-- Search users form -->
 	<form action="#" method="post" id="search_users_form">
 		<input type="hidden" id="find_users_nonce" name="find_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'find_users_nonce' ) ); ?>">
-		<input type="hidden" name="action" value="search_users_for_delete">
+		<input type="hidden" name="action" value="ubdwp_search_users_for_delete">
 		<table class="form-table">
 			<tbody>
 			<!-- Filter Type Selector -->

@@ -76,7 +76,7 @@ abstract class UbdwpAbstractBasePage {
 
 			$response = $callback();
 			wp_send_json_success( $response );
-		} catch ( \Exception $e ) {
+		} catch ( \Throwable $e ) {
 			wp_send_json_error( array( 'message' => UbdwpValidationFacade::get_error_message( 'generic_error' ) ) );
 		}
 		wp_die();
@@ -91,7 +91,7 @@ abstract class UbdwpAbstractBasePage {
 	 * @return void
 	 */
 	protected function render_template( string $template_name, array $data = array() ): void {
-		if ( ! current_user_can( self::MANAGE_OPTIONS_CAP ) ) {
+		if ( ! current_user_can( self::MANAGE_OPTIONS_CAP ) || ! current_user_can( self::LIST_USERS_CAP ) ) {
 			wp_die( UbdwpValidationFacade::get_error_message( 'permission_error' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --All messages are escaped and translated using the "get_error_message" method.
 		}
 
