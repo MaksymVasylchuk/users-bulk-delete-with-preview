@@ -83,18 +83,34 @@ class UbdwpValidation {
 			);
 
 
+		$without_content = filter_var( $request['without_content'] ?? false, FILTER_VALIDATE_BOOLEAN );
+
 		if (
 			empty( $user_role ) &&
 			empty( $user_email ) &&
 			empty( $registration_date ) &&
-			! $has_meta_filter
+			! $has_meta_filter &&
+			! $without_content
 		) {
 			$this->send_error_response( 'at_least_one_required' );
 		}
 
 		// An unparsable value would silently drop the filter and widen the result to more users.
-		if ( '' !== $registration_date && ! $this->is_valid_date( $registration_date ) ) {
-			$this->send_error_response( 'invalid_date' );
+		if ( '' !== $registration_date ) {
+			$date_compare = sanitize_key( $request['registration_date_compare'] ?? 'after' );
+			$date_to      = sanitize_text_field( $request['registration_date_to'] ?? '' );
+
+			if ( ! in_array( $date_compare, array( '', 'after', 'before', 'on', 'between' ), true ) ) {
+				$this->send_error_response( 'invalid_date_compare' );
+			}
+
+			if ( ! $this->is_valid_date( $registration_date ) ) {
+				$this->send_error_response( 'invalid_date' );
+			}
+
+			if ( 'between' === $date_compare && ( ! $this->is_valid_date( $date_to ) || $date_to < $registration_date ) ) {
+				$this->send_error_response( 'invalid_date_range' );
+			}
 		}
 
 		if ( $has_meta_filter && '' !== $user_meta_value ) {
@@ -205,6 +221,14 @@ class UbdwpValidation {
 			),
 			'invalid_date'                      => esc_html__(
 				'Please enter a valid date in YYYY-MM-DD format.',
+				'users-bulk-delete-with-preview'
+			),
+			'invalid_date_range'                => esc_html__(
+				'Please enter a valid date range: both dates in YYYY-MM-DD format, and the end date not before the start date.',
+				'users-bulk-delete-with-preview'
+			),
+			'invalid_date_compare'              => esc_html__(
+				'Please choose a valid registration date comparison.',
 				'users-bulk-delete-with-preview'
 			),
 			'invalid_number'                    => esc_html__(

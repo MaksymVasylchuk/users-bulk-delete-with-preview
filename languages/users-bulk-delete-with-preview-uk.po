@@ -35,14 +35,11 @@ msgstr "Виберіть ролі користувачів"
 msgid "Select products that bought user"
 msgstr "Виберіть продукти, які купив користувач"
 
-#: assets/admin/admin.js:101
-msgid "Select registration date"
-msgstr "Виберіть дату реєстрації"
-
-#: assets/admin/admin.js:307
-#: assets/admin/admin.js:438
-#: assets/admin/admin.js:479
-#: assets/admin/admin.js:612
+#: assets/admin/admin.js:319
+#: assets/admin/admin.js:364
+#: assets/admin/admin.js:576
+#: assets/admin/admin.js:617
+#: assets/admin/admin.js:748
 #: assets/admin/logs.js:25
 #: assets/admin/logs.js:35
 msgid "An unexpected error occurred."
@@ -97,82 +94,86 @@ msgstr "Знайти користувачів за певними критері
 msgid "Find users using WooCommerce filters"
 msgstr "Знайдіть користувачів за допомогою фільтрів WooCommerce"
 
-#: src/Helpers/UbdwpHelper.php:74
+#: src/Helpers/UbdwpHelper.php:75
 msgid "No data available in table"
 msgstr "У таблиці немає даних"
 
-#: src/Helpers/UbdwpHelper.php:75
+#: src/Helpers/UbdwpHelper.php:76
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr "Відображення від _START_ до _END_ _TOTAL_ записів"
 
-#: src/Helpers/UbdwpHelper.php:76
+#: src/Helpers/UbdwpHelper.php:77
 msgid "Showing 0 to 0 of 0 entries"
 msgstr "Показано від 0 до 0 з 0 записів"
 
-#: src/Helpers/UbdwpHelper.php:77
+#: src/Helpers/UbdwpHelper.php:78
 msgid "(filtered from _MAX_ total entries)"
 msgstr "(відфільтровано з _MAX_ всіх записів)"
 
-#: src/Helpers/UbdwpHelper.php:78
+#: src/Helpers/UbdwpHelper.php:79
 msgid "Show _MENU_ entries"
 msgstr "Показати _MENU_ записів"
 
-#: src/Helpers/UbdwpHelper.php:79
+#: src/Helpers/UbdwpHelper.php:80
 msgid "Loading..."
 msgstr "Завантаження…"
 
-#: src/Helpers/UbdwpHelper.php:80
+#: src/Helpers/UbdwpHelper.php:81
 msgid "Processing..."
 msgstr "Обробка…"
 
-#: src/Helpers/UbdwpHelper.php:81
+#: src/Helpers/UbdwpHelper.php:82
 msgid "Search"
 msgstr "Пошук"
 
-#: src/Helpers/UbdwpHelper.php:82
+#: src/Helpers/UbdwpHelper.php:83
 msgid "No matching records found"
 msgstr "Відповідних записів не знайдено"
 
-#: src/Helpers/UbdwpHelper.php:93
+#: src/Helpers/UbdwpHelper.php:94
 #: templates/logs-page.php:31
 #: templates/partials/_users_table.php:32
 msgid "ID"
 msgstr "ID"
 
-#: src/Helpers/UbdwpHelper.php:94
+#: src/Helpers/UbdwpHelper.php:95
+#: templates/partials/_confirmation-popup.php:28
 #: templates/partials/_users_table.php:33
+#: templates/steps/step-3.php:41
 msgid "Username"
 msgstr "Ім’я користувача"
 
-#: src/Helpers/UbdwpHelper.php:95
+#: src/Helpers/UbdwpHelper.php:96
+#: templates/partials/_confirmation-popup.php:29
 #: templates/partials/_users_table.php:34
 #: templates/steps/step-3.php:27
+#: templates/steps/step-3.php:42
 msgid "Email"
 msgstr "Електронна пошта"
 
-#: src/Helpers/UbdwpHelper.php:96
+#: src/Helpers/UbdwpHelper.php:97
 #: templates/partials/_users_table.php:35
 msgid "Registered"
 msgstr "Зареєстрований"
 
-#: src/Helpers/UbdwpHelper.php:97
+#: src/Helpers/UbdwpHelper.php:99
 #: templates/partials/_users_table.php:36
 msgid "Role"
 msgstr "Роль"
 
-#: src/Helpers/UbdwpHelper.php:98
+#: src/Helpers/UbdwpHelper.php:100
 #: templates/partials/_users_table.php:16
-#: templates/partials/_users_table.php:37
+#: templates/partials/_users_table.php:38
 msgid "Assign related content to user"
 msgstr "Призначте пов’язаний вміст користувачу"
 
-#: src/Helpers/UbdwpHelper.php:99
-#: src/Helpers/UbdwpHelper.php:362
+#: src/Helpers/UbdwpHelper.php:101
+#: src/Helpers/UbdwpHelper.php:462
 msgid "Select a user"
 msgstr "Виберіть користувача"
 
-#: src/Helpers/UbdwpHelper.php:100
-#: src/Helpers/UbdwpHelper.php:364
+#: src/Helpers/UbdwpHelper.php:102
+#: src/Helpers/UbdwpHelper.php:464
 msgid "Remove all related content"
 msgstr "Видаліть весь пов'язаний вміст"
 
@@ -180,7 +181,7 @@ msgstr "Видаліть весь пов'язаний вміст"
 msgid "Logs Page"
 msgstr "Сторінка журналів"
 
-#: src/Pages/UbdwpUsersPage.php:62
+#: src/Pages/UbdwpUsersPage.php:63
 msgid "Users Management"
 msgstr "Керування користувачами"
 
@@ -188,44 +189,44 @@ msgstr "Керування користувачами"
 msgid "An unknown error occurred."
 msgstr "Сталася невідома помилка."
 
-#: src/Utils/UbdwpValidation.php:162
+#: src/Utils/UbdwpValidation.php:178
 msgid "You do not have sufficient permissions to perform this action."
 msgstr "У вас недостатньо прав для виконання цієї дії."
 
-#: src/Utils/UbdwpValidation.php:166
+#: src/Utils/UbdwpValidation.php:182
 msgid "Invalid nonce"
 msgstr "Недійсний nonce"
 
-#: src/Utils/UbdwpValidation.php:170
+#: src/Utils/UbdwpValidation.php:186
 msgid "Select type"
 msgstr "Виберіть тип"
 
-#: src/Utils/UbdwpValidation.php:174
+#: src/Utils/UbdwpValidation.php:190
 msgid "Invalid security token"
 msgstr "Недійсний маркер безпеки"
 
-#: src/Utils/UbdwpValidation.php:178
+#: src/Utils/UbdwpValidation.php:194
 msgid "Something went wrong. Please try again."
 msgstr "Щось пішло не так. Спробуйте ще раз."
 
-#: src/Utils/UbdwpValidation.php:182
+#: src/Utils/UbdwpValidation.php:198
 msgid "User IDs should be an array."
 msgstr "Ідентифікатори користувачів мають бути масивом."
 
-#: src/Utils/UbdwpValidation.php:186
+#: src/Utils/UbdwpValidation.php:202
 msgid "At least one required field."
 msgstr "Принаймні одне обов’язкове поле."
 
-#: src/Utils/UbdwpValidation.php:190
+#: src/Utils/UbdwpValidation.php:206
 msgid "No users found with the given filters"
 msgstr "Користувачів із заданими фільтрами не знайдено"
 
-#: src/Utils/UbdwpValidation.php:194
+#: src/Utils/UbdwpValidation.php:210
 msgid "No users found for the provided IDs."
 msgstr "Не знайдено користувачів для наданих ідентифікаторів."
 
-#: src/Helpers/UbdwpHelper.php:105
-#: src/Utils/UbdwpValidation.php:198
+#: src/Helpers/UbdwpHelper.php:107
+#: src/Utils/UbdwpValidation.php:214
 msgid "Please select at least one user for deletion."
 msgstr "Будь ласка, виберіть принаймні одного користувача для видалення."
 
@@ -253,15 +254,11 @@ msgstr "Підтвердити видалення"
 msgid "Close"
 msgstr "Закрити"
 
-#: templates/partials/_confirmation-popup.php:23
-msgid "Are you sure you want to delete this(these) user(s)?"
-msgstr "Ви впевнені, що хочете видалити цього(их) користувача(ів)?"
-
-#: templates/partials/_confirmation-popup.php:26
+#: templates/partials/_confirmation-popup.php:42
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: templates/partials/_confirmation-popup.php:27
+#: templates/partials/_confirmation-popup.php:43
 msgid "Delete"
 msgstr "Видалити"
 
@@ -283,22 +280,22 @@ msgid "User Email"
 msgstr "Електронна пошта користувача"
 
 #: templates/partials/_find_user_form.php:38
-#: templates/partials/_find_user_form.php:68
+#: templates/partials/_find_user_form.php:78
 msgid "Equal to (string)"
 msgstr "Equal to (string)"
 
 #: templates/partials/_find_user_form.php:39
-#: templates/partials/_find_user_form.php:69
+#: templates/partials/_find_user_form.php:79
 msgid "Not equal to (string)"
 msgstr "Not equal to (string)"
 
 #: templates/partials/_find_user_form.php:40
-#: templates/partials/_find_user_form.php:70
+#: templates/partials/_find_user_form.php:80
 msgid "Like (string)"
 msgstr "Like (string)"
 
 #: templates/partials/_find_user_form.php:41
-#: templates/partials/_find_user_form.php:71
+#: templates/partials/_find_user_form.php:81
 msgid "Not like (string)"
 msgstr "Not like (string)"
 
@@ -310,67 +307,67 @@ msgstr "Введіть адресу електронної пошти корис
 msgid "User Registration Date"
 msgstr "Дата реєстрації користувача"
 
-#: templates/partials/_find_user_form.php:60
+#: templates/partials/_find_user_form.php:70
 msgid "User Meta"
 msgstr "Мета користувача"
 
-#: templates/partials/_find_user_form.php:66
+#: templates/partials/_find_user_form.php:76
 msgid "Meta does not exist"
 msgstr "Meta does not exist"
 
-#: templates/partials/_find_user_form.php:67
+#: templates/partials/_find_user_form.php:77
 msgid "Meta is empty"
 msgstr "Meta is empty"
 
-#: templates/partials/_find_user_form.php:72
+#: templates/partials/_find_user_form.php:82
 msgid "Equal to (date)"
 msgstr "Equal to (date)"
 
-#: templates/partials/_find_user_form.php:73
+#: templates/partials/_find_user_form.php:83
 msgid "Not equal to (date)"
 msgstr "Not equal to (date)"
 
-#: templates/partials/_find_user_form.php:74
+#: templates/partials/_find_user_form.php:84
 msgid "Less than (date)"
 msgstr "Less than (date)"
 
-#: templates/partials/_find_user_form.php:75
+#: templates/partials/_find_user_form.php:85
 msgid "Less than or equal to (date)"
 msgstr "Less than or equal to (date)"
 
-#: templates/partials/_find_user_form.php:76
+#: templates/partials/_find_user_form.php:86
 msgid "Greater than (date)"
 msgstr "Greater than (date)"
 
-#: templates/partials/_find_user_form.php:77
+#: templates/partials/_find_user_form.php:87
 msgid "Greater than or equal to (date)"
 msgstr "Greater than or equal to (date)"
 
-#: templates/partials/_find_user_form.php:78
+#: templates/partials/_find_user_form.php:88
 msgid "Equal to (number)"
 msgstr "Equal to (number)"
 
-#: templates/partials/_find_user_form.php:79
+#: templates/partials/_find_user_form.php:89
 msgid "Not equal to (number)"
 msgstr "Not equal to (number)"
 
-#: templates/partials/_find_user_form.php:80
+#: templates/partials/_find_user_form.php:90
 msgid "Less than (number)"
 msgstr "Less than (number)"
 
-#: templates/partials/_find_user_form.php:81
+#: templates/partials/_find_user_form.php:91
 msgid "Less than or equal to (number)"
 msgstr "Less than or equal to (number)"
 
-#: templates/partials/_find_user_form.php:82
+#: templates/partials/_find_user_form.php:92
 msgid "Greater than (number)"
 msgstr "Greater than (number)"
 
-#: templates/partials/_find_user_form.php:83
+#: templates/partials/_find_user_form.php:93
 msgid "Greater than or equal to (number)"
 msgstr "Greater than or equal to (number)"
 
-#: templates/partials/_find_user_form.php:85
+#: templates/partials/_find_user_form.php:95
 msgid "Enter user meta value"
 msgstr "Введіть мета-значення користувача"
 
@@ -436,22 +433,24 @@ msgid "Deleted user #%d"
 msgstr "Видалений користувач #%d"
 
 #. translators: %d: number of users.
-#: src/Helpers/UbdwpHelper.php:102
+#: src/Helpers/UbdwpHelper.php:104
 #, php-format
 msgid "Success! Selected users removed: %d."
 msgstr "Готово! Видалено вибраних користувачів: %d."
 
 #. translators: %d: number of users.
-#: src/Helpers/UbdwpHelper.php:104
+#: src/Helpers/UbdwpHelper.php:106
 #, php-format
 msgid "Users that could not be removed: %d."
 msgstr "Не вдалося видалити користувачів: %d."
 
-#: src/Utils/UbdwpValidation.php:202
+#: src/Utils/UbdwpValidation.php:218
 msgid "Failed to create the export file."
 msgstr "Не вдалося створити файл експорту."
 
+#: templates/partials/_confirmation-popup.php:27
 #: templates/steps/step-3.php:25
+#: templates/steps/step-3.php:40
 msgid "User ID"
 msgstr "ID користувача"
 
@@ -459,19 +458,194 @@ msgstr "ID користувача"
 msgid "Display name"
 msgstr "Відображуване ім'я"
 
-#: templates/steps/step-3.php:28
-msgid "Reassign user ID"
-msgstr "ID користувача для передачі контенту"
-
-#: assets/admin/admin.js:628
+#: assets/admin/admin.js:764
 #: assets/admin/logs.js:73
 msgid "Dismiss this notice."
 msgstr "Закрити це повідомлення."
 
-#: src/Utils/UbdwpValidation.php:206
+#: src/Utils/UbdwpValidation.php:222
 msgid "Please enter a valid date in YYYY-MM-DD format."
 msgstr "Введіть коректну дату у форматі РРРР-ММ-ДД."
 
-#: src/Utils/UbdwpValidation.php:210
+#: src/Utils/UbdwpValidation.php:234
 msgid "Please enter a valid number for the selected comparison."
 msgstr "Введіть коректне число для вибраного порівняння."
+
+#: src/Helpers/UbdwpHelper.php:108
+msgid "None of the selected users can be deleted. See the reasons below."
+msgstr "Жодного з вибраних користувачів не можна видалити. Причини вказано нижче."
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:110
+#, php-format
+msgid "Selected users: %d"
+msgstr "Вибрано користувачів: %d"
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:112
+#, php-format
+msgid "Will be deleted: %d"
+msgstr "Буде видалено: %d"
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:114
+#, php-format
+msgid "Will be removed from this site: %d"
+msgstr "Буде прибрано з цього сайту: %d"
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:116
+#, php-format
+msgid "Will be skipped: %d"
+msgstr "Буде пропущено: %d"
+
+#. translators: 1: number of users, 2: number of posts, 3: comma-separated usernames.
+#: src/Helpers/UbdwpHelper.php:118
+#, php-format
+msgid "%1$d user(s): %2$d post(s) will be reassigned to %3$s"
+msgstr "Користувачів: %1$d — записів: %2$d буде передано %3$s"
+
+#. translators: 1: number of users, 2: number of posts.
+#: src/Helpers/UbdwpHelper.php:120
+#, php-format
+msgid "%1$d user(s): %2$d post(s) will be deleted as by WordPress core (posts and pages go to the trash)"
+msgstr "Користувачів: %1$d — записів: %2$d буде видалено за правилами WordPress (записи та сторінки переміщуються в кошик)"
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:122
+#, php-format
+msgid "%d user(s): their content stays on this site"
+msgstr "Користувачів: %d — їхній вміст залишиться на цьому сайті"
+
+#. translators: 1: number of users, 2: number of posts, 3: number of comments.
+#: src/Helpers/UbdwpHelper.php:124
+#, php-format
+msgid "%1$d user(s): %2$d post(s) and %3$d comment(s) will be permanently deleted"
+msgstr "Користувачів: %1$d — записів: %2$d і коментарів: %3$d буде остаточно видалено"
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:126
+#, php-format
+msgid "This cannot be undone. Type %d to confirm."
+msgstr "Цю дію неможливо скасувати. Введіть %d для підтвердження."
+
+#: src/Helpers/UbdwpHelper.php:127
+msgid "This cannot be undone."
+msgstr "Цю дію неможливо скасувати."
+
+#: src/Helpers/UbdwpHelper.php:128
+#: templates/steps/step-3.php:36
+msgid "Users that were not deleted"
+msgstr "Користувачі, яких не видалено"
+
+#: src/Helpers/UbdwpHelper.php:191
+msgid "User does not exist."
+msgstr "Користувача не існує."
+
+#: src/Helpers/UbdwpHelper.php:192
+msgid "You cannot delete your own account."
+msgstr "Ви не можете видалити власний обліковий запис."
+
+#: src/Helpers/UbdwpHelper.php:193
+msgid "User is not a member of this site."
+msgstr "Користувач не є учасником цього сайту."
+
+#: src/Helpers/UbdwpHelper.php:194
+msgid "Protected: administrators and other privileged users cannot be deleted."
+msgstr "Захищено: адміністраторів та інших привілейованих користувачів видаляти не можна."
+
+#: src/Helpers/UbdwpHelper.php:195
+msgid "You do not have permission to delete this user."
+msgstr "У вас немає прав на видалення цього користувача."
+
+#: src/Helpers/UbdwpHelper.php:196
+msgid "The user selected to receive the content is not valid."
+msgstr "Користувач, якому має бути передано вміст, недійсний."
+
+#: src/Helpers/UbdwpHelper.php:197
+msgid "WordPress could not delete this user."
+msgstr "WordPress не вдалося видалити цього користувача."
+
+#: src/Helpers/UbdwpHelper.php:482
+msgid "Administrators and other privileged users cannot be deleted with this plugin."
+msgstr "Адміністраторів та інших привілейованих користувачів не можна видалити цим плагіном."
+
+#: src/Helpers/UbdwpHelper.php:482
+msgid "Protected"
+msgstr "Захищено"
+
+#: src/Utils/UbdwpValidation.php:226
+msgid "Please enter a valid date range: both dates in YYYY-MM-DD format, and the end date not before the start date."
+msgstr "Введіть коректний діапазон дат: обидві дати у форматі РРРР-ММ-ДД, кінцева дата не раніше початкової."
+
+#: src/Utils/UbdwpValidation.php:230
+msgid "Please choose a valid registration date comparison."
+msgstr "Виберіть коректне порівняння дати реєстрації."
+
+#: templates/partials/_confirmation-popup.php:30
+#: templates/steps/step-3.php:43
+msgid "Reason"
+msgstr "Причина"
+
+#: templates/partials/_confirmation-popup.php:37
+msgid "Number of users to delete"
+msgstr "Кількість користувачів для видалення"
+
+#: templates/partials/_find_user_form.php:53
+msgid "Registration date comparison"
+msgstr "Порівняння дати реєстрації"
+
+#: templates/partials/_find_user_form.php:54
+msgid "On or after"
+msgstr "Того дня або пізніше"
+
+#: templates/partials/_find_user_form.php:55
+msgid "On or before"
+msgstr "Того дня або раніше"
+
+#: templates/partials/_find_user_form.php:56
+msgid "On"
+msgstr "У день"
+
+#: templates/partials/_find_user_form.php:57
+msgid "Between"
+msgstr "Між"
+
+#: templates/partials/_find_user_form.php:61
+msgid "and"
+msgstr "і"
+
+#: src/Helpers/UbdwpHelper.php:98
+#: templates/partials/_users_table.php:37
+msgid "Posts"
+msgstr "Записи"
+
+#: src/Helpers/UbdwpHelper.php:167
+msgid "Removed permanently"
+msgstr "Видалено остаточно"
+
+#. translators: %s: username that received the content.
+#: src/Helpers/UbdwpHelper.php:174
+#, php-format
+msgid "Reassigned to %s"
+msgstr "Передано %s"
+
+#: src/Helpers/UbdwpHelper.php:178
+msgid "Kept on this site"
+msgstr "Залишено на цьому сайті"
+
+#: src/Helpers/UbdwpHelper.php:179
+msgid "Posts moved to the trash"
+msgstr "Записи переміщено в кошик"
+
+#: templates/partials/_find_user_form.php:102
+msgid "Content"
+msgstr "Вміст"
+
+#: templates/partials/_find_user_form.php:107
+msgid "Only users without posts or comments on this site"
+msgstr "Лише користувачі без записів і коментарів на цьому сайті"
+
+#: templates/steps/step-3.php:28
+msgid "Related content"
+msgstr "Пов’язаний вміст"

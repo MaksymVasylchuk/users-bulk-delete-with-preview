@@ -19,9 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<select id="generalSelect" class="general-select">
 	</select>
 </div>
-<input type="hidden" id="delete_users_nonce" name="delete_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'delete_users_nonce' ) ); ?>">
+<input type="hidden" id="delete_users_nonce" name="delete_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_delete_users' ) ); ?>">
 <input type="hidden" name="action" value="ubdwp_delete_users" id="delete_users_action">
-<input type="hidden" id="export_users_nonce" name="export_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'export_users_nonce' ) ); ?>">
+<input type="hidden" id="export_users_nonce" name="export_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_export_users' ) ); ?>">
 
 <form action="#" method="post" id="select_users_for_delete">
 
@@ -34,6 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<th><?php esc_html_e( 'Email', 'users-bulk-delete-with-preview' ); ?></th>
 			<th><?php esc_html_e( 'Registered', 'users-bulk-delete-with-preview' ); ?></th>
 			<th><?php esc_html_e( 'Role', 'users-bulk-delete-with-preview' ); ?></th>
+			<th><?php esc_html_e( 'Posts', 'users-bulk-delete-with-preview' ); ?></th>
 			<th><?php esc_html_e( 'Assign related content to user', 'users-bulk-delete-with-preview' ); ?></th>
 		</tr>
 		</thead>

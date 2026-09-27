@@ -17,10 +17,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="confirmModalLabel"><?php esc_html_e( 'Confirm Deletion', 'users-bulk-delete-with-preview' ); ?></h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php esc_html_e( 'Close', 'users-bulk-delete-with-preview' ); ?>"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php esc_attr_e( 'Close', 'users-bulk-delete-with-preview' ); ?>"></button>
 			</div>
 			<div class="modal-body">
-				<?php esc_html_e( 'Are you sure you want to delete this(these) user(s)?', 'users-bulk-delete-with-preview' ); ?>
+				<ul id="ubdwp_delete_summary" class="ubdwp-delete-summary"></ul>
+				<table id="ubdwp_delete_skipped" class="wp-list-table widefat fixed striped" style="display: none;">
+					<thead>
+					<tr>
+						<th><?php esc_html_e( 'User ID', 'users-bulk-delete-with-preview' ); ?></th>
+						<th><?php esc_html_e( 'Username', 'users-bulk-delete-with-preview' ); ?></th>
+						<th><?php esc_html_e( 'Email', 'users-bulk-delete-with-preview' ); ?></th>
+						<th><?php esc_html_e( 'Reason', 'users-bulk-delete-with-preview' ); ?></th>
+					</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+				<p id="ubdwp_confirm_text" class="ubdwp-confirm-text"></p>
+				<p id="ubdwp_confirm_typing" style="display: none;">
+					<label for="ubdwp_confirm_input" class="screen-reader-text"><?php esc_html_e( 'Number of users to delete', 'users-bulk-delete-with-preview' ); ?></label>
+					<input type="text" id="ubdwp_confirm_input" class="regular-text" inputmode="numeric" autocomplete="off">
+				</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php esc_html_e( 'Cancel', 'users-bulk-delete-with-preview' ); ?></button>

@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div id="poststuff_logs">
 		<div id="post-body" class="metabox-holder columns-1">
 
-            <input type="hidden" id="logs_datatable_nonce" name="logs_datatable_nonce" value="<?php echo esc_attr( wp_create_nonce( 'logs_datatable_nonce' ) ); ?>">
+            <input type="hidden" id="logs_datatable_nonce" name="logs_datatable_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_logs' ) ); ?>">
 
 			<div id="notices">
 			</div>

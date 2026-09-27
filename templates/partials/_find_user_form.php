@@ -50,7 +50,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<label for="registration_date"><?php esc_html_e( 'User Registration Date', 'users-bulk-delete-with-preview' ); ?>:</label>
 	</th>
 	<td>
-		<input type="text" id="registration_date" name="registration_date" class="regular-text">
+		<select name="registration_date_compare" id="registration_date_compare" aria-label="<?php esc_attr_e( 'Registration date comparison', 'users-bulk-delete-with-preview' ); ?>">
+			<option value="after"><?php esc_html_e( 'On or after', 'users-bulk-delete-with-preview' ); ?></option>
+			<option value="before"><?php esc_html_e( 'On or before', 'users-bulk-delete-with-preview' ); ?></option>
+			<option value="on"><?php esc_html_e( 'On', 'users-bulk-delete-with-preview' ); ?></option>
+			<option value="between"><?php esc_html_e( 'Between', 'users-bulk-delete-with-preview' ); ?></option>
+		</select>
+		<input type="text" id="registration_date" name="registration_date" class="regular-text" placeholder="YYYY-MM-DD" autocomplete="off">
+		<span id="registration_date_to_wrap" style="display: none;">
+			<label for="registration_date_to"><?php esc_html_e( 'and', 'users-bulk-delete-with-preview' ); ?></label>
+			<input type="text" id="registration_date_to" name="registration_date_to" class="regular-text" placeholder="YYYY-MM-DD" autocomplete="off">
+		</span>
 	</td>
 </tr>
 <!-- User Registration Date -->
@@ -60,7 +70,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<label for="user_meta"><?php esc_html_e( 'User Meta', 'users-bulk-delete-with-preview' ); ?>:</label>
 	</th>
 	<td>
-		<input type="hidden" id="search_user_meta_nonce" name="search_user_meta_nonce" value="<?php echo esc_attr( wp_create_nonce( 'search_user_meta_nonce' ) ); ?>" />
+		<input type="hidden" id="search_user_meta_nonce" name="search_user_meta_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_search_usermeta' ) ); ?>" />
 		<select class="regular-text" name="user_meta" id="user_meta"></select>
 		<select name="user_meta_equal" id="user_meta_equal">
             <option value="meta_not_exists"><?php esc_html_e( 'Meta does not exist', 'users-bulk-delete-with-preview' ); ?></option>
@@ -86,4 +96,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</td>
 </tr>
 <!-- User Meta -->
+<!-- Without Content -->
+<tr class="find_users_form" style="display: none;">
+	<th scope="row">
+		<?php esc_html_e( 'Content', 'users-bulk-delete-with-preview' ); ?>:
+	</th>
+	<td>
+		<label for="without_content">
+			<input type="checkbox" id="without_content" name="without_content" value="1">
+			<?php esc_html_e( 'Only users without posts or comments on this site', 'users-bulk-delete-with-preview' ); ?>
+		</label>
+	</td>
+</tr>
+<!-- Without Content -->
 <!-- Find Users Form -->

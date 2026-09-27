@@ -155,10 +155,23 @@ class UbdwpUsersHandler {
 		$users    = $this->repository->get_users_by_ids( $user_ids );
 
 		if ( ! empty( $users ) ) {
-			return UbdwpHelperFacade::prepare_users_for_table( $users );
+			return $this->prepare_users_for_table( $users );
 		}
 
 		return new \WP_Error( 'no_users_found', UbdwpValidationFacade::get_error_message( 'no_users_found' ) );
+	}
+
+	/**
+	 * Format users for the preview table, including their post counts.
+	 *
+	 * @param array<\WP_User> $users Users.
+	 *
+	 * @return array<int, array<string, mixed>> Table rows.
+	 */
+	private function prepare_users_for_table( array $users ): array {
+		$post_counts = $this->repository->count_posts_by_authors( array_map( static fn( $user ) => (int) $user->ID, $users ) );
+
+		return UbdwpHelperFacade::prepare_users_for_table( $users, $post_counts );
 	}
 
 	/**
@@ -182,7 +195,7 @@ class UbdwpUsersHandler {
 		}
 
 		if ( ! empty( $user_query->get_results() ) ) {
-			return UbdwpHelperFacade::prepare_users_for_table( $user_query->get_results() );
+			return $this->prepare_users_for_table( $user_query->get_results() );
 		}
 
 		return new \WP_Error( 'no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message( 'no_users_found_with_given_filters' ) );
@@ -205,7 +218,7 @@ class UbdwpUsersHandler {
 			$user_ids = array_unique( $user_ids );
 			$users    = $this->repository->get_users_by_ids( $user_ids );
 
-			return UbdwpHelperFacade::prepare_users_for_table( $users );
+			return $this->prepare_users_for_table( $users );
 		}
 
 		return new \WP_Error( 'no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message( 'no_users_found_with_given_filters' ) );
@@ -278,8 +291,10 @@ class UbdwpUsersHandler {
 		$batch_ids = array_keys( $unique_users );
 
 		foreach ( $unique_users as $user_id => $user ) {
-			if ( ! $this->can_manage_user_for_current_site( $user_id ) ) {
-				$failed_users[] = $user_id;
+			$block_reason = $this->get_block_reason( $user_id );
+
+			if ( null !== $block_reason ) {
+				$failed_users[ $user_id ] = $this->build_failed_entry( $user_id, $block_reason );
 				continue;
 			}
 
@@ -295,7 +310,7 @@ class UbdwpUsersHandler {
 
 				// Never fall back to deleting content when an explicit reassign target is invalid.
 				if ( null === $reassign ) {
-					$failed_users[] = $user_id;
+					$failed_users[ $user_id ] = $this->build_failed_entry( $user_id, 'invalid_reassign' );
 					continue;
 				}
 			}
@@ -305,7 +320,7 @@ class UbdwpUsersHandler {
 			}
 
 			if ( ! $this->remove_or_delete_user( $user_id, $reassign ) ) {
-				$failed_users[] = $user_id;
+				$failed_users[ $user_id ] = $this->build_failed_entry( $user_id, 'delete_failed' );
 				continue;
 			}
 
@@ -326,11 +341,85 @@ class UbdwpUsersHandler {
 			)
 		);
 
-		return array(
-			'deleted_users' => $deleted_users,
-			'failed_users'  => $failed_users,
-			'template'      => $template,
+		$failed_template = UbdwpViewsFacade::render_template(
+			'partials/_failed_user_delete.php',
+			array( 'failed_users' => array_values( $failed_users ) )
 		);
+
+		return array(
+			'deleted_users'   => $deleted_users,
+			'failed_users'    => $failed_users,
+			'template'        => $template,
+			'failed_template' => $failed_template,
+		);
+	}
+
+	/**
+	 * Summarize what a deletion request will do, without changing anything.
+	 *
+	 * @param array<int, array<string, mixed>> $sanitized_users Users selected for deletion.
+	 *
+	 * @return array<string, mixed> Summary for the confirmation dialog.
+	 */
+	public function get_delete_summary( array $sanitized_users ): array {
+		$unique_users = array();
+		foreach ( $sanitized_users as $user ) {
+			$unique_users[ (int) $user['id'] ] ??= $user;
+		}
+		$batch_ids = array_keys( $unique_users );
+
+		$summary = array(
+			'selected'         => count( $unique_users ),
+			'deletable'        => 0,
+			'skipped'          => array(),
+			'reassign_users'   => 0,
+			'reassign_posts'   => 0,
+			'reassign_targets' => array(),
+			'default_users'    => 0,
+			'default_posts'    => 0,
+			'remove_users'     => 0,
+			'remove_posts'     => 0,
+			'remove_comments'  => 0,
+			'multisite'        => is_multisite(),
+		);
+
+		foreach ( $unique_users as $user_id => $user ) {
+			$block_reason = $this->get_block_reason( $user_id );
+			$reassign_raw = (string) ( $user['reassign'] ?? '' );
+			$reassign     = null;
+
+			if ( null === $block_reason && '' !== $reassign_raw && 'remove_all_related_content' !== $reassign_raw ) {
+				$reassign = $this->normalize_reassign_user_id( $reassign_raw, $user_id, $batch_ids );
+				if ( null === $reassign ) {
+					$block_reason = 'invalid_reassign';
+				}
+			}
+
+			if ( null !== $block_reason ) {
+				$summary['skipped'][] = $this->build_failed_entry( $user_id, $block_reason );
+				continue;
+			}
+
+			++$summary['deletable'];
+
+			if ( 'remove_all_related_content' === $reassign_raw ) {
+				++$summary['remove_users'];
+				$summary['remove_posts']    += count( $this->get_related_post_ids( $user_id ) );
+				$summary['remove_comments'] += (int) get_comments( array( 'user_id' => $user_id, 'status' => 'any', 'count' => true ) );
+			} elseif ( null !== $reassign ) {
+				++$summary['reassign_users'];
+				$summary['reassign_posts'] += $this->count_default_content( $user_id, true );
+				$summary['reassign_targets'][ $reassign ] = sanitize_user( get_userdata( $reassign )->user_login );
+			} else {
+				++$summary['default_users'];
+				$summary['default_posts'] += $this->count_default_content( $user_id, false );
+			}
+		}
+
+		$summary['reassign_targets'] = array_values( $summary['reassign_targets'] );
+		$summary['confirm_required'] = $summary['deletable'] >= (int) apply_filters( 'ubdwp_confirmation_threshold', 20 );
+
+		return $summary;
 	}
 
 	/**
@@ -373,26 +462,112 @@ class UbdwpUsersHandler {
 	}
 
 	/**
-	 * Check whether a user can be managed in the current site context.
+	 * Explain why a user cannot be deleted or removed in the current site context.
 	 *
 	 * @param int $user_id User ID.
 	 *
-	 * @return bool True when the user can be managed.
+	 * @return string|null Reason code, or null when the user can be deleted.
 	 */
-	private function can_manage_user_for_current_site( int $user_id ): bool {
-		if ( $user_id <= 0 || $user_id === $this->current_user_id || ! get_userdata( $user_id ) ) {
-			return false;
+	private function get_block_reason( int $user_id ): ?string {
+		$user = $user_id > 0 ? get_userdata( $user_id ) : false;
+
+		if ( ! $user ) {
+			return 'not_found';
 		}
 
-		if ( ! is_multisite() ) {
-			return current_user_can( 'delete_user', $user_id );
+		if ( $user_id === $this->current_user_id ) {
+			return 'self';
 		}
 
-		if ( ! is_user_member_of_blog( $user_id, get_current_blog_id() ) || ! current_user_can( 'remove_user', $user_id ) ) {
-			return false;
+		if ( is_multisite() && ! is_user_member_of_blog( $user_id, get_current_blog_id() ) ) {
+			return 'not_member';
 		}
 
-		return ! is_super_admin( $user_id ) || is_super_admin( $this->current_user_id );
+		if ( UbdwpHelperFacade::is_protected_user( $user, $this->current_user_id ) ) {
+			return 'protected';
+		}
+
+		$capability = is_multisite() ? 'remove_user' : 'delete_user';
+
+		return current_user_can( $capability, $user_id ) ? null : 'no_permission';
+	}
+
+	/**
+	 * Build a failed user entry with a translated reason.
+	 *
+	 * @param int    $user_id User ID.
+	 * @param string $reason  Reason code.
+	 *
+	 * @return array<string, mixed> Failed entry.
+	 */
+	private function build_failed_entry( int $user_id, string $reason ): array {
+		$user = $user_id > 0 ? get_userdata( $user_id ) : false;
+
+		return array(
+			'user_id' => $user_id,
+			'login'   => $user ? sanitize_user( $user->user_login ) : '',
+			'email'   => $user ? sanitize_email( $user->user_email ) : '',
+			'reason'  => $reason,
+			'message' => UbdwpHelperFacade::get_delete_block_reason_message( $reason ),
+		);
+	}
+
+	/**
+	 * Count content affected when a user is deleted without "remove all related content".
+	 *
+	 * Mirrors wp_delete_user(): posts of types that are deleted with the user.
+	 * On multisite, removing a user from a site keeps the content unless it is reassigned.
+	 *
+	 * @param int  $user_id  User ID.
+	 * @param bool $reassign Whether the content is reassigned instead of deleted.
+	 *
+	 * @return int Number of posts.
+	 */
+	private function count_default_content( int $user_id, bool $reassign ): int {
+		global $wpdb;
+
+		if ( is_multisite() && ! $reassign ) {
+			return 0;
+		}
+
+		if ( $reassign ) {
+			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_author = %d", $user_id ) );
+		}
+
+		$post_types = array();
+		foreach ( get_post_types( array(), 'objects' ) as $post_type ) {
+			if ( $post_type->delete_with_user || ( null === $post_type->delete_with_user && post_type_supports( $post_type->name, 'author' ) ) ) {
+				$post_types[] = $post_type->name;
+			}
+		}
+
+		if ( empty( $post_types ) ) {
+			return 0;
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $post_types ), '%s' ) );
+
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_author = %d AND post_type IN ($placeholders)", array_merge( array( $user_id ), $post_types ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are generated for each post type.
+	}
+
+	/**
+	 * Get IDs of posts removed by "remove all related content".
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return array<int> Post IDs.
+	 */
+	private function get_related_post_ids( int $user_id ): array {
+		// Post type "any" intentionally skips internal types (e.g. WooCommerce orders, scheduled actions),
+		// but status "any" would skip trashed posts and auto-drafts, so all statuses are listed explicitly.
+		return get_posts( array(
+			'author'           => $user_id,
+			'post_type'        => 'any',
+			'post_status'      => array_keys( get_post_stati() ),
+			'numberposts'      => -1,
+			'fields'           => 'ids',
+			'suppress_filters' => true,
+		) );
 	}
 
 	/**
@@ -425,16 +600,7 @@ class UbdwpUsersHandler {
 	 * @return void
 	 */
 	private function delete_related_content( int $user_id ): void {
-		// Post type "any" intentionally skips internal types (e.g. WooCommerce orders, scheduled actions),
-		// but status "any" would skip trashed posts and auto-drafts, so all statuses are listed explicitly.
-		$user_posts = get_posts( array(
-			'author'           => $user_id,
-			'post_type'        => 'any',
-			'post_status'      => array_keys( get_post_stati() ),
-			'numberposts'      => -1,
-			'fields'           => 'ids',
-			'suppress_filters' => true,
-		) );
+		$user_posts = $this->get_related_post_ids( $user_id );
 
 		foreach ( $user_posts as $post_id ) {
 			wp_delete_post( $post_id, true );
@@ -464,6 +630,9 @@ class UbdwpUsersHandler {
 			'search_user_existing_nonce',
 			'search_user_meta_nonce',
 			'registration_date',
+			'registration_date_compare',
+			'registration_date_to',
+			'without_content',
 			'user_meta_value',
 			'user_email',
 			'filter_type',

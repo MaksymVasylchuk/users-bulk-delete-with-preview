@@ -451,3 +451,27 @@ label:has(> input[type=checkbox]) {
 }
 
 /**DataTables**/
+/* Protected users and deletion summary */
+.ubdwp-protected {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 0 6px;
+    border-radius: 3px;
+    background: #f0f0f1;
+    color: #50575e;
+    font-size: 11px;
+    line-height: 18px;
+}
+
+.ubdwp-delete-summary {
+    margin: 0 0 12px 18px;
+    list-style: disc;
+}
+
+.ubdwp-confirm-text {
+    font-weight: 600;
+}
+
+#ubdwp_delete_skipped {
+    margin-bottom: 12px;
+}

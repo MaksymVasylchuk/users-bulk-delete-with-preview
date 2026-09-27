@@ -105,7 +105,103 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 			return $email_filter_result;
 		}
 
+		// Runs last, because it has to narrow down an "include" list set by the email filter.
+		$content_filter_result = $this->apply_without_content_filter( $args, $request );
+
+		if ( is_wp_error( $content_filter_result ) ) {
+			return $content_filter_result;
+		}
+
 		return new \WP_User_Query( $args );
+	}
+
+	/**
+	 * Post types that count as a user's content.
+	 *
+	 * Same set as WP_Query's post type "any" used by "remove all related content":
+	 * internal types such as revisions or WooCommerce orders are not included.
+	 *
+	 * @return array<string> Post type names.
+	 */
+	public function get_content_post_types(): array {
+		return array_values( get_post_types( array( 'exclude_from_search' => false ) ) );
+	}
+
+	/**
+	 * Count posts in any status for several users with one query.
+	 *
+	 * @param array<int> $user_ids User IDs.
+	 *
+	 * @return array<int, int> Post count by user ID (users without posts are omitted).
+	 */
+	public function count_posts_by_authors( array $user_ids ): array {
+		$user_ids   = array_values( array_filter( array_unique( array_map( 'absint', $user_ids ) ) ) );
+		$post_types = $this->get_content_post_types();
+
+		if ( empty( $user_ids ) || empty( $post_types ) ) {
+			return array();
+		}
+
+		$user_placeholders = implode( ',', array_fill( 0, count( $user_ids ), '%d' ) );
+		$type_placeholders = implode( ',', array_fill( 0, count( $post_types ), '%s' ) );
+		$rows              = $this->select(
+			"SELECT post_author, COUNT(*) AS post_count FROM {$this->wpdb->posts} WHERE post_author IN ($user_placeholders) AND post_type IN ($type_placeholders) GROUP BY post_author",
+			array_merge( $user_ids, $post_types )
+		);
+
+		$counts = array();
+		foreach ( $rows as $row ) {
+			$counts[ (int) $row->post_author ] = (int) $row->post_count;
+		}
+
+		return $counts;
+	}
+
+	/**
+	 * Keep only users who have no posts (in any status) and no comments on the current site.
+	 *
+	 * @param array<string, mixed> $args Current query arguments.
+	 * @param array<string, mixed> $request Request parameters.
+	 *
+	 * @return \WP_Error|null Error when no user can match.
+	 */
+	private function apply_without_content_filter( array &$args, array $request ): ?\WP_Error {
+		if ( empty( $request['without_content'] ) ) {
+			return null;
+		}
+
+		$post_types = $this->get_content_post_types();
+		$authors    = array();
+
+		if ( ! empty( $post_types ) ) {
+			$type_placeholders = implode( ',', array_fill( 0, count( $post_types ), '%s' ) );
+			$authors           = $this->get_col(
+				"SELECT DISTINCT post_author FROM {$this->wpdb->posts} WHERE post_author > %d AND post_type IN ($type_placeholders)",
+				array_merge( array( 0 ), $post_types )
+			);
+		}
+
+		$commenters = $this->get_col( "SELECT DISTINCT user_id FROM {$this->wpdb->comments} WHERE user_id > %d", array( 0 ) );
+		$with_content = array_values( array_unique( array_map( 'absint', array_merge( $authors, $commenters ) ) ) );
+
+		if ( empty( $with_content ) ) {
+			return null;
+		}
+
+		// WP_User_Query ignores "exclude" when "include" is set, so narrow the include list instead.
+		if ( ! empty( $args['include'] ) ) {
+			$args['include'] = array_values( array_diff( array_map( 'absint', (array) $args['include'] ), $with_content ) );
+
+			if ( empty( $args['include'] ) ) {
+				return new \WP_Error( 'no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message( 'no_users_found_with_given_filters' ) );
+			}
+
+			return null;
+		}
+
+		$args['exclude'] = array_values( array_unique( array_merge( array_map( 'absint', (array) ( $args['exclude'] ?? array() ) ), $with_content ) ) ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- Users with content must be excluded.
+
+		return null;
 	}
 
 	/**
@@ -234,13 +330,42 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 * @param array<string, mixed> $request Request parameters.
 	 */
 	private function apply_registration_date_filter( array &$args, array $request ): void {
-		if ( ! empty( $request['registration_date'] ) ) {
-			$args['date_query'][] = array(
-				'column'    => 'user_registered',
-				'after'     => sanitize_text_field( $request['registration_date'] ),
-				'inclusive' => true,
-			);
+		$from = sanitize_text_field( $request['registration_date'] ?? '' );
+
+		if ( '' === $from ) {
+			return;
 		}
+
+		$to      = sanitize_text_field( $request['registration_date_to'] ?? '' );
+		$compare = sanitize_key( $request['registration_date_compare'] ?? '' );
+
+		// Dates are entered in the site's timezone, while user_registered is stored in UTC.
+		$day_start = static fn( string $date ): string => get_gmt_from_date( $date . ' 00:00:00' );
+		$day_end   = static fn( string $date ): string => get_gmt_from_date( $date . ' 23:59:59' );
+		$clause    = array(
+			'column'    => 'user_registered',
+			'inclusive' => true,
+		);
+
+		switch ( $compare ) {
+			case 'before':
+				$clause['before'] = $day_end( $from );
+				break;
+			case 'on':
+				$clause['after']  = $day_start( $from );
+				$clause['before'] = $day_end( $from );
+				break;
+			case 'between':
+				$clause['after']  = $day_start( $from );
+				$clause['before'] = $day_end( $to );
+				break;
+			default:
+				// Requests without an operator keep the behavior of earlier versions.
+				$clause['after'] = $day_start( $from );
+				break;
+		}
+
+		$args['date_query'][] = $clause;
 	}
 
 	/**

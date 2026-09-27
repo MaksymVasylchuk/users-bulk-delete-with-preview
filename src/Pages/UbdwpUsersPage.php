@@ -15,6 +15,7 @@ use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
 use UsersBulkDeleteWithPreview\Handlers\UbdwpLogsHandler;
 use UsersBulkDeleteWithPreview\Handlers\UbdwpUsersHandler;
 use UsersBulkDeleteWithPreview\Facades\UbdwpValidationFacade;
+use UsersBulkDeleteWithPreview\Facades\UbdwpViewsFacade;
 
 /**
  * Class for managing the Users Page.
@@ -101,7 +102,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 
 			UbdwpHelperFacade::localize_scripts( 'wpubdp-admin-js', array(
 				'ajaxurl'                => admin_url( 'admin-ajax.php' ),
-				'reassignUsersNonce'     => wp_create_nonce( 'search_reassign_users_nonce' ),
+				'reassignUsersNonce'     => wp_create_nonce( 'ubdwp_search_reassign_users' ),
 				'translations'           => array_merge(
 					UbdwpHelperFacade::get_data_table_translation(),
 					UbdwpHelperFacade::get_user_table_translation()
@@ -123,7 +124,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 			self::LIST_USERS_CAP,
 		);
 
-		$this->handle_ajax_request( 'nonce', 'search_user_existing_nonce', $capabilities, function () {
+		$this->handle_ajax_request( 'nonce', 'ubdwp_search_users', $capabilities, function () {
 			$search_data = array(
 				'q'          => sanitize_text_field( $_POST['q'] ?? '' ), // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
 				'select_all' => filter_var( $_POST['select_all'] ?? false, FILTER_VALIDATE_BOOLEAN ), // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
@@ -146,7 +147,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 			self::LIST_USERS_CAP,
 		);
 
-		$this->handle_ajax_request( 'nonce', 'search_user_meta_nonce', $capabilities, function () {
+		$this->handle_ajax_request( 'nonce', 'ubdwp_search_usermeta', $capabilities, function () {
 			$sanitized_data = array(
 				'q' => sanitize_text_field( $_POST['q'] ?? '' ), // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
 			);
@@ -166,7 +167,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 			self::LIST_USERS_CAP,
 		);
 
-		$this->handle_ajax_request( 'nonce', 'search_reassign_users_nonce', $capabilities, function () {
+		$this->handle_ajax_request( 'nonce', 'ubdwp_search_reassign_users', $capabilities, function () {
 			$exclude = wp_unslash( $_POST['exclude'] ?? array() ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked in "handle_ajax_request" method, values are cast to integers below.
 
 			$search_data = array(
@@ -189,7 +190,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 			self::LIST_USERS_CAP,
 		);
 
-		$this->handle_ajax_request( 'find_users_nonce', 'find_users_nonce', $capabilities, function () {
+		$this->handle_ajax_request( 'find_users_nonce', 'ubdwp_find_users', $capabilities, function () {
 			$type = sanitize_text_field( $_POST['filter_type'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
 
 			if ( empty( $type ) ) {
@@ -211,33 +212,12 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 	 * @return void
 	 */
 	public function delete_users_action(): void {
-		$capabilities = array(
-			self::MANAGE_OPTIONS_CAP,
-			self::LIST_USERS_CAP,
-			is_multisite() ? self::REMOVE_USERS_CAP : self::DELETE_USERS_CAP,
-		);
-
-		$this->handle_ajax_request( 'delete_users_nonce', 'delete_users_nonce', $capabilities, function () {
-			$sanitized_users = array_filter( array_map( function ( $user ) {
-				return is_array( $user ) && ! empty( $user['id'] ) ? array(
-					'id'           => (int) $user['id'],
-					'reassign'     => sanitize_text_field( $user['reassign'] ?? '' ),
-					'email'        => sanitize_email( $user['email'] ?? '' ),
-					'display_name' => sanitize_text_field( $user['display_name'] ?? '' ),
-				) : null;
-			}, $_POST['users'] ?? array() ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
-
-			$user_ids = array_unique( array_column( $sanitized_users, 'id' ) );
-
-			if ( empty( $user_ids ) ) {
-				wp_send_json_error( array( 'message' => UbdwpValidationFacade::get_error_message( 'select_any_user' ) ) );
-				wp_die();
-			}
+		$this->handle_ajax_request( 'delete_users_nonce', 'ubdwp_delete_users', $this->get_delete_capabilities(), function () {
+			$sanitized_users = $this->get_requested_users();
 
 			$response      = $this->handler->delete_users( $sanitized_users );
 			$deleted_users = $response['deleted_users'] ?? array();
 			$failed_users  = $response['failed_users'] ?? array();
-			$template      = $response['template'] ?? '';
 
 			if ( ! empty( $deleted_users ) ) {
 				$this->logs_handler->insert_log( array(
@@ -247,11 +227,69 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 			}
 
 			return array(
-				'template'      => $template,
-				'deleted_count' => count( $deleted_users ),
-				'failed_count'  => count( $failed_users ),
+				'template'        => $response['template'] ?? '',
+				'failed_template' => $response['failed_template'] ?? '',
+				'deleted_count'   => count( $deleted_users ),
+				'failed_count'    => count( $failed_users ),
 			);
 		} );
+	}
+
+	/**
+	 * Handle AJAX request that summarizes a deletion before it is confirmed.
+	 *
+	 * @return void
+	 */
+	public function delete_summary_action(): void {
+		$this->handle_ajax_request( 'delete_users_nonce', 'ubdwp_delete_users', $this->get_delete_capabilities(), function () {
+			$summary = $this->handler->get_delete_summary( $this->get_requested_users() );
+
+			$summary['skipped_template'] = UbdwpViewsFacade::render_template(
+				'partials/_failed_user_delete.php',
+				array( 'failed_users' => $summary['skipped'] )
+			);
+			$summary['skipped'] = count( $summary['skipped'] );
+
+			return $summary;
+		} );
+	}
+
+	/**
+	 * Capabilities required to delete users or remove them from a site.
+	 *
+	 * @return array<string> Capabilities.
+	 */
+	private function get_delete_capabilities(): array {
+		return array(
+			self::MANAGE_OPTIONS_CAP,
+			self::LIST_USERS_CAP,
+			is_multisite() ? self::REMOVE_USERS_CAP : self::DELETE_USERS_CAP,
+		);
+	}
+
+	/**
+	 * Read users selected for deletion from the request.
+	 *
+	 * Sends a JSON error and stops when no valid user ID was sent.
+	 *
+	 * @return array<int, array<string, mixed>> Sanitized users.
+	 */
+	private function get_requested_users(): array {
+		$users = wp_unslash( $_POST['users'] ?? array() ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked in "handle_ajax_request" method, values are sanitized below.
+
+		$sanitized_users = array_values( array_filter( array_map( static function ( $user ) {
+			return is_array( $user ) && ! empty( $user['id'] ) ? array(
+				'id'       => (int) $user['id'],
+				'reassign' => sanitize_text_field( $user['reassign'] ?? '' ),
+			) : null;
+		}, is_array( $users ) ? $users : array() ) ) );
+
+		if ( empty( array_filter( array_column( $sanitized_users, 'id' ) ) ) ) {
+			wp_send_json_error( array( 'message' => UbdwpValidationFacade::get_error_message( 'select_any_user' ) ) );
+			wp_die();
+		}
+
+		return $sanitized_users;
 	}
 
 	/**
@@ -265,7 +303,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 			self::LIST_USERS_CAP,
 		);
 
-		$this->handle_ajax_request( 'export_users_nonce', 'export_users_nonce', $capabilities, function () {
+		$this->handle_ajax_request( 'export_users_nonce', 'ubdwp_export_users', $capabilities, function () {
 			$sanitized_users = array_filter( array_map( function ( $user ) {
 				return is_array( $user ) && ! empty( $user['value'] ) ? array(
 					'id'    => (int) ( $user['value'] ?? 0 ),
@@ -301,6 +339,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 			'ubdwp_search_usermeta'         => 'search_usermeta_ajax',
 			'ubdwp_search_users_for_delete' => 'search_users_for_delete_ajax',
 			'ubdwp_delete_users'            => 'delete_users_action',
+			'ubdwp_delete_summary'          => 'delete_summary_action',
 			'ubdwp_search_reassign_users'   => 'search_reassign_users_ajax',
 			'ubdwp_export_users'            => 'custom_export_users_action',
 		);

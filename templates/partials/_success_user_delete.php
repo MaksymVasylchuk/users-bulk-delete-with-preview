@@ -22,7 +22,7 @@ $deleted_users     = $deleted_users ?? array(); // Array with information about 
                 <td><?php echo esc_html($user['user_id']); ?></td>
                 <td><?php echo esc_html($user['display_name']); ?></td>
                 <td><?php echo esc_html($user['email']); ?></td>
-                <td><?php echo esc_html($user['reassign']); ?></td>
+                <td><?php echo esc_html( \UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade::get_content_action_label( $user['reassign'] ) ); ?></td>
             </tr>
 		<?php endforeach; ?>
 <?php endif; ?>
