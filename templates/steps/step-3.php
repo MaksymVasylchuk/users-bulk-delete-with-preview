@@ -25,12 +25,28 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <th><?php esc_html_e( 'User ID', 'users-bulk-delete-with-preview' ); ?></th>
                     <th><?php esc_html_e( 'Display name', 'users-bulk-delete-with-preview' ); ?></th>
                     <th><?php esc_html_e( 'Email', 'users-bulk-delete-with-preview' ); ?></th>
-                    <th><?php esc_html_e( 'Reassign user ID', 'users-bulk-delete-with-preview' ); ?></th>
+                    <th><?php esc_html_e( 'Related content', 'users-bulk-delete-with-preview' ); ?></th>
                 </tr>
                 </thead>
                 <tbody id="user_delete_success_list">
                 </tbody>
             </table>
+
+            <div id="user_delete_failed" style="display: none;">
+                <h3><?php esc_html_e( 'Users that were not deleted', 'users-bulk-delete-with-preview' ); ?></h3>
+                <table class="wp-list-table widefat fixed striped">
+                    <thead>
+                    <tr>
+                        <th><?php esc_html_e( 'User ID', 'users-bulk-delete-with-preview' ); ?></th>
+                        <th><?php esc_html_e( 'Username', 'users-bulk-delete-with-preview' ); ?></th>
+                        <th><?php esc_html_e( 'Email', 'users-bulk-delete-with-preview' ); ?></th>
+                        <th><?php esc_html_e( 'Reason', 'users-bulk-delete-with-preview' ); ?></th>
+                    </tr>
+                    </thead>
+                    <tbody id="user_delete_failed_list">
+                    </tbody>
+                </table>
+            </div>
 
 
         </div>

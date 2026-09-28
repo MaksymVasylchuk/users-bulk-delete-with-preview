@@ -49,11 +49,12 @@ class UbdwpHelper {
 	/**
 	 * Prepare user data for displaying in a table.
 	 *
-	 * @param array $users List of WP_User objects.
+	 * @param array           $users       List of WP_User objects.
+	 * @param array<int, int> $post_counts Post count by user ID.
 	 *
 	 * @return array Formatted user data for table display.
 	 */
-	public function prepare_users_for_table( array $users ): array {
+	public function prepare_users_for_table( array $users, array $post_counts = array() ): array {
 		if ( empty( $users ) ) {
 			return array();
 		}
@@ -61,7 +62,7 @@ class UbdwpHelper {
 		// Reassign targets are loaded on demand via AJAX, so only static options are rendered per row.
 		$select_options = $this->build_select_options();
 
-		return array_map( fn( $user ) => $this->format_user_data_for_table( $user, $select_options ), $users );
+		return array_map( fn( $user ) => $this->format_user_data_for_table( $user, $select_options, (int) ( $post_counts[ (int) $user->ID ] ?? 0 ) ), $users );
 	}
 
 	/**
@@ -94,6 +95,7 @@ class UbdwpHelper {
 			'username'      => __( 'Username', 'users-bulk-delete-with-preview' ),
 			'email'         => __( 'Email', 'users-bulk-delete-with-preview' ),
 			'registered'    => __( 'Registered', 'users-bulk-delete-with-preview' ),
+			'posts'         => __( 'Posts', 'users-bulk-delete-with-preview' ),
 			'role'          => __( 'Role', 'users-bulk-delete-with-preview' ),
 			'assignContent' => __( 'Assign related content to user', 'users-bulk-delete-with-preview' ),
 			'selectUser'    => __( 'Select a user', 'users-bulk-delete-with-preview' ),
@@ -103,7 +105,99 @@ class UbdwpHelper {
 			/* translators: %d: number of users. */
 			'deleteFailed'  => __( 'Users that could not be removed: %d.', 'users-bulk-delete-with-preview' ),
 			'selectAnyUser' => __( 'Please select at least one user for deletion.', 'users-bulk-delete-with-preview' ),
+			'nothingToDelete' => __( 'None of the selected users can be deleted. See the reasons below.', 'users-bulk-delete-with-preview' ),
+			/* translators: %d: number of users. */
+			'summarySelected' => __( 'Selected users: %d', 'users-bulk-delete-with-preview' ),
+			/* translators: %d: number of users. */
+			'summaryDeletable' => __( 'Will be deleted: %d', 'users-bulk-delete-with-preview' ),
+			/* translators: %d: number of users. */
+			'summaryRemovable' => __( 'Will be removed from this site: %d', 'users-bulk-delete-with-preview' ),
+			/* translators: %d: number of users. */
+			'summarySkipped'  => __( 'Will be skipped: %d', 'users-bulk-delete-with-preview' ),
+			/* translators: 1: number of users, 2: number of posts, 3: comma-separated usernames. */
+			'summaryReassign' => __( '%1$d user(s): %2$d post(s) will be reassigned to %3$s', 'users-bulk-delete-with-preview' ),
+			/* translators: 1: number of users, 2: number of posts. */
+			'summaryTrash'    => __( '%1$d user(s): %2$d post(s) will be deleted as by WordPress core (posts and pages go to the trash)', 'users-bulk-delete-with-preview' ),
+			/* translators: %d: number of users. */
+			'summaryKeep'     => __( '%d user(s): their content stays on this site', 'users-bulk-delete-with-preview' ),
+			/* translators: 1: number of users, 2: number of posts, 3: number of comments. */
+			'summaryRemove'   => __( '%1$d user(s): %2$d post(s) and %3$d comment(s) will be permanently deleted', 'users-bulk-delete-with-preview' ),
+			/* translators: %d: number of users. */
+			'confirmTyping'   => __( 'This cannot be undone. Type %d to confirm.', 'users-bulk-delete-with-preview' ),
+			'confirmIrreversible' => __( 'This cannot be undone.', 'users-bulk-delete-with-preview' ),
+			'failedHeading'   => __( 'Users that were not deleted', 'users-bulk-delete-with-preview' ),
 		);
+	}
+
+	/**
+	 * Check whether a user is protected from deletion by this plugin.
+	 *
+	 * Administrators, users who can manage other users and super admins are protected.
+	 *
+	 * @param \WP_User $user            User to check.
+	 * @param int      $current_user_id User performing the action.
+	 *
+	 * @return bool True when the user must not be deleted.
+	 */
+	public function is_protected_user( \WP_User $user, int $current_user_id ): bool {
+		$protected = is_super_admin( $user->ID )
+			|| user_can( $user, 'manage_options' )
+			|| user_can( $user, 'delete_users' )
+			|| user_can( $user, 'remove_users' );
+
+		/**
+		 * Filters whether a user is protected from deletion by Users Bulk Delete With Preview.
+		 *
+		 * @param bool     $protected       Whether the user is protected.
+		 * @param \WP_User $user            User being checked.
+		 * @param int      $current_user_id User performing the deletion.
+		 */
+		return (bool) apply_filters( 'ubdwp_is_protected_user', $protected, $user, $current_user_id );
+	}
+
+	/**
+	 * Describe what happened to a deleted user's content.
+	 *
+	 * @param string|int $reassign Reassign user ID, "remove_all_related_content" or empty.
+	 *
+	 * @return string Description.
+	 */
+	public function get_content_action_label( $reassign ): string {
+		if ( 'remove_all_related_content' === $reassign ) {
+			return __( 'Removed permanently', 'users-bulk-delete-with-preview' );
+		}
+
+		$target = absint( $reassign ) ? get_userdata( absint( $reassign ) ) : false;
+
+		if ( $target ) {
+			/* translators: %s: username that received the content. */
+			return sprintf( __( 'Reassigned to %s', 'users-bulk-delete-with-preview' ), $target->user_login );
+		}
+
+		return is_multisite()
+			? __( 'Kept on this site', 'users-bulk-delete-with-preview' )
+			: __( 'Posts moved to the trash', 'users-bulk-delete-with-preview' );
+	}
+
+	/**
+	 * Get a translated message for a deletion block reason.
+	 *
+	 * @param string $reason Reason code.
+	 *
+	 * @return string Message.
+	 */
+	public function get_delete_block_reason_message( string $reason ): string {
+		$messages = array(
+			'not_found'        => __( 'User does not exist.', 'users-bulk-delete-with-preview' ),
+			'self'             => __( 'You cannot delete your own account.', 'users-bulk-delete-with-preview' ),
+			'not_member'       => __( 'User is not a member of this site.', 'users-bulk-delete-with-preview' ),
+			'protected'        => __( 'Protected: administrators and other privileged users cannot be deleted.', 'users-bulk-delete-with-preview' ),
+			'no_permission'    => __( 'You do not have permission to delete this user.', 'users-bulk-delete-with-preview' ),
+			'invalid_reassign' => __( 'The user selected to receive the content is not valid.', 'users-bulk-delete-with-preview' ),
+			'delete_failed'    => __( 'WordPress could not delete this user.', 'users-bulk-delete-with-preview' ),
+		);
+
+		return $messages[ $reason ] ?? $messages['delete_failed'];
 	}
 
 	/**
@@ -135,6 +229,7 @@ class UbdwpHelper {
 				case 'search_user_existing_nonce':
 				case 'search_user_meta_nonce':
 				case 'registration_date':
+				case 'registration_date_to':
 				case 'user_meta_value':
 				case 'user_email':
 					$sanitized_data[ $key ] = sanitize_text_field( $value );
@@ -144,12 +239,18 @@ class UbdwpHelper {
 				case 'action':
 				case 'user_email_equal':
 				case 'user_meta_equal':
+				case 'registration_date_compare':
 					$sanitized_data[ $key ] = sanitize_key( $value );
 					break;
 
 				case 'user_meta':
 					// Meta keys are case-sensitive and may contain characters sanitize_key() would strip.
 					$sanitized_data[ $key ] = sanitize_text_field( $value );
+					break;
+
+				case 'without_content':
+				case 'all_products':
+					$sanitized_data[ $key ] = filter_var( $value, FILTER_VALIDATE_BOOLEAN );
 					break;
 
 				case 'user_search':
@@ -374,13 +475,23 @@ class UbdwpHelper {
 	 *
 	 * @return array Formatted user data.
 	 */
-	private function format_user_data_for_table( \WP_User $user, string $select_options ): array {
+	private function format_user_data_for_table( \WP_User $user, string $select_options, int $post_count = 0 ): array {
+		$protected = $this->is_protected_user( $user, get_current_user_id() );
+		$checkbox  = '<input type="checkbox" class="user-checkbox" name="users[' . esc_attr( $user->ID ) . '][id]" value="' . esc_attr( $user->ID ) . '"' . ( $protected ? ' disabled="disabled"' : '' ) . '>';
+
+		if ( $protected ) {
+			$checkbox .= ' <span class="ubdwp-protected" title="' . esc_attr__( 'Administrators and other privileged users cannot be deleted with this plugin.', 'users-bulk-delete-with-preview' ) . '">' . esc_html__( 'Protected', 'users-bulk-delete-with-preview' ) . '</span>';
+		}
+
 		return array(
-			'checkbox'        => '<input type="checkbox" class="user-checkbox" name="users[' . esc_attr( $user->ID ) . '][id]" value="' . esc_attr( $user->ID ) . '">',
+			'checkbox'        => $checkbox,
+			'protected'       => $protected,
 			'ID'              => intval( $user->ID ),
 			'user_login'      => sanitize_text_field( $user->user_login ),
 			'user_email'      => sanitize_email( $user->user_email ),
-			'user_registered' => sanitize_text_field( $user->user_registered ),
+			// Stored in UTC; shown in the site's timezone, as dates are entered in the filter.
+			'user_registered' => sanitize_text_field( get_date_from_gmt( $user->user_registered, 'Y-m-d H:i' ) ),
+			'post_count'      => $post_count,
 			'user_role'       => implode( ', ', array_map( 'sanitize_text_field', $user->roles ) ),
 			'select'          => $this->build_user_select_html( $user, $select_options ),
 		);
@@ -395,8 +506,6 @@ class UbdwpHelper {
 	 * @return string The HTML string for the user select dropdown.
 	 */
 	private function build_user_select_html( \WP_User $user, string $select_options ): string {
-		return '<select class="user-select" name="users[' . esc_attr( $user->ID ) . '][reassign]">' . $select_options . '</select>' .
-		       '<input type="hidden" name="users[' . esc_attr( $user->ID ) . '][email]" value="' . esc_attr( $user->user_email ) . '">' .
-		       '<input type="hidden" name="users[' . esc_attr( $user->ID ) . '][display_name]" value="' . esc_attr( $user->display_name ) . '">';
+		return '<select class="user-select" name="users[' . esc_attr( $user->ID ) . '][reassign]">' . $select_options . '</select>';
 	}
 }

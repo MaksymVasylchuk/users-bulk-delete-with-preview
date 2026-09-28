@@ -13,15 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <!-- Existing Users Form -->
 <tr class="select_existing_form" style="display: none;">
-	<input type="hidden" id="search_user_existing_nonce" name="search_user_existing_nonce" value="<?php echo esc_attr( wp_create_nonce( 'search_user_existing_nonce' ) ); ?>" />
+	<input type="hidden" id="search_user_existing_nonce" name="search_user_existing_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_search_users' ) ); ?>" />
 	<th scope="row">
 		<label for="user_search"><?php esc_html_e( 'Select existing users', 'users-bulk-delete-with-preview' ); ?>:</label>
 	</th>
 	<td>
 		<select id="user_search" name="user_search[]" multiple="multiple" class="form-control"></select>
 		<span class="invalid-feedback"></span>
-		<br>
-		<label for="use_regexp">
+		<label for="selectAllUsers" class="ubdwp-checkbox">
 			<input type="checkbox" id="selectAllUsers" name="selectAll">
 			<?php esc_html_e( 'Select All', 'users-bulk-delete-with-preview' ); ?>
 		</label>

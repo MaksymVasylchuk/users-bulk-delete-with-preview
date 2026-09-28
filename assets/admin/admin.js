@@ -27,7 +27,7 @@
      * Initialize Select2 for user search
      */
     function initializeUserSearch() {
-        var $user_search_select = $( '#user_search' ).select2(
+        $( '#user_search' ).select2(
             {
                 placeholder: __( 'Search for users', 'users-bulk-delete-with-preview' ),
                 width: '400px',
@@ -48,17 +48,6 @@
                 }
             }
         );
-
-        // Adjust the height based on the selection
-        $user_search_select.on(
-            'select2:select select2:unselect',
-            function () {
-                adjustSelect2Height( $( this ) );
-            }
-        );
-
-        // Initial setting for an empty Select2
-        $( '.select2-selection--multiple' ).css( 'height', '35px' );
     }
 
     /**
@@ -86,21 +75,47 @@
             }
         );
 
-        initializeSelect2WithHeightAdjustment( '#user_role', __( 'Select user roles', 'users-bulk-delete-with-preview' ) );
-        initializeSelect2WithHeightAdjustment( '#products', __( 'Select products that bought user', 'users-bulk-delete-with-preview' ) );
+        initializeSelect2( '#user_role', __( 'Select user roles', 'users-bulk-delete-with-preview' ) );
+        initializeSelect2(
+            '#products',
+            __( 'Select products that bought user', 'users-bulk-delete-with-preview' ),
+            {
+                ajax: {
+                    url: ubdwpData.ajaxurl,
+                    type: 'POST',
+                    dataType: 'json',
+                    delay: 250,
+                    data: params => ({
+                        action: 'ubdwp_search_products',
+                        q: params.term || '',
+                        nonce: $( '#search_products_nonce' ).val()
+                    }),
+                    processResults: data => ({results: data.success ? data.data.results : []})
+                }
+            }
+        );
 
-        // Initial setting for an empty Select2
-        $( '.select2-selection--multiple' ).css( 'height', '35px' );
-
-        // Initialize the date picker
-        $( '#registration_date' ).datepicker(
+        // Initialize the date pickers
+        $( '#registration_date, #registration_date_to' ).datepicker(
             {
                 changeMonth: true,
                 changeYear: true,
-                dateFormat: 'yy-mm-dd',
-                placeholder: __( 'Select registration date', 'users-bulk-delete-with-preview' )
+                dateFormat: 'yy-mm-dd'
             }
         );
+
+        // The second date is only used for the "between" comparison
+        $( '#registration_date_compare' ).on(
+            'change',
+            function () {
+                const isBetween = 'between' === $( this ).val();
+                $( '#registration_date_to_wrap' ).toggle( isBetween );
+
+                if ( ! isBetween) {
+                    $( '#registration_date_to' ).val( '' );
+                }
+            }
+        ).trigger( 'change' );
 
         const select = document.getElementById('user_meta_equal');
         const valueInput = document.getElementById('user_meta_value');
@@ -118,41 +133,22 @@
     }
 
     /**
-     * Initialize Select2 with height adjustment on select/unselect
+     * Initialize Select2 with the plugin defaults
      *
      * @param {string} selector - The jQuery selector for the element
      * @param {string} placeholder - Placeholder for the element
+     * @param {object} options - Additional Select2 options
      */
-    function initializeSelect2WithHeightAdjustment(selector, placeholder) {
-        var $select = $( selector ).select2(
-            {
-                width: '400px',
-                placeholder: placeholder
-            }
+    function initializeSelect2(selector, placeholder, options = {}) {
+        $( selector ).select2(
+            Object.assign(
+                {
+                    width: '400px',
+                    placeholder: placeholder
+                },
+                options
+            )
         );
-
-        // Adjust the height based on the selection
-        $select.on(
-            'select2:select select2:unselect',
-            function () {
-                adjustSelect2Height( $( this ) );
-            }
-        );
-    }
-
-    /**
-     * Adjust the height of Select2 based on the selection
-     *
-     * @param {object} $element - The jQuery element of Select2
-     */
-    function adjustSelect2Height($element) {
-        var $selection = $element.next( '.select2-container' ).find( '.select2-selection--multiple .select2-selection__rendered' );
-
-        if ($selection.children( '.select2-selection__choice' ).length === 0) {
-            $( '.select2-selection--multiple' ).css( 'height', '35px' );
-        } else {
-            $( '.select2-selection--multiple' ).css( 'height', 'auto' );
-        }
     }
 
     /**
@@ -192,7 +188,6 @@
                                 );
 
                                 $( '#user_search' ).val( allIds ).trigger( 'change' );
-                                $( '#user_search' ).trigger( 'select2:select' );
                             },
                             error: function(data) {
                                 console.log( 'Error fetching users' );
@@ -202,7 +197,6 @@
                     );
                 } else {
                     $( '#user_search' ).empty().trigger( 'change' ).val( null ).trigger( 'change' );
-                    $( '#user_search' ).trigger( 'select2:unselect' );
                 }
             }
         );
@@ -215,13 +209,10 @@
         $( '#selectAllProducts' ).on(
             'change',
             function () {
-                if ($( this ).is( ':checked' )) {
-                    $( "#products > option" ).prop( "selected", "selected" );
-                    $( "#products" ).trigger( "change" );
-                } else {
-                    $( "#products > option" ).removeAttr( "selected" );
-                    $( "#products" ).trigger( "change" );
-                }
+                // "Select All" matches customers who bought any product, so the product list is not needed
+                const allProducts = $( this ).is( ':checked' );
+
+                $( '#products' ).val( null ).prop( 'disabled', allProducts ).trigger( 'change' );
             }
         );
     }
@@ -295,9 +286,16 @@
                             hideLoader();
                             if (response.success) {
                                 // Show step 2 first: DataTables measures the container to size paging and columns.
+                                const preview = Array.isArray( response.data ) ? {rows: response.data} : response.data;
+
                                 currentStep = 2;
                                 showStep( currentStep );
-                                setupUserTable( response.data );
+                                setupUserTable( preview.rows );
+
+                                // Very large result sets are loaded in parts to keep the page responsive
+                                if (preview.truncated && preview.message) {
+                                    createWordpressError( preview.message, 'warning' );
+                                }
                             } else {
                                 handleErrorResponse( response );
                             }
@@ -318,20 +316,139 @@
             () => {
                 clearWordpressError();
 
-                if ( ! getCheckedUsers().length) {
+                const users = getCheckedUsers();
+
+                if ( ! users.length) {
                     createWordpressError( translations.selectAnyUser );
                     return;
                 }
 
-                $( '#confirmModal' ).modal( 'show' );
+                showLoader();
+                $.ajax(
+                    {
+                        url: ubdwpData.ajaxurl,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            action: 'ubdwp_delete_summary',
+                            delete_users_nonce: $( '#delete_users_nonce' ).val(),
+                            users: users
+                        },
+                        success: function (response) {
+                            hideLoader();
+
+                            if ( ! response.success) {
+                                handleErrorResponse( response );
+                                return;
+                            }
+
+                            showDeleteSummary( response.data );
+                            $( '#confirmModal' ).modal( 'show' );
+                        },
+                        error: function () {
+                            hideLoader();
+                            createWordpressError( __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );
+                        }
+                    }
+                );
             }
         );
+
+        // Enable the delete button only when the typed number matches
+        $( document ).on(
+            'input',
+            '#ubdwp_confirm_input',
+            function () {
+                const expected = String( $( '#confirmDelete' ).data( 'expected' ) || '' );
+                $( '#confirmDelete' ).prop( 'disabled', '' !== expected && $( this ).val().trim() !== expected );
+            }
+        );
+
+        // Enter in the confirmation field confirms once the number matches
+        $( document ).on(
+            'keydown',
+            '#ubdwp_confirm_input',
+            function (e) {
+                if ('Enter' === e.key) {
+                    e.preventDefault();
+
+                    if ( ! $( '#confirmDelete' ).prop( 'disabled' )) {
+                        $( '#confirmDelete' ).trigger( 'click' );
+                    }
+                }
+            }
+        );
+
+        // Focus the confirmation field, or the safe Cancel button, when the dialog opens
+        $( document ).on(
+            'shown.bs.modal',
+            '#confirmModal',
+            function () {
+                if ($( '#ubdwp_confirm_typing' ).is( ':visible' )) {
+                    $( '#ubdwp_confirm_input' ).trigger( 'focus' );
+                } else {
+                    $( '#ubdwp_cancel_delete' ).trigger( 'focus' );
+                }
+            }
+        );
+
+        /**
+         * Fill the confirmation dialog with what the deletion will do
+         *
+         * @param {object} summary - Summary returned by the server
+         */
+        function showDeleteSummary(summary) {
+            const $list = $( '#ubdwp_delete_summary' ).empty();
+            const add   = text => $list.append( $( '<li>' ).text( text ) );
+
+            add( sprintf( translations.summarySelected, summary.selected ) );
+            add( sprintf( summary.multisite ? translations.summaryRemovable : translations.summaryDeletable, summary.deletable ) );
+
+            if (summary.reassign_users > 0) {
+                add( sprintf( translations.summaryReassign, summary.reassign_users, summary.reassign_posts, summary.reassign_targets.join( ', ' ) ) );
+            }
+
+            if (summary.default_users > 0) {
+                add( summary.multisite ? sprintf( translations.summaryKeep, summary.default_users ) : sprintf( translations.summaryTrash, summary.default_users, summary.default_posts ) );
+            }
+
+            if (summary.remove_users > 0) {
+                add( sprintf( translations.summaryRemove, summary.remove_users, summary.remove_posts, summary.remove_comments ) );
+            }
+
+            if (summary.skipped > 0) {
+                add( sprintf( translations.summarySkipped, summary.skipped ) );
+            }
+
+            $( '#ubdwp_delete_skipped' ).toggle( summary.skipped > 0 ).find( 'tbody' ).html( summary.skipped_template );
+
+            const $confirm = $( '#confirmDelete' );
+            $( '#ubdwp_confirm_input' ).val( '' );
+
+            if (summary.deletable < 1) {
+                $( '#ubdwp_confirm_text' ).text( translations.nothingToDelete );
+                $( '#ubdwp_confirm_typing' ).hide();
+                $confirm.prop( 'disabled', true ).data( 'expected', '' );
+            } else if (summary.confirm_required) {
+                $( '#ubdwp_confirm_text' ).text( sprintf( translations.confirmTyping, summary.deletable ) );
+                $( '#ubdwp_confirm_typing' ).show();
+                $confirm.prop( 'disabled', true ).data( 'expected', summary.deletable );
+            } else {
+                $( '#ubdwp_confirm_text' ).text( translations.confirmIrreversible );
+                $( '#ubdwp_confirm_typing' ).hide();
+                $confirm.prop( 'disabled', false ).data( 'expected', '' );
+            }
+        }
 
         // Handle delete confirmation
         $( document ).on(
             'click',
             '#confirmDelete',
             () => {
+                if ($( '#confirmDelete' ).prop( 'disabled' )) {
+                    return;
+                }
+
                 $( '#confirmModal' ).modal( 'hide' );
 
                 const users = getCheckedUsers();
@@ -343,7 +460,8 @@
 
                 showProgressBar();
                 disableButtonsOnTheSecondStep();
-                $( '#user_delete_success_list' ).empty();
+                $( '#user_delete_success_list, #user_delete_failed_list' ).empty();
+                $( '#user_delete_failed' ).hide();
 
                 const totalUsers = users.length;
                 const state      = {
@@ -385,6 +503,12 @@
                         state.failed    += parseInt( response.data.failed_count, 10 ) || 0;
 
                         $( '#user_delete_success_list' ).append( response.data.template );
+
+                        if (response.data.failed_template && response.data.failed_template.trim()) {
+                            $( '#user_delete_failed_list' ).append( response.data.failed_template );
+                            $( '#user_delete_failed' ).show();
+                        }
+
                         updateProgressOfUserDeletion( state.processed, state.totalUsers );
 
                         if (state.processed < state.totalUsers) {
@@ -525,7 +649,7 @@
     function getCheckedUsers() {
         const users = [];
 
-        getTableRowNodes().find( 'input.user-checkbox:checked' ).each(
+        getTableRowNodes().find( 'input.user-checkbox:checked:not(:disabled)' ).each(
             function () {
                 const $row = $( this ).closest( 'tr' );
                 const id   = String( $( this ).val() );
@@ -533,9 +657,7 @@
                 users.push(
                     {
                         id: id,
-                        reassign: $row.find( 'select.user-select' ).val() || '',
-                        email: $row.find( 'input[name="users[' + id + '][email]"]' ).val() || '',
-                        display_name: $row.find( 'input[name="users[' + id + '][display_name]"]' ).val() || ''
+                        reassign: $row.find( 'select.user-select' ).val() || ''
                     }
                 );
             }
@@ -618,8 +740,8 @@
      *
      * @param {string} message - The error message
      */
-    function createWordpressError(message) {
-        const errorDiv         = $( '<div>', {class: 'notice notice-error is-dismissible'} );
+    function createWordpressError(message, type = 'error') {
+        const errorDiv         = $( '<div>', {class: 'notice notice-' + ('warning' === type ? 'warning' : 'error') + ' is-dismissible'} );
         const messageParagraph = $( '<p>' ).text( message );
         const dismissButton    = $(
             '<button>',
@@ -718,6 +840,7 @@
                     {title: translations.email, data: 'user_email', render: escapeText},
                     {title: translations.registered, data: 'user_registered', render: escapeText},
                     {title: translations.role, data: 'user_role', render: escapeText},
+                    {title: translations.posts, data: 'post_count', render: escapeText},
                     {
                         title: translations.assignContent,
                         data: 'select',
@@ -740,14 +863,7 @@
                 lengthMenu: [
                     [10, 25, 50, 75, 100, 250, 500, -1],
                     [10, 25, 50, 75, 100, 250, 500, 'All']
-                ],
-                initComplete: function () {
-                    $( 'input[type="search"]' ).addClass( 'custom-search-class' );
-                    $( 'select[name="userTable_length"]' ).addClass( 'custom-select-class' );
-                },
-                createdRow: function (row) {
-                    $( row ).find( 'select.user-select' ).addClass( 'custom-select-class' );
-                }
+                ]
             }
         );
 
@@ -842,7 +958,8 @@
             'click.ubdwp',
             function () {
                 const rows = $( '#userTable' ).DataTable().rows( {'search': 'applied'} ).nodes();
-                $( 'input[type="checkbox"]', rows ).prop( 'checked', this.checked );
+                // Protected users have a disabled checkbox and are never selected
+                $( 'input.user-checkbox:not(:disabled)', rows ).prop( 'checked', this.checked );
             }
         );
 

@@ -3,7 +3,7 @@ Contributors: maksymvasylchuk
 Tags: bulk delete, user management, delete users, preview delete, bulk clean
 Requires at least: 6.2
 Tested up to: 7.1.2
-Stable tag: 2.2.2
+Stable tag: 2.3.0
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -89,6 +89,14 @@ Yes, the plugin is compatible with WooCommerce and allows filtering users who ha
 
 On multisite, the plugin works in the current site context. It removes selected users from the current site instead of deleting their network account, helping network administrators avoid removing users from other sites by mistake.
 
+= How do I delete spam users who have no first name? =
+
+Choose "Find users according to certain criteria", set User Role to Subscriber, pick the first_name field under User Meta and choose "Meta is empty or missing". WordPress stores an empty first_name for every user who did not fill it in, so "Meta does not exist" will not find them. You can also tick "Only users without posts or comments on this site" to target accounts that never contributed anything.
+
+= Can I delete administrators with this plugin? =
+
+No. Administrators, users who can manage other users and super admins are protected: they are marked in the preview and skipped during deletion. Use the standard WordPress Users screen for them. Developers can change which users are protected with the ubdwp_is_protected_user filter.
+
 = What happens to the content of deleted users? =
 
 For each user you can reassign their posts to another user, permanently remove all their related content (posts in any status and comments), or leave the default. On single-site installations the default follows WordPress core: the user's posts and pages are moved to the trash. On multisite, the user is only removed from the current site and their content stays in place unless you choose to reassign or remove it.
@@ -98,6 +106,9 @@ For each user you can reassign their posts to another user, permanently remove a
 Yes. When network activated, the plugin creates its log table for each site and initializes the table automatically for newly created sites.
 
 == Upgrade Notice ==
+
+= 2.3.0 =
+Safer bulk deletion: administrators are protected, the confirmation shows exactly what will be deleted, large deletions need typed confirmation, and the registration date filter supports before, on and between. No manual upgrade steps are required.
 
 = 2.2.2 =
 Recommended security and bug fix release. Rejects invalid date and number filters instead of ignoring them, logs real user data, tightens permissions, fixes preview pagination and logs ordering, and adds Ukrainian JS translations. No manual upgrade steps are required.
@@ -139,6 +150,32 @@ This plugin uses the following third-party libraries:
 – [Select2](https://select2.org/) – Licensed under MIT License.
 
 == Changelog ==
+= 2.3.0 =
+*Release Date - 28 September 2026*
+
+* Administrators, users who can manage other users and super admins are now protected and cannot be deleted with the plugin (developers can change this with the ubdwp_is_protected_user filter)
+* Protected users are marked in the preview table and cannot be selected
+* The confirmation dialog now shows how many users will be deleted or skipped and what happens to their posts and comments
+* Deleting 20 or more users requires typing the number of users to confirm (filterable with ubdwp_confirmation_threshold)
+* The results step lists users that were not deleted, with the reason
+* Registration date filter now supports on or after, on or before, on a specific day and between two dates
+* Registration date filter now uses the site's timezone, so day boundaries match what administrators see
+* The Registered column in the preview is shown in the site's timezone
+* New Posts column in the preview shows how many posts each user has
+* New filter: only users without posts or comments on the site
+* The results step shows what happened to each user's content instead of a user ID
+* The confirmation field gets focus automatically and Enter confirms once the number matches
+* "Meta is empty or missing" now also matches users who do not have the meta key at all
+* Added a hint explaining how to find users with blank profile fields such as first_name
+* Very large previews are loaded in parts of 10,000 users (filterable with ubdwp_preview_limit) with a notice, so the preview no longer fails on sites with tens of thousands of users
+* WooCommerce product filter now searches products as you type instead of loading every product when the page opens, so the page stays fast in large stores
+* WooCommerce "Select All" now matches customers who bought any product
+* WooCommerce product filter uses a single faster query and only counts paid orders in both HPOS and legacy order storage
+* Refreshed admin UI: all fields, Select2 dropdowns, tables, pagination, steps and the confirmation dialog now share one size, border, corner radius and the admin color scheme
+* Fixed the "Select All" label on the existing users filter so clicking the text toggles the checkbox
+* Removed hidden email and display name fields from the preview form
+* Prefixed nonce actions
+
 = 2.2.2 =
 *Release Date - 27 September 2026*
 

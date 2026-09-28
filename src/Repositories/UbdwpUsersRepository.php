@@ -86,6 +86,23 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	}
 
 	/**
+	 * Query users by IDs for the preview, limited to a number of results.
+	 *
+	 * @param array<int> $user_ids User IDs.
+	 * @param int        $limit    Maximum number of users to load.
+	 *
+	 * @return \WP_User_Query Query with results and total count.
+	 */
+	public function query_users_by_ids( array $user_ids, int $limit ): \WP_User_Query {
+		return new \WP_User_Query( array(
+			'blog_id'     => get_current_blog_id(),
+			'include'     => $user_ids,
+			'number'      => $limit,
+			'count_total' => true,
+		) );
+	}
+
+	/**
 	 * Get users by various filters.
 	 *
 	 * @param array<string, mixed> $args Query arguments.
@@ -105,53 +122,147 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 			return $email_filter_result;
 		}
 
+		// Runs last, because it has to narrow down an "include" list set by the email filter.
+		$content_filter_result = $this->apply_without_content_filter( $args, $request );
+
+		if ( is_wp_error( $content_filter_result ) ) {
+			return $content_filter_result;
+		}
+
 		return new \WP_User_Query( $args );
 	}
 
 	/**
-	 * Get users who purchased a specific WooCommerce product.
+	 * Post types that count as a user's content.
+	 *
+	 * Same set as WP_Query's post type "any" used by "remove all related content":
+	 * internal types such as revisions or WooCommerce orders are not included.
+	 *
+	 * @return array<string> Post type names.
+	 */
+	public function get_content_post_types(): array {
+		return array_values( get_post_types( array( 'exclude_from_search' => false ) ) );
+	}
+
+	/**
+	 * Count posts in any status for several users with one query.
+	 *
+	 * @param array<int> $user_ids User IDs.
+	 *
+	 * @return array<int, int> Post count by user ID (users without posts are omitted).
+	 */
+	public function count_posts_by_authors( array $user_ids ): array {
+		$user_ids   = array_values( array_filter( array_unique( array_map( 'absint', $user_ids ) ) ) );
+		$post_types = $this->get_content_post_types();
+
+		if ( empty( $user_ids ) || empty( $post_types ) ) {
+			return array();
+		}
+
+		$user_placeholders = implode( ',', array_fill( 0, count( $user_ids ), '%d' ) );
+		$type_placeholders = implode( ',', array_fill( 0, count( $post_types ), '%s' ) );
+		$rows              = $this->select(
+			"SELECT post_author, COUNT(*) AS post_count FROM {$this->wpdb->posts} WHERE post_author IN ($user_placeholders) AND post_type IN ($type_placeholders) GROUP BY post_author",
+			array_merge( $user_ids, $post_types )
+		);
+
+		$counts = array();
+		foreach ( $rows as $row ) {
+			$counts[ (int) $row->post_author ] = (int) $row->post_count;
+		}
+
+		return $counts;
+	}
+
+	/**
+	 * Keep only users who have no posts (in any status) and no comments on the current site.
+	 *
+	 * @param array<string, mixed> $args Current query arguments.
+	 * @param array<string, mixed> $request Request parameters.
+	 *
+	 * @return \WP_Error|null Error when no user can match.
+	 */
+	private function apply_without_content_filter( array &$args, array $request ): ?\WP_Error {
+		if ( empty( $request['without_content'] ) ) {
+			return null;
+		}
+
+		$post_types = $this->get_content_post_types();
+		$authors    = array();
+
+		if ( ! empty( $post_types ) ) {
+			$type_placeholders = implode( ',', array_fill( 0, count( $post_types ), '%s' ) );
+			$authors           = $this->get_col(
+				"SELECT DISTINCT post_author FROM {$this->wpdb->posts} WHERE post_author > %d AND post_type IN ($type_placeholders)",
+				array_merge( array( 0 ), $post_types )
+			);
+		}
+
+		$commenters = $this->get_col( "SELECT DISTINCT user_id FROM {$this->wpdb->comments} WHERE user_id > %d", array( 0 ) );
+		$with_content = array_values( array_unique( array_map( 'absint', array_merge( $authors, $commenters ) ) ) );
+
+		if ( empty( $with_content ) ) {
+			return null;
+		}
+
+		// WP_User_Query ignores "exclude" when "include" is set, so narrow the include list instead.
+		if ( ! empty( $args['include'] ) ) {
+			$args['include'] = array_values( array_diff( array_map( 'absint', (array) $args['include'] ), $with_content ) );
+
+			if ( empty( $args['include'] ) ) {
+				return new \WP_Error( 'no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message( 'no_users_found_with_given_filters' ) );
+			}
+
+			return null;
+		}
+
+		$args['exclude'] = array_values( array_unique( array_merge( array_map( 'absint', (array) ( $args['exclude'] ?? array() ) ), $with_content ) ) ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- Users with content must be excluded.
+
+		return null;
+	}
+
+	/**
+	 * Get users who purchased specific WooCommerce products.
+	 *
+	 * Only paid orders (completed, processing, on-hold) are counted; refunds and guest orders are ignored.
 	 *
 	 * @param array<int> $products_ids List of product IDs.
+	 * @param bool       $any_product  Match customers who purchased any product instead of the given ones.
 	 *
 	 * @return array<int> List of user IDs.
 	 */
-	public function get_users_by_product_purchase( array $products_ids ): array {
-		if ( empty( $products_ids ) ) {
+	public function get_users_by_product_purchase( array $products_ids, bool $any_product = false ): array {
+		$products_ids = array_values( array_filter( array_unique( array_map( 'absint', $products_ids ) ) ) );
+
+		if ( ! $any_product && empty( $products_ids ) ) {
 			return array();
 		}
 
-		$products_ids = array_unique( array_map( 'absint', $products_ids ) );
-		$placeholders = implode( ',', array_fill( 0, count( $products_ids ), '%d' ) );
+		$product_where = "AND oim.meta_value <> '0'";
 
-		$query = "SELECT DISTINCT order_id 
-            FROM {$this->wpdb->prefix}woocommerce_order_items
-            WHERE order_item_id IN (
-                SELECT order_item_id 
-                FROM {$this->wpdb->prefix}woocommerce_order_itemmeta
-                WHERE meta_key = '_product_id' AND meta_value IN ($placeholders))";
-
-		$order_items = $this->get_col( $query, $products_ids );
-
-		if ( empty( $order_items ) ) {
-			return array();
+		if ( ! $any_product ) {
+			$product_where = 'AND oim.meta_value IN (' . implode( ',', array_fill( 0, count( $products_ids ), '%d' ) ) . ')';
 		}
 
-		$order_items            = array_map( 'intval', $order_items );
-		$order_ids_placeholders = implode( ',', array_fill( 0, count( $order_items ), '%d' ) );
+		$items_join = "INNER JOIN {$this->wpdb->prefix}woocommerce_order_items oi ON oi.order_id = o.id AND oi.order_item_type = 'line_item'
+                INNER JOIN {$this->wpdb->prefix}woocommerce_order_itemmeta oim ON oim.order_item_id = oi.order_item_id AND oim.meta_key = '_product_id'";
 
 		if ( $this->is_woocommerce_hpos_enabled() ) {
-			$order_query = "SELECT DISTINCT customer_id
-                FROM {$this->wpdb->prefix}wc_orders
-                WHERE id IN ($order_ids_placeholders) AND status IN ('wc-completed', 'wc-processing', 'wc-on-hold')";
+			$query = "SELECT DISTINCT o.customer_id
+                FROM {$this->wpdb->prefix}wc_orders o
+                {$items_join}
+                WHERE o.type = 'shop_order' AND o.status IN ('wc-completed', 'wc-processing', 'wc-on-hold') AND o.customer_id > 0 {$product_where}";
 		} else {
 			// Legacy order storage keeps orders in the posts table and the customer in post meta.
-			$order_query = "SELECT DISTINCT pm.meta_value
-                FROM {$this->wpdb->posts} p
-                INNER JOIN {$this->wpdb->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = '_customer_user'
-                WHERE p.ID IN ($order_ids_placeholders) AND p.post_type = 'shop_order' AND p.post_status IN ('wc-completed', 'wc-processing', 'wc-on-hold')";
+			$items_join = str_replace( 'oi.order_id = o.id', 'oi.order_id = o.ID', $items_join );
+			$query      = "SELECT DISTINCT pm.meta_value
+                FROM {$this->wpdb->posts} o
+                INNER JOIN {$this->wpdb->postmeta} pm ON pm.post_id = o.ID AND pm.meta_key = '_customer_user'
+                {$items_join}
+                WHERE o.post_type = 'shop_order' AND o.post_status IN ('wc-completed', 'wc-processing', 'wc-on-hold') {$product_where}";
 		}
 
-		return array_map( 'intval', $this->get_col( $order_query, $order_items ) );
+		return array_values( array_filter( array_map( 'intval', $this->get_col( $query, $any_product ? array() : $products_ids ) ) ) );
 	}
 
 	/**
@@ -234,13 +345,42 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 * @param array<string, mixed> $request Request parameters.
 	 */
 	private function apply_registration_date_filter( array &$args, array $request ): void {
-		if ( ! empty( $request['registration_date'] ) ) {
-			$args['date_query'][] = array(
-				'column'    => 'user_registered',
-				'after'     => sanitize_text_field( $request['registration_date'] ),
-				'inclusive' => true,
-			);
+		$from = sanitize_text_field( $request['registration_date'] ?? '' );
+
+		if ( '' === $from ) {
+			return;
 		}
+
+		$to      = sanitize_text_field( $request['registration_date_to'] ?? '' );
+		$compare = sanitize_key( $request['registration_date_compare'] ?? '' );
+
+		// Dates are entered in the site's timezone, while user_registered is stored in UTC.
+		$day_start = static fn( string $date ): string => get_gmt_from_date( $date . ' 00:00:00' );
+		$day_end   = static fn( string $date ): string => get_gmt_from_date( $date . ' 23:59:59' );
+		$clause    = array(
+			'column'    => 'user_registered',
+			'inclusive' => true,
+		);
+
+		switch ( $compare ) {
+			case 'before':
+				$clause['before'] = $day_end( $from );
+				break;
+			case 'on':
+				$clause['after']  = $day_start( $from );
+				$clause['before'] = $day_end( $from );
+				break;
+			case 'between':
+				$clause['after']  = $day_start( $from );
+				$clause['before'] = $day_end( $to );
+				break;
+			default:
+				// Requests without an operator keep the behavior of earlier versions.
+				$clause['after'] = $day_start( $from );
+				break;
+		}
+
+		$args['date_query'][] = $clause;
 	}
 
 	/**
@@ -266,11 +406,18 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 				break;
 
 			case 'meta_is_empty':
+				// WordPress stores empty profile fields (e.g. first_name) for every user, while other plugins may
+				// not store the key at all. Both mean "no value", so match either.
 				$args['meta_query'][] = [
+					'relation' => 'OR',
 					[
 						'key'     => $key,
 						'value'   => '',
 						'compare' => '=',
+					],
+					[
+						'key'     => $key,
+						'compare' => 'NOT EXISTS',
 					],
 				];
 				break;

@@ -1,75 +1,490 @@
-.btn-rect, .stepwizard-step, .success_list {
-    text-align: center;
-    padding: 0
+/**
+ * Users Bulk Delete With Preview - admin styles.
+ *
+ * Every field (native inputs and selects, Select2 and DataTables controls) uses the same
+ * tokens below, so heights, borders, corners, fonts and focus rings match on all plugin pages.
+ * Tokens live on <body> because WordPress admin color schemes set --wp-admin-theme-color there,
+ * so the accent always matches the admin's primary buttons.
+ */
+
+body {
+    --ubdwp-field-height: 40px;
+    --ubdwp-field-width: 400px;
+    --ubdwp-operator-width: 260px;
+    --ubdwp-table-field-width: 220px;
+    --ubdwp-radius: 2px;
+    --ubdwp-border: #949494;
+    --ubdwp-border-light: #dcdcde;
+    --ubdwp-text: #1e1e1e;
+    --ubdwp-muted: #757575;
+    --ubdwp-disabled-bg: #f6f7f7;
+    --ubdwp-disabled-text: #a7aaad;
+    --ubdwp-font-size: 14px;
+    --ubdwp-gap: 8px;
+    --ubdwp-accent: var(--wp-admin-theme-color, #3858e9);
+    --ubdwp-accent-darker: var(--wp-admin-theme-color-darker-20, #183ad6);
+    --ubdwp-danger: #d63638;
+    --ubdwp-danger-darker: #b32d2e;
+    --ubdwp-focus-ring: 0 0 0 var(--wp-admin-border-width-focus, 1.5px) var(--ubdwp-accent);
+    --ubdwp-row-alt: #f9f9f9;
+    --ubdwp-row-hover: #f0f6fc;
 }
 
 body {
     background: #f0f0f1 !important
 }
 
-input:not([type=checkbox]):not([type=radio]):not(.select2-search__field):not(.custom-search-class), select:not(.ui-datepicker-month):not(.ui-datepicker-year):not(.custom-select-class), textarea, #userTable_wrapper select, #userTable_wrapper input:not([type=checkbox]):not([type=radio]):not(.select2-search__field) {
-    width: 400px !important;
-    height: 35px;
-    background-color: white;
+/* ==========================================================================
+   Fields
+   ========================================================================== */
+
+.ubdwp-page input[type=text],
+.ubdwp-page input[type=email],
+.ubdwp-page input[type=search],
+.ubdwp-page input[type=number],
+.ubdwp-page select,
+.ubdwp-page textarea,
+.ubdwp-page .select2-container .select2-selection {
+    box-sizing: border-box;
+    min-height: var(--ubdwp-field-height);
+    border: 1px solid var(--ubdwp-border);
+    border-radius: var(--ubdwp-radius);
+    background-color: #fff;
+    color: var(--ubdwp-text);
+    font-size: var(--ubdwp-font-size);
+    box-shadow: none;
+    outline: 2px solid transparent;
+    margin: 0;
 }
 
-label:has(> input[type=checkbox]) {
-    margin-top: 5px
+.ubdwp-page input[type=text],
+.ubdwp-page input[type=email],
+.ubdwp-page input[type=search],
+.ubdwp-page input[type=number],
+.ubdwp-page select {
+    height: var(--ubdwp-field-height);
+    line-height: calc(var(--ubdwp-field-height) - 2px);
+    padding: 0 12px;
 }
 
-.success_list {
-    font-size: 20px;
-    list-style-type: none
+.ubdwp-page select {
+    padding-right: 24px;
 }
 
-.success_heading {
+.ubdwp-page .form-table input[type=text],
+.ubdwp-page .form-table input[type=email],
+.ubdwp-page .form-table select,
+.ubdwp-page .select2-container {
+    width: var(--ubdwp-field-width) !important;
+    max-width: 100%;
+}
+
+.ubdwp-page .form-table select.ubdwp-operator,
+.ubdwp-page .form-table input.ubdwp-short {
+    width: var(--ubdwp-operator-width) !important;
+}
+
+.ubdwp-page input::placeholder {
+    color: var(--ubdwp-muted);
+}
+
+/* Focus */
+.ubdwp-page input[type=text]:focus,
+.ubdwp-page input[type=email]:focus,
+.ubdwp-page input[type=search]:focus,
+.ubdwp-page input[type=number]:focus,
+.ubdwp-page select:focus,
+.ubdwp-page textarea:focus,
+.ubdwp-page .select2-container--focus .select2-selection,
+.ubdwp-page .select2-container--open .select2-selection {
+    border-color: var(--ubdwp-accent);
+    box-shadow: var(--ubdwp-focus-ring);
+}
+
+/* Disabled */
+.ubdwp-page input:disabled,
+.ubdwp-page select:disabled,
+.ubdwp-page .select2-container--disabled .select2-selection {
+    border-color: var(--ubdwp-border-light);
+    background-color: var(--ubdwp-disabled-bg);
+    color: var(--ubdwp-disabled-text);
+    cursor: default;
+}
+
+/* Several fields in one row: same gap everywhere, wraps on narrow screens */
+.ubdwp-field-row,
+.ubdwp-inline-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ubdwp-gap);
+}
+
+.ubdwp-inline-group {
+    display: inline-flex;
+}
+
+.ubdwp-inline-group label {
+    color: var(--ubdwp-muted);
+}
+
+.ubdwp-page .form-table td .description {
+    margin-top: var(--ubdwp-gap);
+    max-width: calc(var(--ubdwp-field-width) * 2 + var(--ubdwp-gap));
+}
+
+.ubdwp-page .form-table th,
+.ubdwp-page .form-table td {
+    vertical-align: top;
+}
+
+/* Center the row label on the first field line (td has 15px top padding, labels are 20px high) */
+.ubdwp-page .form-table th {
+    padding-top: calc(15px + (var(--ubdwp-field-height) - 20px) / 2);
+}
+
+/* Checkboxes under a field */
+.ubdwp-checkbox {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: var(--ubdwp-gap);
+    margin-top: var(--ubdwp-gap);
+}
+
+.ubdwp-checkbox input[type=checkbox] {
+    margin: 0;
+}
+
+.ubdwp-page .form-table td > .ubdwp-checkbox:first-child {
+    margin-top: calc((var(--ubdwp-field-height) - 20px) / 2);
+}
+
+/* Buttons */
+.ubdwp-page p.submit {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ubdwp-gap);
+}
+
+.ubdwp-page p.submit .button {
+    margin: 0;
+}
+
+.ubdwp-page .button.ubdwp-button-danger {
+    background: var(--ubdwp-danger);
+    border-color: var(--ubdwp-danger);
+    color: #fff;
+}
+
+.ubdwp-page .button.ubdwp-button-danger:hover,
+.ubdwp-page .button.ubdwp-button-danger:focus {
+    background: var(--ubdwp-danger-darker);
+    border-color: var(--ubdwp-danger-darker);
+    color: #fff;
+}
+
+.ubdwp-page .button.ubdwp-button-danger:focus {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--ubdwp-danger);
+}
+
+.ubdwp-page .button.ubdwp-button-danger:disabled,
+.ubdwp-page .button.ubdwp-button-danger[disabled] {
+    background: var(--ubdwp-disabled-bg) !important;
+    border-color: var(--ubdwp-border-light) !important;
+    color: var(--ubdwp-disabled-text) !important;
+}
+
+/* ==========================================================================
+   Select2
+   ========================================================================== */
+
+.ubdwp-page .select2-container .select2-selection--single .select2-selection__rendered {
+    padding: 0 28px 0 12px;
+    line-height: calc(var(--ubdwp-field-height) - 2px);
+    color: var(--ubdwp-text);
+}
+
+.ubdwp-page .select2-container .select2-selection--single .select2-selection__placeholder,
+.ubdwp-page .select2-container .select2-search__field::placeholder {
+    color: var(--ubdwp-muted);
+}
+
+.ubdwp-page .select2-container .select2-selection--single .select2-selection__arrow {
+    top: 0;
+    right: 6px;
+    height: calc(var(--ubdwp-field-height) - 2px);
+}
+
+.ubdwp-page .select2-container .select2-selection--multiple {
+    height: auto;
+    cursor: text;
+}
+
+.ubdwp-page .select2-container .select2-selection--multiple .select2-selection__rendered {
+    display: block;
+    padding: 0 12px 7px 6px;
+}
+
+/* WordPress adds a bottom margin to every list item, Select2 renders tags as a list */
+.ubdwp-page .select2-container .select2-selection--multiple .select2-selection__rendered li {
+    margin-bottom: 0;
+}
+
+.ubdwp-page .select2-container .select2-selection--multiple .select2-selection__choice {
+    margin: 7px 0 0 6px;
+    padding: 0 8px;
+    border: 1px solid var(--ubdwp-border-light);
+    border-radius: var(--ubdwp-radius);
+    background: #f0f0f1;
+    color: var(--ubdwp-text);
+    font-size: 13px;
+    line-height: 22px;
+}
+
+.ubdwp-page .select2-container .select2-selection--multiple .select2-selection__choice__remove {
+    margin-right: 6px;
+    color: var(--ubdwp-muted);
+}
+
+.ubdwp-page .select2-container .select2-selection--multiple .select2-search--inline .select2-search__field {
+    height: 24px;
+    min-height: 0;
+    margin: 7px 0 0 6px;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    font-size: var(--ubdwp-font-size);
+    line-height: 24px;
+}
+
+.ubdwp-page .select2-container--disabled .select2-selection__choice__remove {
+    display: none;
+}
+
+/* Dropdowns are appended to <body>, so they are styled without the page scope */
+.select2-container--default .select2-dropdown {
+    border-color: var(--ubdwp-accent);
+    border-radius: var(--ubdwp-radius);
+    font-size: var(--ubdwp-font-size);
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    box-sizing: border-box;
+    height: var(--ubdwp-field-height);
+    padding: 0 12px;
+    border: 1px solid var(--ubdwp-border);
+    border-radius: var(--ubdwp-radius);
+    font-size: var(--ubdwp-font-size);
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field:focus {
+    border-color: var(--ubdwp-accent);
+    box-shadow: var(--ubdwp-focus-ring);
+    outline: 2px solid transparent;
+}
+
+.select2-container--default .select2-results__option {
+    padding: 8px 12px;
+}
+
+.select2-container--default .select2-results__option {
+    color: var(--ubdwp-text);
+}
+
+/* Already selected option */
+.select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: var(--ubdwp-row-hover);
+    color: var(--ubdwp-text);
+}
+
+/* Hovered or keyboard-highlighted option: same color as the primary buttons */
+.select2-container--default .select2-results__option.select2-results__option--highlighted[aria-selected],
+.select2-container--default .select2-results__option.select2-results__option--highlighted[aria-selected=true] {
+    background-color: var(--ubdwp-accent);
+    color: #fff;
+}
+
+.select2-container--default .select2-results__option[aria-disabled=true] {
+    color: var(--ubdwp-disabled-text);
+}
+
+.select2-container--default .select2-results__message {
+    color: var(--ubdwp-muted);
+}
+
+/* ==========================================================================
+   Tables (DataTables 2)
+   ========================================================================== */
+
+.ubdwp-page div.dt-container {
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 20px;
+    font-size: 13px;
+}
+
+.ubdwp-page div.dt-container .dt-layout-row {
+    align-items: center;
+    margin: 12px 0;
+}
+
+.ubdwp-page div.dt-container .dt-length,
+.ubdwp-page div.dt-container .dt-search,
+.ubdwp-page div.dt-container .dt-length label,
+.ubdwp-page div.dt-container .dt-search label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ubdwp-gap);
+    color: var(--ubdwp-text);
+    font-size: var(--ubdwp-font-size);
+    font-weight: 400;
+}
+
+/* DataTables styles its own controls with more specific selectors, so repeat the field tokens here */
+.ubdwp-page div.dt-container .dt-length select.dt-input,
+.ubdwp-page div.dt-container .dt-search input.dt-input {
+    box-sizing: border-box;
+    height: var(--ubdwp-field-height);
+    padding: 0 12px;
+    border: 1px solid var(--ubdwp-border);
+    border-radius: var(--ubdwp-radius);
+    background-color: #fff;
+    color: var(--ubdwp-text);
+    font-size: var(--ubdwp-font-size);
+    line-height: calc(var(--ubdwp-field-height) - 2px);
+}
+
+.ubdwp-page div.dt-container .dt-length select.dt-input {
+    padding-right: 24px;
+}
+
+.ubdwp-page div.dt-container .dt-length select.dt-input:focus,
+.ubdwp-page div.dt-container .dt-search input.dt-input:focus {
+    border-color: var(--ubdwp-accent);
+    box-shadow: var(--ubdwp-focus-ring);
+    outline: 2px solid transparent;
+}
+
+.ubdwp-page div.dt-container .dt-length select.dt-input {
+    width: auto;
+    min-width: 80px;
+    margin: 0;
+}
+
+.ubdwp-page div.dt-container .dt-search input.dt-input {
+    width: var(--ubdwp-operator-width);
+    margin: 0;
+}
+
+.ubdwp-page table.dataTable {
+    width: 100%;
+    border: 1px solid #c3c4c7;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background-color: #fff;
+    font-size: 13px;
+}
+
+.ubdwp-page table.dataTable thead th {
+    padding: 12px 10px;
+    border-bottom: 1px solid #c3c4c7;
+    background-color: #fff;
+    color: var(--ubdwp-text);
+    font-size: var(--ubdwp-font-size);
+    font-weight: 600;
+    text-align: left;
+}
+
+.ubdwp-page table.dataTable tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f1;
+    vertical-align: middle;
+}
+
+.ubdwp-page table.dataTable tbody tr:nth-child(even) {
+    background-color: var(--ubdwp-row-alt);
+}
+
+.ubdwp-page table.dataTable tbody tr:hover {
+    background-color: var(--ubdwp-row-hover);
+}
+
+/* Zebra rows come from the rules above, not from DataTables' inset shadows */
+.ubdwp-page table.dataTable > tbody > tr > *,
+.ubdwp-page table.dataTable > tbody > tr.selected > * {
+    box-shadow: none !important;
+    color: inherit;
+}
+
+.ubdwp-page table.dataTable input[type=checkbox] {
+    margin: 0;
+}
+
+.ubdwp-page table.dataTable td .select2-container {
+    width: var(--ubdwp-table-field-width) !important;
+}
+
+/* Pagination */
+.ubdwp-page div.dt-container .dt-paging .dt-paging-button {
+    box-sizing: border-box;
+    min-width: var(--ubdwp-field-height);
+    height: var(--ubdwp-field-height);
+    margin-left: 4px;
+    padding: 0 12px;
+    border: 1px solid var(--ubdwp-border);
+    border-radius: var(--ubdwp-radius);
+    background: #fff;
+    color: var(--ubdwp-accent) !important;
+    font-size: 13px;
+    line-height: calc(var(--ubdwp-field-height) - 2px);
+}
+
+.ubdwp-page div.dt-container .dt-paging .dt-paging-button:hover {
+    border-color: var(--ubdwp-accent);
+    background: #fff;
+    color: var(--ubdwp-accent-darker) !important;
+}
+
+.ubdwp-page div.dt-container .dt-paging .dt-paging-button.current,
+.ubdwp-page div.dt-container .dt-paging .dt-paging-button.current:hover {
+    border-color: var(--ubdwp-accent);
+    background: var(--ubdwp-accent);
+    color: #fff !important;
+}
+
+.ubdwp-page div.dt-container .dt-paging .dt-paging-button.disabled,
+.ubdwp-page div.dt-container .dt-paging .dt-paging-button.disabled:hover {
+    border-color: var(--ubdwp-border-light);
+    background: var(--ubdwp-disabled-bg);
+    color: var(--ubdwp-disabled-text) !important;
+}
+
+.ubdwp-page div.dt-container .dt-paging .dt-paging-button:focus {
+    box-shadow: var(--ubdwp-focus-ring);
+    outline: 2px solid transparent;
+}
+
+/* Reassign all content select above the preview table */
+.ubdwp-general-reassign {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ubdwp-gap);
+    margin-bottom: 16px;
+}
+
+/* ==========================================================================
+   Step wizard, loader, progress, results
+   ========================================================================== */
+
+.stepwizard-step, .success_list {
     text-align: center;
-    font-size: 24px;
-    font-weight: 700
+    padding: 0
 }
 
 #poststuff, #poststuff_logs {
     margin-top: 50px
-}
-
-#user_meta_equal {
-    margin-left: 10px;
-    margin-right: 10px
-}
-
-#deleteProgressBar {
-    margin-top: 20px
-}
-
-.progress {
-    height: 20px;
-    background-color: #f1f1f1
-}
-
-.progress-bar {
-    background-color: #4caf50;
-    transition: width .5s
-}
-
-.select2-selection__rendered {
-    line-height: 31px !important
-}
-
-.select2-container .select2-selection--single {
-    height: 35px
-}
-
-.select2-selection__arrow {
-    height: 34px !important
-}
-
-.select2-container .select2-selection__choice {
-    height: 24px;
-    line-height: 1.5
-}
-
-.select2-container .select2-search__field {
-    margin-top: 2px !important
 }
 
 .stepwizard {
@@ -106,42 +521,37 @@ label:has(> input[type=checkbox]) {
     color: #555
 }
 
-.btn-rect {
-    width: 40px;
-    height: 40px;
-    font-size: 16px;
-    line-height: 40px;
-    border-radius: 5px;
-    background-color: #fff;
-    border: 2px solid #e0e0e0;
-    color: #555;
-    z-index: 2;
+/* Step icons are Bootstrap .btn links, so the plugin scope is needed to override Bootstrap colors */
+.ubdwp-page .stepwizard .step_icon {
     position: relative;
-    display: inline-block
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--ubdwp-field-height);
+    height: var(--ubdwp-field-height);
+    padding: 0;
+    border: 1px solid var(--ubdwp-border-light);
+    border-radius: var(--ubdwp-radius);
+    background: #fff;
+    color: var(--ubdwp-muted);
+    font-size: var(--ubdwp-font-size);
+    font-weight: 600;
+    line-height: 1;
+    box-shadow: none;
+    opacity: 1;
 }
 
-.btn-rect.btn-primary, .stepwizard-step.active .btn-rect {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: #fff
+.ubdwp-page .stepwizard .step_icon.btn-primary {
+    border-color: var(--ubdwp-accent);
+    background: var(--ubdwp-accent);
+    color: #fff;
 }
 
-.btn-rect.btn-default {
-    background-color: #f8f9fa;
-    border-color: #e0e0e0;
-    color: #555
-}
-
-.btn-rect:disabled {
-    background-color: #e0e0e0;
-    border-color: #e0e0e0;
-    color: #aaa
-}
-
-.stepwizard-step.complete .btn-rect {
-    background-color: #28a745;
-    border-color: #28a745;
-    color: #fff
+.ubdwp-page .stepwizard .step_icon:focus {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--ubdwp-accent);
+    outline: 2px solid transparent;
 }
 
 #page_loader {
@@ -160,7 +570,7 @@ label:has(> input[type=checkbox]) {
 .loader {
     border: 8px solid #f3f3f3;
     border-radius: 50%;
-    border-top: 8px solid #3498db;
+    border-top: 8px solid var(--ubdwp-accent);
     width: 80px;
     height: 80px;
     animation: 1.5s linear infinite spin
@@ -175,279 +585,104 @@ label:has(> input[type=checkbox]) {
     }
 }
 
-/**DataTables**/
-
-/* General Table Styling to Match WordPress Look */
-#userTable_wrapper table.dataTable {
-    width: 100%;
-    font-size: 13px; /* General font size for the table */
-    border-collapse: collapse;
-    border-spacing: 0;
-    background-color: #fff;
-    border: 1px solid #ddd; /* Border similar to WP table */
+#deleteProgressBar {
+    margin-top: 20px
 }
 
-/* Table Header Styling (WordPress-like) */
-#userTable_wrapper table.dataTable thead th {
-    font-size: 14px; /* Slightly larger for emphasis */
-    background-color: #f1f1f1;
-    color: #444; /* WordPress typical header color */
-    font-weight: 600;
-    border-bottom: 2px solid #ccc;
-    padding: 12px 10px;
-    text-align: left;
+.progress {
+    height: 20px;
+    border-radius: var(--ubdwp-radius);
+    background-color: #f1f1f1
 }
 
-/* Table Body Rows (WordPress-like) */
-#userTable_wrapper table.dataTable tbody td {
-    padding: 10px;
-    border-bottom: 1px solid #e5e5e5;
-    vertical-align: middle;
+.progress-bar {
+    background-color: #4caf50;
+    transition: width .5s
 }
 
-/* Alternating Row Colors (Zebra Stripes like WP) */
-#userTable_wrapper table.dataTable tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* Light grey like WordPress table */
+.success_list {
+    font-size: 20px;
+    list-style-type: none
 }
 
-/* Hover effect for table rows (WordPress-like) */
-#userTable_wrapper table.dataTable tbody tr:hover {
-    background-color: #f1f1f1; /* Slight hover effect */
+.success_heading {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700
 }
 
-/* Pagination Styling */
-#userTable_wrapper .dataTables_paginate {
-    text-align: right;
-    margin-top: 10px;
-}
+/* ==========================================================================
+   Protected users and confirmation dialog
+   ========================================================================== */
 
-#userTable_wrapper .dataTables_paginate .paginate_button {
+.ubdwp-protected {
     display: inline-block;
-    padding: 5px 12px;
-    margin-left: 3px;
-    border: 1px solid #ccc;
-    color: #0073aa; /* WordPress primary blue color */
-    border-radius: 3px;
-    background-color: #f9f9f9;
+    margin-left: 4px;
+    padding: 0 6px;
+    border-radius: var(--ubdwp-radius);
+    background: #f0f0f1;
+    color: #50575e;
+    font-size: 11px;
+    line-height: 18px;
 }
 
-#userTable_wrapper .dataTables_paginate .paginate_button:hover {
-    background-color: #0073aa;
-    color: white; /* WP hover effect */
+.ubdwp-page .modal-content {
+    border: 0;
+    border-radius: var(--ubdwp-radius);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, .2);
 }
 
-#userTable_wrapper .dataTables_paginate .paginate_button.current {
-    background-color: #0073aa;
-    color: #fff;
-    border: 1px solid #0073aa;
+.ubdwp-page .modal-footer {
+    gap: var(--ubdwp-gap);
 }
 
-/* Entries per page section - styled like WordPress */
-#userTable_wrapper .dataTables_length label {
-    font-size: 14px; /* Larger label for entries per page */
-    font-weight: bold;
-    color: #444;
+.ubdwp-page .modal-footer > * {
+    margin: 0;
 }
 
-#userTable_wrapper .dataTables_length select {
-    font-size: 13px;
-    padding: 5px 8px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    background-color: #fff;
-    margin-left: 5px;
+.ubdwp-delete-summary {
+    margin: 0 0 12px 18px;
+    list-style: disc;
 }
 
-/* Search box styled like WordPress search fields */
-#userTable_wrapper .dataTables_filter input[type="search"] {
-    font-size: 13px;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    background-color: #fff;
-    margin-left: 10px;
-}
-
-/* Adjust Select Dropdown Size (including Select2 dropdowns) */
-.select2-container--default .select2-selection--single,
-#userTable_wrapper .dataTables_length select,
-#userTable_wrapper .dataTables_filter input[type="search"] {
-    font-size: 13px;
-    height: auto; /* Match WordPress heights */
-    min-width: 160px; /* Adjust width to match WP forms */
-}
-
-/* Checkbox and Select Column Sizes Adjusted */
-.user-checkbox, .user-select {
-    transform: scale(0.85); /* Slightly smaller checkboxes */
-    margin-right: 10px;
-}
-
-/* Adjust Checkbox and Selection Size */
-#userTable_wrapper input[type="checkbox"], #userTable_wrapper select {
-    transform: scale(0.9); /* Match WordPress scale for input fields */
-}
-
-/* Overall Table Layout Padding */
-.dt-layout-table {
-    padding: 10px 15px;
-}
-
-/* Table Scroll Wrapper for Responsive Design */
-.dataTables_wrapper {
-    overflow-x: auto; /* Ensure table responsiveness */
-    padding-bottom: 20px; /* Add bottom padding for space */
-}
-
-/* Responsive Adjustments for Smaller Screens */
-@media screen and (max-width: 768px) {
-    #userTable_wrapper table.dataTable {
-        font-size: 12px; /* Smaller font on mobile */
-    }
-
-    #userTable_wrapper .dataTables_length select,
-    #userTable_wrapper .dataTables_filter input[type="search"] {
-        font-size: 12px;
-    }
-
-    #userTable_wrapper .dataTables_paginate .paginate_button {
-        font-size: 12px;
-        padding: 5px 8px; /* Smaller pagination buttons */
-    }
-}
-
-/* General Table Styling to Match WordPress Look */
-#logs {
-    width: 100%;
-    font-size: 13px;
-    border-collapse: collapse;
-    border-spacing: 0;
-    background-color: #fff;
-    border: 1px solid #ddd; /* Border similar to WordPress table */
-}
-
-/* Table Header Styling (WordPress-like) */
-#logs thead th {
-    font-size: 14px;
-    background-color: #f1f1f1;
-    color: #444;
+.ubdwp-confirm-text {
     font-weight: 600;
-    border-bottom: 2px solid #ccc;
-    padding: 10px;
-    text-align: left;
 }
 
-/* Table Body Rows (WordPress-like) */
-#logs tbody td {
-    padding: 8px 10px;
-    border-bottom: 1px solid #e5e5e5;
-    vertical-align: middle;
+#ubdwp_delete_skipped {
+    margin-bottom: 12px;
 }
 
-/* Alternating Row Colors (Zebra Stripes like WordPress) */
-#logs tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-/* Hover effect for table rows (WordPress-like) */
-#logs tbody tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Adjusted Column Widths */
-#logs colgroup col {
-    width: auto;
-}
-
-/* Pagination Styling */
-.dataTables_paginate {
-    text-align: right;
-    margin-top: 10px;
-}
-
-.dataTables_paginate .paginate_button {
-    display: inline-block;
-    padding: 5px 12px;
-    margin-left: 3px;
-    border: 1px solid #ccc;
-    color: #0073aa;
-    border-radius: 3px;
-    background-color: #f9f9f9;
-}
-
-.dataTables_paginate .paginate_button:hover {
-    background-color: #0073aa;
-    color: white;
-}
-
-.dataTables_paginate .paginate_button.current {
-    background-color: #0073aa;
-    color: #fff;
-    border: 1px solid #0073aa;
-}
-
-/* Entries per page section - styled like WordPress */
-.dataTables_length label {
-    font-size: 14px;
-    font-weight: bold;
-    color: #444;
-}
-
-.dataTables_length select {
-    font-size: 13px;
-    padding: 5px 8px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    background-color: #fff;
-    margin-left: 5px;
-}
-
-/* Search box styled like WordPress search fields */
-.dataTables_filter input[type="search"] {
-    font-size: 13px;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    background-color: #fff;
-    margin-left: 10px;
-}
-
-/* Responsive Table Adjustments */
-#logs_wrapper {
-    overflow-x: auto; /* Horizontal scrolling for small screens */
-    padding-bottom: 20px;
-}
-
-/* Adjust Checkbox and Selection Size */
-#logs_wrapper input[type="checkbox"], #logs_wrapper select {
-    transform: scale(0.9); /* Match WordPress scale for input fields */
-}
-
-/* Responsive Adjustments for Smaller Screens */
-@media screen and (max-width: 768px) {
-    #logs {
-        font-size: 12px; /* Smaller font on mobile */
-    }
-
-    .dataTables_length select,
-    .dataTables_filter input[type="search"] {
-        font-size: 12px;
-    }
-
-    .dataTables_paginate .paginate_button {
-        font-size: 12px;
-        padding: 5px 8px; /* Smaller pagination buttons */
-    }
-}
-
-.dataTables_wrapper {
+.ubdwp-page #ubdwp_confirm_input {
     width: 100%;
-    margin: 0 auto;
 }
 
-.dataTables_paginate {
-    display: block; /* Ensures the pagination is displayed */
-    margin: 20px 0; /* Adjusts margin as needed */
-}
+/* ==========================================================================
+   Small screens
+   ========================================================================== */
 
-/**DataTables**/
+@media screen and (max-width: 782px) {
+    body {
+        --ubdwp-field-width: 100%;
+        --ubdwp-operator-width: 100%;
+    }
+
+    .ubdwp-field-row > *,
+    .ubdwp-inline-group,
+    .ubdwp-inline-group input,
+    .ubdwp-page .form-table input.ubdwp-short {
+        width: 100% !important;
+    }
+
+    .ubdwp-page .form-table th {
+        padding-top: 10px;
+    }
+
+    .ubdwp-page table.dataTable {
+        font-size: 12px;
+    }
+
+    .ubdwp-page div.dt-container .dt-search input.dt-input {
+        width: 100%;
+    }
+}

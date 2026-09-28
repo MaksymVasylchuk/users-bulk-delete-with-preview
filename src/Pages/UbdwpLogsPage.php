@@ -86,7 +86,7 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 
 		$this->handle_ajax_request(
 			'logs_datatable_nonce',
-			'logs_datatable_nonce',
+			'ubdwp_logs',
 			$capabilities,
 			function () {
 				return $this->handler->prepare_logs_data( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is checked in "handle_ajax_request" method.
