@@ -53,17 +53,11 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 	 * @return void
 	 */
 	public function render(): void {
-		$products = array();
-
-		if ( UbdwpHelperFacade::check_if_woocommerce_is_active() ) {
-			$products = wc_get_products( array( 'limit' => - 1 ) );
-		}
-
 		$data = array(
-			'title'    => __( 'Users Management', 'users-bulk-delete-with-preview' ),
-			'roles'    => wp_roles()->roles,
-			'types'    => UbdwpHelperFacade::get_types_of_user_search(),
-			'products' => $products,
+			'title'              => __( 'Users Management', 'users-bulk-delete-with-preview' ),
+			'roles'              => wp_roles()->roles,
+			'types'              => UbdwpHelperFacade::get_types_of_user_search(),
+			'woocommerce_active' => UbdwpHelperFacade::check_if_woocommerce_is_active(),
 		);
 
 		$this->render_template( 'admin-page.php', $data );
@@ -176,6 +170,26 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 			);
 
 			return array( 'results' => $this->handler->search_reassign_users_ajax( $search_data ) );
+		} );
+	}
+
+	/**
+	 * Handle AJAX request to search WooCommerce products for the products filter.
+	 *
+	 * @return void
+	 */
+	public function search_products_ajax(): void {
+		$capabilities = array(
+			self::MANAGE_OPTIONS_CAP,
+			self::LIST_USERS_CAP,
+		);
+
+		$this->handle_ajax_request( 'nonce', 'ubdwp_search_products', $capabilities, function () {
+			$search_data = array(
+				'q' => sanitize_text_field( wp_unslash( $_POST['q'] ?? '' ) ), // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked in "handle_ajax_request" method.
+			);
+
+			return array( 'results' => $this->handler->search_products_ajax( $search_data ) );
 		} );
 	}
 
@@ -341,6 +355,7 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 			'ubdwp_delete_users'            => 'delete_users_action',
 			'ubdwp_delete_summary'          => 'delete_summary_action',
 			'ubdwp_search_reassign_users'   => 'search_reassign_users_ajax',
+			'ubdwp_search_products'         => 'search_products_ajax',
 			'ubdwp_export_users'            => 'custom_export_users_action',
 		);
 

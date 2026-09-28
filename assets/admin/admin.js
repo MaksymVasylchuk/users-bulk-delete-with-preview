@@ -27,7 +27,7 @@
      * Initialize Select2 for user search
      */
     function initializeUserSearch() {
-        var $user_search_select = $( '#user_search' ).select2(
+        $( '#user_search' ).select2(
             {
                 placeholder: __( 'Search for users', 'users-bulk-delete-with-preview' ),
                 width: '400px',
@@ -48,17 +48,6 @@
                 }
             }
         );
-
-        // Adjust the height based on the selection
-        $user_search_select.on(
-            'select2:select select2:unselect',
-            function () {
-                adjustSelect2Height( $( this ) );
-            }
-        );
-
-        // Initial setting for an empty Select2
-        $( '.select2-selection--multiple' ).css( 'height', '35px' );
     }
 
     /**
@@ -86,11 +75,25 @@
             }
         );
 
-        initializeSelect2WithHeightAdjustment( '#user_role', __( 'Select user roles', 'users-bulk-delete-with-preview' ) );
-        initializeSelect2WithHeightAdjustment( '#products', __( 'Select products that bought user', 'users-bulk-delete-with-preview' ) );
-
-        // Initial setting for an empty Select2
-        $( '.select2-selection--multiple' ).css( 'height', '35px' );
+        initializeSelect2( '#user_role', __( 'Select user roles', 'users-bulk-delete-with-preview' ) );
+        initializeSelect2(
+            '#products',
+            __( 'Select products that bought user', 'users-bulk-delete-with-preview' ),
+            {
+                ajax: {
+                    url: ubdwpData.ajaxurl,
+                    type: 'POST',
+                    dataType: 'json',
+                    delay: 250,
+                    data: params => ({
+                        action: 'ubdwp_search_products',
+                        q: params.term || '',
+                        nonce: $( '#search_products_nonce' ).val()
+                    }),
+                    processResults: data => ({results: data.success ? data.data.results : []})
+                }
+            }
+        );
 
         // Initialize the date pickers
         $( '#registration_date, #registration_date_to' ).datepicker(
@@ -130,41 +133,22 @@
     }
 
     /**
-     * Initialize Select2 with height adjustment on select/unselect
+     * Initialize Select2 with the plugin defaults
      *
      * @param {string} selector - The jQuery selector for the element
      * @param {string} placeholder - Placeholder for the element
+     * @param {object} options - Additional Select2 options
      */
-    function initializeSelect2WithHeightAdjustment(selector, placeholder) {
-        var $select = $( selector ).select2(
-            {
-                width: '400px',
-                placeholder: placeholder
-            }
+    function initializeSelect2(selector, placeholder, options = {}) {
+        $( selector ).select2(
+            Object.assign(
+                {
+                    width: '400px',
+                    placeholder: placeholder
+                },
+                options
+            )
         );
-
-        // Adjust the height based on the selection
-        $select.on(
-            'select2:select select2:unselect',
-            function () {
-                adjustSelect2Height( $( this ) );
-            }
-        );
-    }
-
-    /**
-     * Adjust the height of Select2 based on the selection
-     *
-     * @param {object} $element - The jQuery element of Select2
-     */
-    function adjustSelect2Height($element) {
-        var $selection = $element.next( '.select2-container' ).find( '.select2-selection--multiple .select2-selection__rendered' );
-
-        if ($selection.children( '.select2-selection__choice' ).length === 0) {
-            $( '.select2-selection--multiple' ).css( 'height', '35px' );
-        } else {
-            $( '.select2-selection--multiple' ).css( 'height', 'auto' );
-        }
     }
 
     /**
@@ -204,7 +188,6 @@
                                 );
 
                                 $( '#user_search' ).val( allIds ).trigger( 'change' );
-                                $( '#user_search' ).trigger( 'select2:select' );
                             },
                             error: function(data) {
                                 console.log( 'Error fetching users' );
@@ -214,7 +197,6 @@
                     );
                 } else {
                     $( '#user_search' ).empty().trigger( 'change' ).val( null ).trigger( 'change' );
-                    $( '#user_search' ).trigger( 'select2:unselect' );
                 }
             }
         );
@@ -227,13 +209,10 @@
         $( '#selectAllProducts' ).on(
             'change',
             function () {
-                if ($( this ).is( ':checked' )) {
-                    $( "#products > option" ).prop( "selected", "selected" );
-                    $( "#products" ).trigger( "change" );
-                } else {
-                    $( "#products > option" ).removeAttr( "selected" );
-                    $( "#products" ).trigger( "change" );
-                }
+                // "Select All" matches customers who bought any product, so the product list is not needed
+                const allProducts = $( this ).is( ':checked' );
+
+                $( '#products' ).val( null ).prop( 'disabled', allProducts ).trigger( 'change' );
             }
         );
     }
@@ -408,7 +387,7 @@
                 if ($( '#ubdwp_confirm_typing' ).is( ':visible' )) {
                     $( '#ubdwp_confirm_input' ).trigger( 'focus' );
                 } else {
-                    $( this ).find( '[data-bs-dismiss="modal"].btn' ).trigger( 'focus' );
+                    $( '#ubdwp_cancel_delete' ).trigger( 'focus' );
                 }
             }
         );
@@ -884,14 +863,7 @@
                 lengthMenu: [
                     [10, 25, 50, 75, 100, 250, 500, -1],
                     [10, 25, 50, 75, 100, 250, 500, 'All']
-                ],
-                initComplete: function () {
-                    $( 'input[type="search"]' ).addClass( 'custom-search-class' );
-                    $( 'select[name="userTable_length"]' ).addClass( 'custom-select-class' );
-                },
-                createdRow: function (row) {
-                    $( row ).find( 'select.user-select' ).addClass( 'custom-select-class' );
-                }
+                ]
             }
         );
 

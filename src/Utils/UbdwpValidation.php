@@ -149,7 +149,7 @@ class UbdwpValidation {
 	public function validate_woocommerce_filters( array $request ): void {
 		$products = array_filter( array_unique( array_map( 'intval', (array) ( $request['products'] ?? array() ) ) ) );
 
-		if ( empty( $products ) ) {
+		if ( empty( $products ) && empty( $request['all_products'] ) ) {
 			$this->send_error_response( 'at_least_one_required' );
 		}
 	}

@@ -13,20 +13,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <!-- WooCommerce Filters Form -->
 <!-- Products -->
-<?php if ( isset( $products ) && ! empty( $products ) ) : ?>
+<?php if ( ! empty( $woocommerce_active ) ) : ?>
 <tr class="woocommerce_filters_form" style="display: none;">
 	<th scope="row">
 		<label for="products"><?php esc_html_e( 'Select products that bought user', 'users-bulk-delete-with-preview' ); ?>:</label>
 	</th>
 	<td>
-		<select id="products" name="products[]" multiple="multiple" class="form-control">
-			<?php foreach ( $products as $product_key => $product ) : ?>
-				<option value="<?php echo esc_attr( $product->get_id() ); ?>"><?php echo esc_html( $product->get_name() ); ?></option>
-			<?php endforeach; ?>
-		</select>
-		<br>
-		<label for="selectAllProducts">
-			<input type="checkbox" id="selectAllProducts" name="selectAllProducts">
+		<select id="products" name="products[]" multiple="multiple" class="form-control"></select>
+		<input type="hidden" id="search_products_nonce" name="search_products_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_search_products' ) ); ?>" />
+		<label for="selectAllProducts" class="ubdwp-checkbox">
+			<input type="checkbox" id="selectAllProducts" name="all_products" value="1">
 			<?php esc_html_e( 'Select All', 'users-bulk-delete-with-preview' ); ?>
 		</label>
 	</td>

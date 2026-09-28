@@ -35,12 +35,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<p id="ubdwp_confirm_text" class="ubdwp-confirm-text"></p>
 				<p id="ubdwp_confirm_typing" style="display: none;">
 					<label for="ubdwp_confirm_input" class="screen-reader-text"><?php esc_html_e( 'Number of users to delete', 'users-bulk-delete-with-preview' ); ?></label>
-					<input type="text" id="ubdwp_confirm_input" class="regular-text" inputmode="numeric" autocomplete="off">
+					<input type="text" id="ubdwp_confirm_input" inputmode="numeric" autocomplete="off">
 				</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php esc_html_e( 'Cancel', 'users-bulk-delete-with-preview' ); ?></button>
-				<button type="button" id="confirmDelete" class="btn btn-danger"><?php esc_html_e( 'Delete', 'users-bulk-delete-with-preview' ); ?></button>
+				<button type="button" id="ubdwp_cancel_delete" class="button button-secondary" data-bs-dismiss="modal"><?php esc_html_e( 'Cancel', 'users-bulk-delete-with-preview' ); ?></button>
+				<button type="button" id="confirmDelete" class="button button-primary ubdwp-button-danger"><?php esc_html_e( 'Delete', 'users-bulk-delete-with-preview' ); ?></button>
 			</div>
 		</div>
 	</div>

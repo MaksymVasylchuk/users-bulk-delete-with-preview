@@ -168,6 +168,11 @@ This plugin uses the following third-party libraries:
 * "Meta is empty or missing" now also matches users who do not have the meta key at all
 * Added a hint explaining how to find users with blank profile fields such as first_name
 * Very large previews are loaded in parts of 10,000 users (filterable with ubdwp_preview_limit) with a notice, so the preview no longer fails on sites with tens of thousands of users
+* WooCommerce product filter now searches products as you type instead of loading every product when the page opens, so the page stays fast in large stores
+* WooCommerce "Select All" now matches customers who bought any product
+* WooCommerce product filter uses a single faster query and only counts paid orders in both HPOS and legacy order storage
+* Refreshed admin UI: all fields, Select2 dropdowns, tables, pagination, steps and the confirmation dialog now share one size, border, corner radius and the admin color scheme
+* Fixed the "Select All" label on the existing users filter so clicking the text toggles the checkbox
 * Removed hidden email and display name fields from the preview form
 * Prefixed nonce actions
 

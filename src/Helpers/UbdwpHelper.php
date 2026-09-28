@@ -249,6 +249,7 @@ class UbdwpHelper {
 					break;
 
 				case 'without_content':
+				case 'all_products':
 					$sanitized_data[ $key ] = filter_var( $value, FILTER_VALIDATE_BOOLEAN );
 					break;
 

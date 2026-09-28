@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 <!-- Logs page -->
-<div class="wrap">
+<div class="wrap ubdwp-page">
 	<h2><?php echo esc_html( $title ); ?></h2>
 	<div id="poststuff_logs">
 		<div id="post-body" class="metabox-holder columns-1">

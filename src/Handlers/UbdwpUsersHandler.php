@@ -237,6 +237,50 @@ class UbdwpUsersHandler {
 	}
 
 	/**
+	 * Search WooCommerce products for the products filter.
+	 *
+	 * @param array<string, mixed> $request Request parameters.
+	 *
+	 * @return array<int, array<string, string>> List of products for Select2.
+	 */
+	public function search_products_ajax( array $request ): array {
+		if ( ! UbdwpHelperFacade::check_if_woocommerce_is_active() || ! function_exists( 'wc_get_products' ) ) {
+			return array();
+		}
+
+		$search_term = $request['q'] ?? '';
+		$limit       = 20;
+
+		if ( $search_term !== '' ) {
+			$product_ids = \WC_Data_Store::load( 'product' )->search_products( $search_term, '', false, true, $limit );
+		} else {
+			$product_ids = wc_get_products( array(
+				'limit'   => $limit,
+				'orderby' => 'title',
+				'order'   => 'ASC',
+				'return'  => 'ids',
+			) );
+		}
+
+		$results = array();
+
+		foreach ( array_filter( array_unique( array_map( 'absint', (array) $product_ids ) ) ) as $product_id ) {
+			$product = wc_get_product( $product_id );
+
+			if ( ! $product || $product->is_type( 'variation' ) || 'auto-draft' === $product->get_status() ) {
+				continue;
+			}
+
+			$results[] = array(
+				'id'   => (string) $product_id,
+				'text' => sanitize_text_field( sprintf( '%s (#%d)', $product->get_name(), $product_id ) ),
+			);
+		}
+
+		return $results;
+	}
+
+	/**
 	 * Get users who purchased specific WooCommerce products.
 	 *
 	 * @param array<string, mixed> $request Request parameters.
@@ -245,9 +289,7 @@ class UbdwpUsersHandler {
 	 */
 	public function get_users_by_woocommerce_filters( array $request ) {
 		$products = array_unique( array_map( 'absint', (array) ( $request['products'] ?? array() ) ) );
-		$user_ids = $this->repository->get_users_by_product_purchase( $products );
-
-		$user_ids = array_filter( $user_ids, static fn( $value ) => $value !== 0 && $value !== '0' );
+		$user_ids = $this->repository->get_users_by_product_purchase( $products, ! empty( $request['all_products'] ) );
 
 		if ( ! empty( $user_ids ) ) {
 			$user_query = $this->repository->query_users_by_ids( array_unique( $user_ids ), $this->get_preview_limit() );
@@ -677,6 +719,7 @@ class UbdwpUsersHandler {
 			'user_meta_equal',
 			'user_search',
 			'products',
+			'all_products',
 			'user_role',
 			'user_meta',
 		);

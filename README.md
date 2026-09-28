@@ -67,14 +67,52 @@ The manual installation method requires downloading the Users Bulk Delete With P
 
 ## Screenshots
 
+**1. Initial Step with Existing Users Filter**
+
 <p align="center">
-   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-1.png?rev=3180083" alt="Users Bulk Delete With Preview Interface" height="400" />
+   <img src=".wordpress-org/screenshot-1.png" alt="Initial Step with Existing Users Filter" width="800" />
 </p>
+
+**2. Initial Step with Different Filters**
+
 <p align="center">
-   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-4.png?rev=3179940" alt="Users Bulk Delete With Preview Interface" height="400" />
+   <img src=".wordpress-org/screenshot-2.png" alt="Initial Step with Different Filters" width="800" />
 </p>
+
+**3. Initial Step with WooCommerce Filter**
+
 <p align="center">
-   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-7.png?rev=3180086" alt="Users Bulk Delete With Preview Interface" height="400" />
+   <img src=".wordpress-org/screenshot-3.png" alt="Initial Step with WooCommerce Filter" width="800" />
+</p>
+
+**4. Second Step: Users Preview**
+
+<p align="center">
+   <img src=".wordpress-org/screenshot-4.png" alt="Second Step: Users Preview" width="800" />
+</p>
+
+**5. Delete Confirmation**
+
+<p align="center">
+   <img src=".wordpress-org/screenshot-5.png" alt="Delete Confirmation" width="800" />
+</p>
+
+**6. Deletion Process**
+
+<p align="center">
+   <img src=".wordpress-org/screenshot-6.png" alt="Deletion Process" width="800" />
+</p>
+
+**7. Deleted Users Review**
+
+<p align="center">
+   <img src=".wordpress-org/screenshot-7.png" alt="Deleted Users Review" width="800" />
+</p>
+
+**8. Logs**
+
+<p align="center">
+   <img src=".wordpress-org/screenshot-8.png" alt="Logs" width="800" />
 </p>
 
 ## Frequently Asked Questions
@@ -160,6 +198,11 @@ This plugin uses the following third-party libraries:
 * "Meta is empty or missing" now also matches users who do not have the meta key at all
 * Added a hint explaining how to find users with blank profile fields such as first_name
 * Very large previews are loaded in parts of 10,000 users (filterable with ubdwp_preview_limit) with a notice, so the preview no longer fails on sites with tens of thousands of users
+* WooCommerce product filter now searches products as you type instead of loading every product when the page opens, so the page stays fast in large stores
+* WooCommerce "Select All" now matches customers who bought any product
+* WooCommerce product filter uses a single faster query and only counts paid orders in both HPOS and legacy order storage
+* Refreshed admin UI: all fields, Select2 dropdowns, tables, pagination, steps and the confirmation dialog now share one size, border, corner radius and the admin color scheme
+* Fixed the "Select All" label on the existing users filter so clicking the text toggles the checkbox
 * Removed hidden email and display name fields from the preview form
 * Prefixed nonce actions
 

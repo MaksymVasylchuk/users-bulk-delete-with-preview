@@ -20,8 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<td>
 		<select id="user_search" name="user_search[]" multiple="multiple" class="form-control"></select>
 		<span class="invalid-feedback"></span>
-		<br>
-		<label for="use_regexp">
+		<label for="selectAllUsers" class="ubdwp-checkbox">
 			<input type="checkbox" id="selectAllUsers" name="selectAll">
 			<?php esc_html_e( 'Select All', 'users-bulk-delete-with-preview' ); ?>
 		</label>

@@ -12,9 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <!-- Users table preview -->
-<div class="form-group mb-4">
+<div class="ubdwp-general-reassign">
 	<label for="generalSelect"><?php esc_html_e( 'Assign related content to user', 'users-bulk-delete-with-preview' ); ?>:</label>
-	<br>
 	<!-- General select dropdown outside the table -->
 	<select id="generalSelect" class="general-select">
 	</select>
