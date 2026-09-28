@@ -70,49 +70,49 @@ The manual installation method requires downloading the Users Bulk Delete With P
 **1. Initial Step with Existing Users Filter**
 
 <p align="center">
-   <img src=".wordpress-org/screenshot-1.png" alt="Initial Step with Existing Users Filter" width="800" />
+   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-1.png" alt="Initial Step with Existing Users Filter" width="800" />
 </p>
 
 **2. Initial Step with Different Filters**
 
 <p align="center">
-   <img src=".wordpress-org/screenshot-2.png" alt="Initial Step with Different Filters" width="800" />
+   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-2.png" alt="Initial Step with Different Filters" width="800" />
 </p>
 
 **3. Initial Step with WooCommerce Filter**
 
 <p align="center">
-   <img src=".wordpress-org/screenshot-3.png" alt="Initial Step with WooCommerce Filter" width="800" />
+   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-3.png" alt="Initial Step with WooCommerce Filter" width="800" />
 </p>
 
 **4. Second Step: Users Preview**
 
 <p align="center">
-   <img src=".wordpress-org/screenshot-4.png" alt="Second Step: Users Preview" width="800" />
+   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-4.png" alt="Second Step: Users Preview" width="800" />
 </p>
 
 **5. Delete Confirmation**
 
 <p align="center">
-   <img src=".wordpress-org/screenshot-5.png" alt="Delete Confirmation" width="800" />
+   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-5.png" alt="Delete Confirmation" width="800" />
 </p>
 
 **6. Deletion Process**
 
 <p align="center">
-   <img src=".wordpress-org/screenshot-6.png" alt="Deletion Process" width="800" />
+   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-6.png" alt="Deletion Process" width="800" />
 </p>
 
 **7. Deleted Users Review**
 
 <p align="center">
-   <img src=".wordpress-org/screenshot-7.png" alt="Deleted Users Review" width="800" />
+   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-7.png" alt="Deleted Users Review" width="800" />
 </p>
 
 **8. Logs**
 
 <p align="center">
-   <img src=".wordpress-org/screenshot-8.png" alt="Logs" width="800" />
+   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-8.png" alt="Logs" width="800" />
 </p>
 
 ## Frequently Asked Questions
@@ -182,7 +182,7 @@ This plugin uses the following third-party libraries:
 
 ## Changelog
 ### 2.3.0
-*Release Date - TBD*
+*Release Date - 28 September 2026*
 * Administrators, users who can manage other users and super admins are now protected and cannot be deleted with the plugin (developers can change this with the ubdwp_is_protected_user filter)
 * Protected users are marked in the preview table and cannot be selected
 * The confirmation dialog now shows how many users will be deleted or skipped and what happens to their posts and comments

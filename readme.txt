@@ -151,7 +151,7 @@ This plugin uses the following third-party libraries:
 
 == Changelog ==
 = 2.3.0 =
-*Release Date - TBD*
+*Release Date - 28 September 2026*
 
 * Administrators, users who can manage other users and super admins are now protected and cannot be deleted with the plugin (developers can change this with the ubdwp_is_protected_user filter)
 * Protected users are marked in the preview table and cannot be selected
