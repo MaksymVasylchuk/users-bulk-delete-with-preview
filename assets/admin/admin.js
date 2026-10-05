@@ -332,7 +332,8 @@
                         data: {
                             action: 'ubdwp_delete_summary',
                             delete_users_nonce: $( '#delete_users_nonce' ).val(),
-                            users: users
+                            // One JSON field, so PHP's max_input_vars cannot cut large selections short
+                            users_json: JSON.stringify( users )
                         },
                         success: function (response) {
                             hideLoader();
@@ -490,7 +491,7 @@
                     data: {
                         action: $( '#delete_users_action' ).val(),
                         delete_users_nonce: $( '#delete_users_nonce' ).val(),
-                        users: batch
+                        users_json: JSON.stringify( batch )
                     },
                     success: function (response) {
                         if ( ! response.success) {
@@ -587,7 +588,7 @@
                         data: {
                             action: 'ubdwp_export_users',
                             export_users_nonce: $( '#export_users_nonce' ).val(),
-                            users: users.map( user => ({value: user.id}) )
+                            users_json: JSON.stringify( users.map( user => ({id: user.id}) ) )
                         },
                         success: function (response) {
                             hideLoader();

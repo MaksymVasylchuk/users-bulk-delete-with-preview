@@ -289,14 +289,12 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 	 * @return array<int, array<string, mixed>> Sanitized users.
 	 */
 	private function get_requested_users(): array {
-		$users = wp_unslash( $_POST['users'] ?? array() ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked in "handle_ajax_request" method, values are sanitized below.
-
 		$sanitized_users = array_values( array_filter( array_map( static function ( $user ) {
-			return is_array( $user ) && ! empty( $user['id'] ) ? array(
+			return is_array( $user ) && ! empty( $user['id'] ) && is_scalar( $user['id'] ) ? array(
 				'id'       => (int) $user['id'],
-				'reassign' => sanitize_text_field( $user['reassign'] ?? '' ),
+				'reassign' => sanitize_text_field( is_scalar( $user['reassign'] ?? '' ) ? (string) ( $user['reassign'] ?? '' ) : '' ),
 			) : null;
-		}, is_array( $users ) ? $users : array() ) ) );
+		}, $this->get_posted_users() ) ) );
 
 		if ( empty( array_filter( array_column( $sanitized_users, 'id' ) ) ) ) {
 			wp_send_json_error( array( 'message' => UbdwpValidationFacade::get_error_message( 'select_any_user' ) ) );
@@ -304,6 +302,27 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 		}
 
 		return $sanitized_users;
+	}
+
+	/**
+	 * Read the list of selected users sent with the request.
+	 *
+	 * The admin script sends the list as one JSON field, because PHP drops form fields above
+	 * max_input_vars (often 1000-3000), which silently cut large selections short.
+	 * The "users" array is still accepted for requests sent by older cached scripts.
+	 *
+	 * @return array<int, mixed> Raw user entries, sanitized by the caller.
+	 */
+	private function get_posted_users(): array {
+		if ( isset( $_POST['users_json'] ) && is_string( $_POST['users_json'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked in "handle_ajax_request" method.
+			$users = json_decode( wp_unslash( $_POST['users_json'] ), true ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked in "handle_ajax_request" method, values are sanitized by the caller.
+
+			return is_array( $users ) ? array_values( $users ) : array();
+		}
+
+		$users = wp_unslash( $_POST['users'] ?? array() ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is checked in "handle_ajax_request" method, values are sanitized by the caller.
+
+		return is_array( $users ) ? array_values( $users ) : array();
 	}
 
 	/**
@@ -318,15 +337,12 @@ class UbdwpUsersPage extends UbdwpAbstractBasePage {
 		);
 
 		$this->handle_ajax_request( 'export_users_nonce', 'ubdwp_export_users', $capabilities, function () {
-			$sanitized_users = array_filter( array_map( function ( $user ) {
-				return is_array( $user ) && ! empty( $user['value'] ) ? array(
-					'id'    => (int) ( $user['value'] ?? 0 ),
-					'name'  => sanitize_text_field( $user['name'] ?? '' ),
-					'email' => sanitize_email( $user['email'] ?? '' ),
-				) : null;
-			}, $_POST['users'] ?? array() ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --  Nonce is checked in "handle_ajax_request" method, variable already sanitized.
+			// Entries are {id} from the current script, or {value} from older cached scripts.
+			$user_ids = array_values( array_unique( array_filter( array_map( static function ( $user ) {
+				$id = is_array( $user ) ? ( $user['id'] ?? $user['value'] ?? 0 ) : 0;
 
-			$user_ids = array_unique( array_map( 'absint', array_column( $sanitized_users, 'id' ) ) );
+				return is_scalar( $id ) ? absint( $id ) : 0;
+			}, $this->get_posted_users() ) ) ) );
 
 			if ( empty( $user_ids ) ) {
 				wp_send_json_error( array( 'message' => UbdwpValidationFacade::get_error_message( 'select_any_user' ) ) );
