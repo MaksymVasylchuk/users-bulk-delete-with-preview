@@ -5,6 +5,8 @@
  * @package UsersBulkDeleteWithPreview\Templates\Steps
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Templates are included inside a render method, their variables are not global.
+
 if ( ! defined( 'ABSPATH' ) ) {
 	// Security check: Ensure the file is not accessed directly.
 	echo 'Hi there! I\'m just a plugin, not much I can do when called directly.';
@@ -18,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             <!-- Success deletion -->
             <p class="success_heading" id="user_delete_success_heading">
             </p>
+            <p id="ubdwp_results_note" class="ubdwp-results-note" style="display: none;"></p>
 
             <table id="user_delete_success_table" class="wp-list-table widefat fixed striped">
                 <thead>

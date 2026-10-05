@@ -5,6 +5,8 @@
  * @package UsersBulkDeleteWithPreview\Templates\Steps
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Templates are included inside a render method, their variables are not global.
+
 if ( ! defined( 'ABSPATH' ) ) {
 	// Security check: Ensure the file is not accessed directly.
 	echo 'Hi there! I\'m just a plugin, not much I can do when called directly.';
@@ -27,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</th>
 					<td>
 						<div class="form-group">
-							<select id="filter_type" name="filter_type" class="form-control">
+							<select id="filter_type" name="filter_type">
 								<?php foreach ( $types as $type_key => $type ) : ?>
 									<option value="<?php echo esc_attr( $type_key ); ?>"><?php echo esc_html( $type ); ?></option>
 								<?php endforeach; ?>
@@ -43,6 +45,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php require_once __DIR__ . '/../partials/_find_user_form.php'; ?>
 
 			<?php require_once __DIR__ . '/../partials/_woocommerce_filters_form.php'; ?>
+
+			<?php
+			/**
+			 * Fires after the filter fields of the Bulk Users Delete page, inside the form table.
+			 *
+			 * Print table rows (<tr>) with your own fields; they are sent with the preview request.
+			 * Give a row the class of a filter type ("select_existing_form", "find_users_form" or
+			 * "woocommerce_filters_form") and style="display: none;" to show it only for that type, and narrow the result
+			 * with the "ubdwp_found_user_ids" filter.
+			 *
+			 * @since 2.4.0
+			 */
+			do_action( 'ubdwp_filter_form_fields' );
+			?>
 
 			</tbody>
 		</table>

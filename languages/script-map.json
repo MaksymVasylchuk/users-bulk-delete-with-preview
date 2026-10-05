@@ -1,0 +1,14 @@
+{
+  "assets/src/users.js": [
+    "assets/build/users.js"
+  ],
+  "assets/src/logs.js": [
+    "assets/build/logs.js"
+  ],
+  "assets/src/jobs.js": [
+    "assets/build/jobs.js"
+  ],
+  "assets/src/settings.js": [
+    "assets/build/settings.js"
+  ]
+}

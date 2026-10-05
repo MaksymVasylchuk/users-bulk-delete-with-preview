@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 use UsersBulkDeleteWithPreview\Traits\UbdwpTraitSingleton;
 use UsersBulkDeleteWithPreview\Activators\UbdwpActivate;
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
+use UsersBulkDeleteWithPreview\Services\UbdwpBackgroundRunner;
 
 /**
  * Main loader class for the plugin.
@@ -34,8 +35,10 @@ class UbdwpLoader {
 	 * @var array<string, string>
 	 */
 	private array $pages_for_init = array(
-		'users' => 'UsersBulkDeleteWithPreview\Pages\UbdwpUsersPage',
-		'logs'  => 'UsersBulkDeleteWithPreview\Pages\UbdwpLogsPage',
+		'users'    => 'UsersBulkDeleteWithPreview\Pages\UbdwpUsersPage',
+		'jobs'     => 'UsersBulkDeleteWithPreview\Pages\UbdwpJobsPage',
+		'logs'     => 'UsersBulkDeleteWithPreview\Pages\UbdwpLogsPage',
+		'settings' => 'UsersBulkDeleteWithPreview\Pages\UbdwpSettingsPage',
 	);
 
 	/**
@@ -63,6 +66,16 @@ class UbdwpLoader {
 			add_filter( 'wpmu_drop_tables', array( UbdwpActivate::class, 'ubdwp_drop_site_tables' ), 10, 2 );
 		}
 
+		// Background deletion jobs run outside of admin requests (WP-Cron or Action Scheduler).
+		UbdwpBackgroundRunner::register();
+
+		// Log privacy: retention cleanup, personal data export and erasure, privacy policy text.
+		\UsersBulkDeleteWithPreview\Services\UbdwpPrivacy::register();
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			\WP_CLI::add_command( 'ubdwp', \UsersBulkDeleteWithPreview\Cli\UbdwpCliCommand::class );
+		}
+
 		// Initialize page objects.
 		$this->init_pages();
 	}
@@ -84,11 +97,29 @@ class UbdwpLoader {
 
 		add_submenu_page(
 			'ubdwp_admin',
+			__( 'Deletion Jobs', 'users-bulk-delete-with-preview' ),
+			__( 'Deletion Jobs', 'users-bulk-delete-with-preview' ),
+			'manage_options',
+			'ubdwp_admin_jobs',
+			array( $this->pages['jobs'], 'render' )
+		);
+
+		add_submenu_page(
+			'ubdwp_admin',
 			__( 'Bulk Users Delete Logs', 'users-bulk-delete-with-preview' ),
-			__( 'Bulk Users Delete Logs', 'users-bulk-delete-with-preview' ),
+			__( 'Logs', 'users-bulk-delete-with-preview' ),
 			'manage_options',
 			'ubdwp_admin_logs',
 			array( $this->pages['logs'], 'render' )
+		);
+
+		add_submenu_page(
+			'ubdwp_admin',
+			__( 'Bulk Users Delete Settings', 'users-bulk-delete-with-preview' ),
+			__( 'Settings', 'users-bulk-delete-with-preview' ),
+			'manage_options',
+			'ubdwp_admin_settings',
+			array( $this->pages['settings'], 'render' )
 		);
 	}
 
@@ -128,7 +159,8 @@ class UbdwpLoader {
 	public function action_links( array $links ): array {
 		$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=ubdwp_admin' ) ) . '">' . esc_html__( 'Delete users', 'users-bulk-delete-with-preview' ) . '</a>';
 		$logs_link     = '<a href="' . esc_url( admin_url( 'admin.php?page=ubdwp_admin_logs' ) ) . '">' . esc_html__( 'Logs', 'users-bulk-delete-with-preview' ) . '</a>';
-		array_unshift( $links, $settings_link, $logs_link );
+		$options_link  = '<a href="' . esc_url( admin_url( 'admin.php?page=ubdwp_admin_settings' ) ) . '">' . esc_html__( 'Settings', 'users-bulk-delete-with-preview' ) . '</a>';
+		array_unshift( $links, $settings_link, $logs_link, $options_link );
 
 		return $links;
 	}
@@ -140,7 +172,7 @@ class UbdwpLoader {
 	 */
 	public function load_text_domain(): void {
 		unload_textdomain( 'users-bulk-delete-with-preview' );
-		load_plugin_textdomain( 'users-bulk-delete-with-preview', false, dirname( WPUBDP_BASE_NAME ) . '/languages/' );
+		load_plugin_textdomain( 'users-bulk-delete-with-preview', false, dirname( WPUBDP_BASE_NAME ) . '/languages/' ); // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Loads the translations bundled in /languages, which WordPress does not load on its own.
 	}
 
 	/**
@@ -153,12 +185,12 @@ class UbdwpLoader {
 	protected function register_common_admin_styles( string $hook_suffix ): void {
 		if ( UbdwpHelperFacade::is_plugin_page( $hook_suffix ) ) {
 			UbdwpHelperFacade::register_common_styles( array(
-					'wpubdp-bootstrap-css'  => array( 'path' => 'assets/bootstrap/bootstrap.min.css' ),
 					'wpubdp-select2-css'    => array( 'path' => 'assets/select2/select2.min.css' ),
-					'wpubdp-jquery-ui-css'  => array( 'path' => 'assets/jquery-ui/jquery-ui.css' ),
 					'wpubdp-dataTables-css' => array( 'path' => 'assets/dataTables/datatables.min.css' ),
-					'wpubdp-admin-css'      => array( 'path' => 'assets/admin/admin.min.css' ),
 			) );
+
+			// Plugin styles come last, so they can adjust the library styles.
+			UbdwpHelperFacade::register_build_style( 'wpubdp-admin-css', 'users', array( 'wpubdp-select2-css', 'wpubdp-dataTables-css' ) );
 		}
 	}
 
@@ -206,7 +238,7 @@ class UbdwpLoader {
 		defined( 'WPUBDP_PLUGIN_DIR' ) || define( 'WPUBDP_PLUGIN_DIR', $plugin_root . '/' );
 		defined( 'WPUBDP_PLUGIN_FILE' ) || define( 'WPUBDP_PLUGIN_FILE', $plugin_root . '/ubdwp-users-bulk-delete-with-preview.php' );
 		defined( 'WPUBDP_PLUGIN_URL' ) || define( 'WPUBDP_PLUGIN_URL', plugin_dir_url( WPUBDP_PLUGIN_FILE ) );
-		defined( 'WPUBDP_PLUGIN_VERSION' ) || define( 'WPUBDP_PLUGIN_VERSION', '2.3.0' );
+		defined( 'WPUBDP_PLUGIN_VERSION' ) || define( 'WPUBDP_PLUGIN_VERSION', '2.4.0' );
 		defined( 'WPUBDP_BASE_NAME' ) || define( 'WPUBDP_BASE_NAME', plugin_basename( WPUBDP_PLUGIN_FILE ) );
 	}
 }

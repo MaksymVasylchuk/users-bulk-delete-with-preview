@@ -1,0 +1,11 @@
+# Files that are not part of the plugin package (wordpress.org and release zips).
+/.git
+/.github
+/.idea
+/.wordpress-org
+/node_modules
+.DS_Store
+.gitignore
+.distignore
+package-lock.json
+languages/script-map.json

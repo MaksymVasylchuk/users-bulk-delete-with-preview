@@ -25,7 +25,7 @@ class UbdwpHelper {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		return is_plugin_active( 'woocommerce/woocommerce.php' ) || in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
+		return is_plugin_active( 'woocommerce/woocommerce.php' ) || class_exists( 'WooCommerce' );
 	}
 
 	/**
@@ -201,6 +201,19 @@ class UbdwpHelper {
 	}
 
 	/**
+	 * Free the in-memory object cache between chunks of large operations.
+	 *
+	 * Only the runtime cache is flushed; a persistent object cache is left untouched.
+	 *
+	 * @return void
+	 */
+	public function flush_runtime_cache(): void {
+		if ( function_exists( 'wp_cache_supports' ) && wp_cache_supports( 'flush_runtime' ) ) {
+			wp_cache_flush_runtime();
+		}
+	}
+
+	/**
 	 * Check if the current page is a plugin-specific page.
 	 *
 	 * @param string $hook_suffix The hook suffix for the current admin page.
@@ -210,7 +223,9 @@ class UbdwpHelper {
 	public function is_plugin_page( string $hook_suffix ): bool {
 		return $hook_suffix === 'toplevel_page_ubdwp_admin' || ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce check is not required, because we just check if this page is a plugin page, and the method returns true or false.
 					'ubdwp_admin',
-					'ubdwp_admin_logs'
+					'ubdwp_admin_jobs',
+					'ubdwp_admin_logs',
+					'ubdwp_admin_settings',
 				), true ) );
 	}
 
@@ -249,7 +264,9 @@ class UbdwpHelper {
 					break;
 
 				case 'without_content':
+				case 'without_wc_orders':
 				case 'all_products':
+				case 'all_users':
 					$sanitized_data[ $key ] = filter_var( $value, FILTER_VALIDATE_BOOLEAN );
 					break;
 
@@ -399,6 +416,7 @@ class UbdwpHelper {
 			'notequal_to_str' => '!=',
 			'like_str'        => 'LIKE',
 			'notlike_str'     => 'NOT LIKE',
+			'endswith_str'    => 'LIKE',
 		);
 
 		return $map[ $comparison ] ?? '=';
@@ -422,6 +440,60 @@ class UbdwpHelper {
 			);
 			wp_enqueue_script( $handle );
 		}
+	}
+
+	/**
+	 * Enqueue a script built with @wordpress/scripts (assets/build/{name}.js).
+	 *
+	 * Its WordPress dependencies and version come from the generated assets/build/{name}.asset.php.
+	 *
+	 * @param string        $handle     Script handle.
+	 * @param string        $name       Build entry name.
+	 * @param array<string> $extra_deps Dependencies that are not WordPress packages (e.g. Select2, DataTables).
+	 *
+	 * @return void
+	 */
+	public function register_build_script( string $handle, string $name, array $extra_deps = array() ): void {
+		$asset = $this->get_build_asset( $name );
+
+		wp_enqueue_script(
+			$handle,
+			WPUBDP_PLUGIN_URL . 'assets/build/' . $name . '.js',
+			array_values( array_unique( array_merge( $asset['dependencies'], $extra_deps ) ) ),
+			$asset['version'],
+			true
+		);
+	}
+
+	/**
+	 * Enqueue a stylesheet built with @wordpress/scripts (assets/build/{name}.css), with its RTL version.
+	 *
+	 * @param string        $handle Style handle.
+	 * @param string        $name   Build entry name.
+	 * @param array<string> $deps   Style dependencies.
+	 *
+	 * @return void
+	 */
+	public function register_build_style( string $handle, string $name, array $deps = array() ): void {
+		wp_enqueue_style( $handle, WPUBDP_PLUGIN_URL . 'assets/build/' . $name . '.css', $deps, $this->get_build_asset( $name )['version'] );
+		wp_style_add_data( $handle, 'rtl', 'replace' );
+	}
+
+	/**
+	 * Read the generated asset file of a build entry.
+	 *
+	 * @param string $name Build entry name.
+	 *
+	 * @return array{dependencies: array<string>, version: string} Asset data.
+	 */
+	private function get_build_asset( string $name ): array {
+		$file  = WPUBDP_PLUGIN_DIR . 'assets/build/' . $name . '.asset.php';
+		$asset = file_exists( $file ) ? include $file : array();
+
+		return array(
+			'dependencies' => isset( $asset['dependencies'] ) && is_array( $asset['dependencies'] ) ? $asset['dependencies'] : array(),
+			'version'      => isset( $asset['version'] ) && is_string( $asset['version'] ) ? $asset['version'] : WPUBDP_PLUGIN_VERSION,
+		);
 	}
 
 	/**

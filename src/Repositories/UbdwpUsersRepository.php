@@ -86,20 +86,80 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	}
 
 	/**
-	 * Query users by IDs for the preview, limited to a number of results.
+	 * Keep only IDs of existing users that belong to the current site, in ascending order.
 	 *
 	 * @param array<int> $user_ids User IDs.
-	 * @param int        $limit    Maximum number of users to load.
 	 *
-	 * @return \WP_User_Query Query with results and total count.
+	 * @return array<int> User IDs.
 	 */
-	public function query_users_by_ids( array $user_ids, int $limit ): \WP_User_Query {
-		return new \WP_User_Query( array(
+	public function filter_site_user_ids( array $user_ids ): array {
+		$user_ids = array_values( array_filter( array_unique( array_map( 'absint', $user_ids ) ) ) );
+
+		if ( empty( $user_ids ) ) {
+			return array();
+		}
+
+		return $this->query_user_ids( array( 'include' => $user_ids ) );
+	}
+
+	/**
+	 * Get IDs of all users of the current site, in ascending order.
+	 *
+	 * @return array<int> User IDs.
+	 */
+	public function get_all_site_user_ids(): array {
+		return $this->query_user_ids( array() );
+	}
+
+	/**
+	 * Run a user query that returns only IDs, without loading user objects.
+	 *
+	 * @param array<string, mixed> $args WP_User_Query arguments.
+	 *
+	 * @return array<int> User IDs in ascending order.
+	 */
+	public function query_user_ids( array $args ): array {
+		$query = new \WP_User_Query( array_merge( $args, array(
+			'blog_id'     => get_current_blog_id(),
+			'fields'      => 'ID',
+			'number'      => -1,
+			'orderby'     => 'ID',
+			'order'       => 'ASC',
+			'count_total' => false,
+		) ) );
+
+		return array_map( 'intval', $query->get_results() );
+	}
+
+	/**
+	 * Load one page of preview users from a fixed set of user IDs.
+	 *
+	 * @param array<int> $user_ids User IDs of the preview.
+	 * @param int        $offset   Offset.
+	 * @param int        $limit    Page size.
+	 * @param string     $search   Search term for login, email and display name.
+	 * @param string     $orderby  Order by field (ID, login, email or registered).
+	 * @param string     $order    ASC or DESC.
+	 *
+	 * @return \WP_User_Query Query with results and the total of the filtered set.
+	 */
+	public function query_preview_page( array $user_ids, int $offset, int $limit, string $search, string $orderby, string $order ): \WP_User_Query {
+		$args = array(
 			'blog_id'     => get_current_blog_id(),
 			'include'     => $user_ids,
 			'number'      => $limit,
+			'offset'      => $offset,
+			'orderby'     => $orderby,
+			'order'       => $order,
 			'count_total' => true,
-		) );
+		);
+
+		if ( '' !== $search ) {
+			$args['search']         = '*' . $search . '*';
+			$args['search_columns'] = array( 'user_login', 'user_email', 'display_name' );
+		}
+
+		return new \WP_User_Query( $args );
 	}
 
 	/**
@@ -122,11 +182,21 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 			return $email_filter_result;
 		}
 
-		// Runs last, because it has to narrow down an "include" list set by the email filter.
-		$content_filter_result = $this->apply_without_content_filter( $args, $request );
+		// Run last, because they have to narrow down an "include" list set by the email filter.
+		if ( ! empty( $request['without_content'] ) ) {
+			$content_filter_result = $this->exclude_user_ids( $args, $this->get_user_ids_with_content() );
 
-		if ( is_wp_error( $content_filter_result ) ) {
-			return $content_filter_result;
+			if ( is_wp_error( $content_filter_result ) ) {
+				return $content_filter_result;
+			}
+		}
+
+		if ( ! empty( $request['without_wc_orders'] ) ) {
+			$orders_filter_result = $this->exclude_user_ids( $args, $this->get_customer_ids_with_orders() );
+
+			if ( is_wp_error( $orders_filter_result ) ) {
+				return $orders_filter_result;
+			}
 		}
 
 		return new \WP_User_Query( $args );
@@ -175,18 +245,11 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	}
 
 	/**
-	 * Keep only users who have no posts (in any status) and no comments on the current site.
+	 * Get IDs of users who have posts (in any status) or comments on the current site.
 	 *
-	 * @param array<string, mixed> $args Current query arguments.
-	 * @param array<string, mixed> $request Request parameters.
-	 *
-	 * @return \WP_Error|null Error when no user can match.
+	 * @return array<int> User IDs.
 	 */
-	private function apply_without_content_filter( array &$args, array $request ): ?\WP_Error {
-		if ( empty( $request['without_content'] ) ) {
-			return null;
-		}
-
+	public function get_user_ids_with_content(): array {
 		$post_types = $this->get_content_post_types();
 		$authors    = array();
 
@@ -199,15 +262,50 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 		}
 
 		$commenters = $this->get_col( "SELECT DISTINCT user_id FROM {$this->wpdb->comments} WHERE user_id > %d", array( 0 ) );
-		$with_content = array_values( array_unique( array_map( 'absint', array_merge( $authors, $commenters ) ) ) );
 
-		if ( empty( $with_content ) ) {
+		return array_values( array_unique( array_map( 'absint', array_merge( $authors, $commenters ) ) ) );
+	}
+
+	/**
+	 * Get IDs of customers who have at least one WooCommerce order in any status on the current site.
+	 *
+	 * Orders in the trash and checkout drafts are not counted. Returns no IDs when WooCommerce is not active.
+	 *
+	 * @return array<int> User IDs.
+	 */
+	public function get_customer_ids_with_orders(): array {
+		if ( ! UbdwpHelperFacade::check_if_woocommerce_is_active() ) {
+			return array();
+		}
+
+		if ( $this->is_woocommerce_hpos_enabled() ) {
+			$query = "SELECT DISTINCT customer_id FROM {$this->wpdb->prefix}wc_orders
+                WHERE type = 'shop_order' AND customer_id > 0 AND status NOT IN ('trash', 'wc-checkout-draft', 'auto-draft')";
+		} else {
+			$query = "SELECT DISTINCT pm.meta_value FROM {$this->wpdb->posts} o
+                INNER JOIN {$this->wpdb->postmeta} pm ON pm.post_id = o.ID AND pm.meta_key = '_customer_user'
+                WHERE o.post_type = 'shop_order' AND o.post_status NOT IN ('trash', 'wc-checkout-draft', 'auto-draft')";
+		}
+
+		return array_values( array_filter( array_map( 'absint', $this->get_col( $query ) ) ) );
+	}
+
+	/**
+	 * Remove the given users from a query.
+	 *
+	 * @param array<string, mixed> $args     Current query arguments.
+	 * @param array<int>           $user_ids Users to remove.
+	 *
+	 * @return \WP_Error|null Error when no user can match.
+	 */
+	private function exclude_user_ids( array &$args, array $user_ids ): ?\WP_Error {
+		if ( empty( $user_ids ) ) {
 			return null;
 		}
 
 		// WP_User_Query ignores "exclude" when "include" is set, so narrow the include list instead.
 		if ( ! empty( $args['include'] ) ) {
-			$args['include'] = array_values( array_diff( array_map( 'absint', (array) $args['include'] ), $with_content ) );
+			$args['include'] = array_values( array_diff( array_map( 'absint', (array) $args['include'] ), $user_ids ) );
 
 			if ( empty( $args['include'] ) ) {
 				return new \WP_Error( 'no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message( 'no_users_found_with_given_filters' ) );
@@ -216,7 +314,7 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 			return null;
 		}
 
-		$args['exclude'] = array_values( array_unique( array_merge( array_map( 'absint', (array) ( $args['exclude'] ?? array() ) ), $with_content ) ) ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- Users with content must be excluded.
+		$args['exclude'] = array_values( array_unique( array_merge( array_map( 'absint', (array) ( $args['exclude'] ?? array() ) ), $user_ids ) ) ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- These users must be excluded.
 
 		return null;
 	}
@@ -270,7 +368,7 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 	 *
 	 * @return bool True when HPOS is the authoritative order storage.
 	 */
-	private function is_woocommerce_hpos_enabled(): bool {
+	public function is_woocommerce_hpos_enabled(): bool {
 		if ( class_exists( '\Automattic\WooCommerce\Utilities\OrderUtil' ) ) {
 			return \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
 		}
@@ -297,7 +395,10 @@ class UbdwpUsersRepository extends UbdwpAbstractBaseRepository {
 		if ( $email_compare ) {
 			$compare = UbdwpHelperFacade::get_email_compare_operator( sanitize_text_field( $email_compare ) );
 
-			if ( in_array( $compare, array( 'LIKE', 'NOT LIKE' ) ) ) {
+			if ( 'endswith_str' === $email_compare ) {
+				// "Ends with" finds a domain, e.g. "@example.com".
+				$email_search = '%' . $this->wpdb->esc_like( $email_search );
+			} elseif ( in_array( $compare, array( 'LIKE', 'NOT LIKE' ), true ) ) {
 				$email_search = '%' . $this->wpdb->esc_like( $email_search ) . '%';
 			}
 

@@ -9,6 +9,7 @@ namespace UsersBulkDeleteWithPreview\Handlers;
 
 use UsersBulkDeleteWithPreview\Facades\UbdwpValidationFacade;
 use UsersBulkDeleteWithPreview\Repositories\UbdwpLogsRepository;
+use UsersBulkDeleteWithPreview\Services\UbdwpPrivacy;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -39,6 +40,11 @@ class UbdwpLogsHandler {
 	 * @param array<string, mixed> $user_data Data of the user action to log.
 	 */
 	public function insert_log( array $user_data ): void {
+		// Store emails and names as the privacy settings say (in full, masked or not at all).
+		if ( isset( $user_data['user_delete_data'] ) && is_array( $user_data['user_delete_data'] ) ) {
+			$user_data['user_delete_data'] = UbdwpPrivacy::prepare_log_entries( $user_data['user_delete_data'] );
+		}
+
 		$user_data_json = wp_json_encode( $user_data );
 
 		if ( false === $user_data_json ) {
@@ -93,15 +99,13 @@ class UbdwpLogsHandler {
 
 			$data[] = array(
 				intval( $log->ID ),
-				null !== $log->display_name
-					? sanitize_text_field( $log->display_name )
-					/* translators: %d: ID of the deleted administrator who performed the deletion. */
-					: sprintf( __( 'Deleted user #%d', 'users-bulk-delete-with-preview' ), (int) $log->user_id ),
+				$this->format_performer( $log ),
 				intval( $deleted_user_data['user_delete_count'] ?? 0 ),
 				implode(
 					', ',
 					array_map(
-						fn( $entry ) => sanitize_text_field( $entry['email'] ?? '' ),
+						// Entries stored without an email (privacy settings or erasure) show the user ID.
+						fn( $entry ) => '' !== (string) ( $entry['email'] ?? '' ) ? sanitize_text_field( $entry['email'] ) : '#' . absint( $entry['user_id'] ?? 0 ),
 						$deleted_user_data['user_delete_data'] ?? []
 					)
 				),
@@ -110,5 +114,25 @@ class UbdwpLogsHandler {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Name of the user who performed a deletion.
+	 *
+	 * @param object $log Log record.
+	 *
+	 * @return string Name.
+	 */
+	private function format_performer( object $log ): string {
+		if ( null !== $log->display_name ) {
+			return sanitize_text_field( $log->display_name );
+		}
+
+		if ( 0 === (int) $log->user_id ) {
+			return __( 'Anonymized user', 'users-bulk-delete-with-preview' );
+		}
+
+		/* translators: %d: ID of the deleted administrator who performed the deletion. */
+		return sprintf( __( 'Deleted user #%d', 'users-bulk-delete-with-preview' ), (int) $log->user_id );
 	}
 }

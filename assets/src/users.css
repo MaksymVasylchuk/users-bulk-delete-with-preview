@@ -30,16 +30,13 @@ body {
     --ubdwp-row-hover: #f0f6fc;
 }
 
-body {
-    background: #f0f0f1 !important
-}
-
 /* ==========================================================================
    Fields
    ========================================================================== */
 
 .ubdwp-page input[type=text],
 .ubdwp-page input[type=email],
+.ubdwp-page input[type=date],
 .ubdwp-page input[type=search],
 .ubdwp-page input[type=number],
 .ubdwp-page select,
@@ -59,6 +56,7 @@ body {
 
 .ubdwp-page input[type=text],
 .ubdwp-page input[type=email],
+.ubdwp-page input[type=date],
 .ubdwp-page input[type=search],
 .ubdwp-page input[type=number],
 .ubdwp-page select {
@@ -91,6 +89,7 @@ body {
 /* Focus */
 .ubdwp-page input[type=text]:focus,
 .ubdwp-page input[type=email]:focus,
+.ubdwp-page input[type=date]:focus,
 .ubdwp-page input[type=search]:focus,
 .ubdwp-page input[type=number]:focus,
 .ubdwp-page select:focus,
@@ -329,6 +328,11 @@ body {
     margin: 12px 0;
 }
 
+/* Wide tables scroll inside their own box instead of the whole admin page. */
+.ubdwp-page div.dt-container .dt-layout-table > .dt-layout-cell {
+    overflow-x: auto;
+}
+
 .ubdwp-page div.dt-container .dt-length,
 .ubdwp-page div.dt-container .dt-search,
 .ubdwp-page div.dt-container .dt-length label,
@@ -521,7 +525,6 @@ body {
     color: #555
 }
 
-/* Step icons are Bootstrap .btn links, so the plugin scope is needed to override Bootstrap colors */
 .ubdwp-page .stepwizard .step_icon {
     position: relative;
     z-index: 2;
@@ -543,7 +546,7 @@ body {
     opacity: 1;
 }
 
-.ubdwp-page .stepwizard .step_icon.btn-primary {
+.ubdwp-page .stepwizard .step_icon.is-active {
     border-color: var(--ubdwp-accent);
     background: var(--ubdwp-accent);
     color: #fff;
@@ -555,6 +558,8 @@ body {
 }
 
 #page_loader {
+    flex-direction: column;
+    gap: 16px;
     position: fixed;
     top: 0;
     left: 0;
@@ -626,18 +631,98 @@ body {
     line-height: 18px;
 }
 
-.ubdwp-page .modal-content {
+/* Confirmation dialog (native <dialog>) */
+.ubdwp-dialog {
+    box-sizing: border-box;
+    width: min(560px, calc(100vw - 32px));
+    max-height: calc(100vh - 64px);
+    padding: 0;
     border: 0;
     border-radius: var(--ubdwp-radius);
+    background: #fff;
+    color: var(--ubdwp-text);
     box-shadow: 0 4px 24px rgba(0, 0, 0, .2);
 }
 
-.ubdwp-page .modal-footer {
-    gap: var(--ubdwp-gap);
+.ubdwp-dialog::backdrop {
+    background: rgba(0, 0, 0, .5);
 }
 
-.ubdwp-page .modal-footer > * {
+.ubdwp-dialog-content {
+    display: flex;
+    flex-direction: column;
+    max-height: inherit;
+}
+
+.ubdwp-dialog-header,
+.ubdwp-dialog-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--ubdwp-gap);
+    padding: 16px 20px;
+}
+
+.ubdwp-dialog-header {
+    justify-content: space-between;
+    border-bottom: 1px solid var(--ubdwp-border-light);
+}
+
+.ubdwp-dialog-footer {
+    justify-content: flex-end;
+    border-top: 1px solid var(--ubdwp-border-light);
+}
+
+.ubdwp-dialog-title {
     margin: 0;
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+.ubdwp-dialog-close {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ubdwp-radius);
+    background: transparent;
+    color: var(--ubdwp-muted);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.ubdwp-dialog-close:hover,
+.ubdwp-dialog-close:focus {
+    color: var(--ubdwp-text);
+}
+
+.ubdwp-dialog-close:focus {
+    box-shadow: var(--ubdwp-focus-ring);
+    outline: 2px solid transparent;
+}
+
+.ubdwp-dialog-body {
+    overflow-y: auto;
+    padding: 16px 20px;
+}
+
+.ubdwp-dialog-footer .button {
+    margin: 0;
+}
+
+.ubdwp-progress-count {
+    margin-top: var(--ubdwp-gap);
+    text-align: center;
+}
+
+.ubdwp-page .invalid-feedback {
+    display: block;
+    margin-top: 4px;
+    color: var(--ubdwp-danger);
+}
+
+.ubdwp-page .invalid-feedback:empty {
+    display: none;
 }
 
 .ubdwp-delete-summary {
@@ -655,6 +740,81 @@ body {
 
 .ubdwp-page #ubdwp_confirm_input {
     width: 100%;
+}
+
+/* ==========================================================================
+   Large selections and deletion jobs
+   ========================================================================== */
+
+.ubdwp-loader-text {
+    margin: 0;
+    color: #fff;
+    font-size: var(--ubdwp-font-size);
+}
+
+.ubdwp-selection-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ubdwp-gap) 16px;
+    margin: 0 0 12px;
+    padding: 10px 12px;
+    border-left: 4px solid var(--ubdwp-accent);
+    background: #fff;
+    font-size: var(--ubdwp-font-size);
+}
+
+.ubdwp-selection-info[style*="display: none"] {
+    display: none !important;
+}
+
+.ubdwp-delete-mode {
+    margin: 0 0 12px;
+    padding: 0;
+    border: 0;
+}
+
+.ubdwp-delete-mode legend {
+    margin-bottom: var(--ubdwp-gap);
+    font-size: var(--ubdwp-font-size);
+    font-weight: 600;
+}
+
+.ubdwp-delete-mode label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ubdwp-gap);
+    margin-bottom: 6px;
+}
+
+.ubdwp-delete-mode input[type=radio] {
+    margin: 2px 0 0;
+}
+
+.ubdwp-progress-note,
+.ubdwp-results-note {
+    text-align: center;
+}
+
+.ubdwp-progress-actions {
+    margin: 12px 0 0;
+    text-align: center;
+}
+
+.ubdwp-jobs {
+    margin-bottom: 24px;
+}
+
+.ubdwp-page .button.ubdwp-button-danger-outline {
+    border-color: var(--ubdwp-danger);
+    color: var(--ubdwp-danger);
+}
+
+.ubdwp-page .button.ubdwp-button-danger-outline:hover,
+.ubdwp-page .button.ubdwp-button-danger-outline:focus {
+    border-color: var(--ubdwp-danger-darker);
+    background: #fff;
+    color: var(--ubdwp-danger-darker);
 }
 
 /* ==========================================================================

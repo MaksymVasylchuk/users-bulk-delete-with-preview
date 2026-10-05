@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Blank WordPress Pot v1.0.0\n"
+"Project-Id-Version: Users Bulk Delete With Preview 2.4.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -18,30 +18,32 @@ msgstr ""
 "X-Generator: Poedit 3.4.4\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: assets/admin/admin.js:32
+#: assets/src/users.js:54
 msgid "Search for users"
 msgstr "Пошук користувачів"
 
-#: assets/admin/admin.js:84
+#: assets/src/users.js:95
 msgid "Select meta field"
 msgstr "Виберіть метаполе"
 
-#: assets/admin/admin.js:89
+#: assets/src/users.js:100
 msgid "Select user roles"
 msgstr "Виберіть ролі користувачів"
 
 #: templates/partials/_woocommerce_filters_form.php:19
-#: assets/admin/admin.js:90
+#: assets/src/users.js:103
 msgid "Select products that bought user"
 msgstr "Виберіть продукти, які купив користувач"
 
-#: assets/admin/admin.js:326
-#: assets/admin/admin.js:371
-#: assets/admin/admin.js:583
-#: assets/admin/admin.js:624
-#: assets/admin/admin.js:755
-#: assets/admin/logs.js:25
-#: assets/admin/logs.js:35
+#: assets/src/jobs.js:34
+#: assets/src/jobs.js:40
+#: assets/src/logs.js:29
+#: assets/src/logs.js:39
+#: assets/src/settings.js:21
+#: assets/src/settings.js:24
+#: assets/src/users.js:216
+#: assets/src/users.js:220
+#: assets/src/users.js:947
 msgid "An unexpected error occurred."
 msgstr "Виникла непередбачувана помилка."
 
@@ -51,34 +53,34 @@ msgstr "Виникла непередбачувана помилка."
 msgid "Method %1$s does not exist in class %2$s."
 msgstr "Метод %1$s не існує в класі %2$s."
 
-#: src/Activators/UbdwpActivate.php:175
+#: src/Activators/UbdwpActivate.php:201
 msgid "This plugin requires PHP version 8.0 or higher."
 msgstr "Цей плагін потребує PHP версії 8.0 або новішої."
 
-#: src/Activators/UbdwpActivate.php:179
-#: src/Activators/UbdwpActivate.php:191
+#: src/Activators/UbdwpActivate.php:205
+#: src/Activators/UbdwpActivate.php:217
 msgid "Plugin Activation Error"
 msgstr "Помилка активації плагіна"
 
-#: src/Activators/UbdwpActivate.php:187
+#: src/Activators/UbdwpActivate.php:213
 msgid "You must update WordPress to version 6.2 or higher to use this plugin."
 msgstr "Щоб використовувати цей плагін, вам потрібно оновити WordPress до версії 6.2 або вище."
 
-#: src/Core/UbdwpLoader.php:77
-#: src/Core/UbdwpLoader.php:78
+#: src/Core/UbdwpLoader.php:90
+#: src/Core/UbdwpLoader.php:91
 msgid "Bulk Users Delete"
 msgstr "Масове видалення користувачів"
 
-#: src/Core/UbdwpLoader.php:87
-#: src/Core/UbdwpLoader.php:88
+#: src/Core/UbdwpLoader.php:109
 msgid "Bulk Users Delete Logs"
 msgstr "Журнал масового видалення користувачів"
 
-#: src/Core/UbdwpLoader.php:129
+#: src/Core/UbdwpLoader.php:160
 msgid "Delete users"
 msgstr "Видалити користувачів"
 
-#: src/Core/UbdwpLoader.php:130
+#: src/Core/UbdwpLoader.php:110
+#: src/Core/UbdwpLoader.php:161
 msgid "Logs"
 msgstr "Журнали"
 
@@ -131,49 +133,51 @@ msgid "No matching records found"
 msgstr "Відповідних записів не знайдено"
 
 #: src/Helpers/UbdwpHelper.php:94
+#: templates/jobs-page.php:33
 #: templates/logs-page.php:31
-#: templates/partials/_users_table.php:32
+#: templates/partials/_users_table.php:36
 msgid "ID"
 msgstr "ID"
 
 #: src/Helpers/UbdwpHelper.php:95
-#: templates/partials/_confirmation-popup.php:28
-#: templates/partials/_users_table.php:33
-#: templates/steps/step-3.php:41
+#: templates/partials/_confirmation-popup.php:27
+#: templates/partials/_users_table.php:37
+#: templates/steps/step-3.php:42
 msgid "Username"
 msgstr "Ім’я користувача"
 
 #: src/Helpers/UbdwpHelper.php:96
-#: templates/partials/_confirmation-popup.php:29
-#: templates/partials/_users_table.php:34
-#: templates/steps/step-3.php:27
-#: templates/steps/step-3.php:42
+#: src/Services/UbdwpPrivacy.php:307
+#: templates/partials/_confirmation-popup.php:28
+#: templates/partials/_users_table.php:38
+#: templates/steps/step-3.php:28
+#: templates/steps/step-3.php:43
 msgid "Email"
 msgstr "Електронна пошта"
 
 #: src/Helpers/UbdwpHelper.php:97
-#: templates/partials/_users_table.php:35
+#: templates/partials/_users_table.php:39
 msgid "Registered"
 msgstr "Зареєстрований"
 
 #: src/Helpers/UbdwpHelper.php:99
-#: templates/partials/_users_table.php:36
+#: templates/partials/_users_table.php:40
 msgid "Role"
 msgstr "Роль"
 
 #: src/Helpers/UbdwpHelper.php:100
-#: templates/partials/_users_table.php:16
-#: templates/partials/_users_table.php:38
+#: templates/partials/_users_table.php:21
+#: templates/partials/_users_table.php:42
 msgid "Assign related content to user"
 msgstr "Призначте пов’язаний вміст користувачу"
 
 #: src/Helpers/UbdwpHelper.php:101
-#: src/Helpers/UbdwpHelper.php:462
+#: src/Helpers/UbdwpHelper.php:535
 msgid "Select a user"
 msgstr "Виберіть користувача"
 
 #: src/Helpers/UbdwpHelper.php:102
-#: src/Helpers/UbdwpHelper.php:464
+#: src/Helpers/UbdwpHelper.php:537
 msgid "Remove all related content"
 msgstr "Видаліть весь пов'язаний вміст"
 
@@ -181,7 +185,7 @@ msgstr "Видаліть весь пов'язаний вміст"
 msgid "Logs Page"
 msgstr "Сторінка журналів"
 
-#: src/Pages/UbdwpUsersPage.php:63
+#: src/Pages/UbdwpUsersPage.php:50
 msgid "Users Management"
 msgstr "Керування користувачами"
 
@@ -189,44 +193,44 @@ msgstr "Керування користувачами"
 msgid "An unknown error occurred."
 msgstr "Сталася невідома помилка."
 
-#: src/Utils/UbdwpValidation.php:178
+#: src/Utils/UbdwpValidation.php:207
 msgid "You do not have sufficient permissions to perform this action."
 msgstr "У вас недостатньо прав для виконання цієї дії."
 
-#: src/Utils/UbdwpValidation.php:182
+#: src/Utils/UbdwpValidation.php:211
 msgid "Invalid nonce"
 msgstr "Недійсний nonce"
 
-#: src/Utils/UbdwpValidation.php:186
+#: src/Utils/UbdwpValidation.php:215
 msgid "Select type"
 msgstr "Виберіть тип"
 
-#: src/Utils/UbdwpValidation.php:190
+#: src/Utils/UbdwpValidation.php:219
 msgid "Invalid security token"
 msgstr "Недійсний маркер безпеки"
 
-#: src/Utils/UbdwpValidation.php:194
+#: src/Utils/UbdwpValidation.php:223
 msgid "Something went wrong. Please try again."
 msgstr "Щось пішло не так. Спробуйте ще раз."
 
-#: src/Utils/UbdwpValidation.php:198
+#: src/Utils/UbdwpValidation.php:227
 msgid "User IDs should be an array."
 msgstr "Ідентифікатори користувачів мають бути масивом."
 
-#: src/Utils/UbdwpValidation.php:202
+#: src/Utils/UbdwpValidation.php:231
 msgid "At least one required field."
 msgstr "Принаймні одне обов’язкове поле."
 
-#: src/Utils/UbdwpValidation.php:206
+#: src/Utils/UbdwpValidation.php:235
 msgid "No users found with the given filters"
 msgstr "Користувачів із заданими фільтрами не знайдено"
 
-#: src/Utils/UbdwpValidation.php:210
+#: src/Utils/UbdwpValidation.php:239
 msgid "No users found for the provided IDs."
 msgstr "Не знайдено користувачів для наданих ідентифікаторів."
 
 #: src/Helpers/UbdwpHelper.php:107
-#: src/Utils/UbdwpValidation.php:214
+#: src/Utils/UbdwpValidation.php:243
 msgid "Please select at least one user for deletion."
 msgstr "Будь ласка, виберіть принаймні одного користувача для видалення."
 
@@ -246,19 +250,20 @@ msgstr "Видалені дані користувача"
 msgid "Deletion Time"
 msgstr "Час видалення"
 
-#: templates/partials/_confirmation-popup.php:19
+#: templates/partials/_confirmation-popup.php:18
 msgid "Confirm Deletion"
 msgstr "Підтвердити видалення"
 
-#: templates/partials/_confirmation-popup.php:20
+#: templates/partials/_confirmation-popup.php:19
 msgid "Close"
 msgstr "Закрити"
 
-#: templates/partials/_confirmation-popup.php:42
+#: templates/jobs-page.php:70
+#: templates/partials/_confirmation-popup.php:52
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: templates/partials/_confirmation-popup.php:43
+#: templates/partials/_confirmation-popup.php:53
 msgid "Delete"
 msgstr "Видалити"
 
@@ -266,8 +271,7 @@ msgstr "Видалити"
 msgid "Select existing users"
 msgstr "Виберіть існуючих користувачів"
 
-#: templates/partials/_existing_user_form.php:26
-#: templates/partials/_woocommerce_filters_form.php:30
+#: templates/partials/_woocommerce_filters_form.php:26
 msgid "Select All"
 msgstr "Виберати усі"
 
@@ -279,91 +283,91 @@ msgstr "Роль користувача"
 msgid "User Email"
 msgstr "Електронна пошта користувача"
 
-#: templates/partials/_find_user_form.php:38
-#: templates/partials/_find_user_form.php:78
+#: templates/partials/_find_user_form.php:39
+#: templates/partials/_find_user_form.php:84
 msgid "Equal to (string)"
 msgstr "Equal to (string)"
 
-#: templates/partials/_find_user_form.php:39
-#: templates/partials/_find_user_form.php:79
+#: templates/partials/_find_user_form.php:40
+#: templates/partials/_find_user_form.php:85
 msgid "Not equal to (string)"
 msgstr "Not equal to (string)"
 
-#: templates/partials/_find_user_form.php:40
-#: templates/partials/_find_user_form.php:80
+#: templates/partials/_find_user_form.php:41
+#: templates/partials/_find_user_form.php:86
 msgid "Like (string)"
 msgstr "Like (string)"
 
-#: templates/partials/_find_user_form.php:41
-#: templates/partials/_find_user_form.php:81
+#: templates/partials/_find_user_form.php:42
+#: templates/partials/_find_user_form.php:87
 msgid "Not like (string)"
 msgstr "Not like (string)"
 
-#: templates/partials/_find_user_form.php:43
+#: templates/partials/_find_user_form.php:45
 msgid "Enter user email..."
 msgstr "Введіть адресу електронної пошти користувача…"
 
-#: templates/partials/_find_user_form.php:50
+#: templates/partials/_find_user_form.php:53
 msgid "User Registration Date"
 msgstr "Дата реєстрації користувача"
 
-#: templates/partials/_find_user_form.php:70
+#: templates/partials/_find_user_form.php:75
 msgid "User Meta"
 msgstr "Мета користувача"
 
-#: templates/partials/_find_user_form.php:76
+#: templates/partials/_find_user_form.php:82
 msgid "Meta does not exist"
 msgstr "Meta does not exist"
 
-#: templates/partials/_find_user_form.php:82
+#: templates/partials/_find_user_form.php:88
 msgid "Equal to (date)"
 msgstr "Equal to (date)"
 
-#: templates/partials/_find_user_form.php:83
+#: templates/partials/_find_user_form.php:89
 msgid "Not equal to (date)"
 msgstr "Not equal to (date)"
 
-#: templates/partials/_find_user_form.php:84
+#: templates/partials/_find_user_form.php:90
 msgid "Less than (date)"
 msgstr "Less than (date)"
 
-#: templates/partials/_find_user_form.php:85
+#: templates/partials/_find_user_form.php:91
 msgid "Less than or equal to (date)"
 msgstr "Less than or equal to (date)"
 
-#: templates/partials/_find_user_form.php:86
+#: templates/partials/_find_user_form.php:92
 msgid "Greater than (date)"
 msgstr "Greater than (date)"
 
-#: templates/partials/_find_user_form.php:87
+#: templates/partials/_find_user_form.php:93
 msgid "Greater than or equal to (date)"
 msgstr "Greater than or equal to (date)"
 
-#: templates/partials/_find_user_form.php:88
+#: templates/partials/_find_user_form.php:94
 msgid "Equal to (number)"
 msgstr "Equal to (number)"
 
-#: templates/partials/_find_user_form.php:89
+#: templates/partials/_find_user_form.php:95
 msgid "Not equal to (number)"
 msgstr "Not equal to (number)"
 
-#: templates/partials/_find_user_form.php:90
+#: templates/partials/_find_user_form.php:96
 msgid "Less than (number)"
 msgstr "Less than (number)"
 
-#: templates/partials/_find_user_form.php:91
+#: templates/partials/_find_user_form.php:97
 msgid "Less than or equal to (number)"
 msgstr "Less than or equal to (number)"
 
-#: templates/partials/_find_user_form.php:92
+#: templates/partials/_find_user_form.php:98
 msgid "Greater than (number)"
 msgstr "Greater than (number)"
 
-#: templates/partials/_find_user_form.php:93
+#: templates/partials/_find_user_form.php:99
 msgid "Greater than or equal to (number)"
 msgstr "Greater than or equal to (number)"
 
-#: templates/partials/_find_user_form.php:95
+#: templates/partials/_find_user_form.php:101
 msgid "Enter user meta value"
 msgstr "Введіть мета-значення користувача"
 
@@ -385,7 +389,7 @@ msgstr "Видалити вибраних користувачів"
 msgid "Step"
 msgstr "Крок"
 
-#: templates/partials/_users_table.php:31
+#: templates/partials/_users_table.php:35
 msgid "Select"
 msgstr "Виберіть"
 
@@ -399,8 +403,9 @@ msgstr "Попередній перегляд"
 
 #. Plugin Name of the plugin
 #: ubdwp-users-bulk-delete-with-preview.php
-#~ msgid "Users Bulk Delete With Preview"
-#~ msgstr "Масове видалення користувачів із попереднім переглядом"
+#: src/Services/UbdwpPrivacy.php:418
+msgid "Users Bulk Delete With Preview"
+msgstr "Масове видалення користувачів із попереднім переглядом"
 
 #. Plugin URI of the plugin
 #: ubdwp-users-bulk-delete-with-preview.php
@@ -423,7 +428,7 @@ msgid "https://github.com/MaksymVasylchuk"
 msgstr ""
 
 #. translators: %d: ID of the deleted administrator who performed the deletion.
-#: src/Handlers/UbdwpLogsHandler.php:99
+#: src/Handlers/UbdwpLogsHandler.php:136
 #, php-format
 msgid "Deleted user #%d"
 msgstr "Видалений користувач #%d"
@@ -440,30 +445,33 @@ msgstr "Готово! Видалено вибраних користувачів
 msgid "Users that could not be removed: %d."
 msgstr "Не вдалося видалити користувачів: %d."
 
-#: src/Utils/UbdwpValidation.php:218
+#: src/Utils/UbdwpValidation.php:247
 msgid "Failed to create the export file."
 msgstr "Не вдалося створити файл експорту."
 
-#: templates/partials/_confirmation-popup.php:27
-#: templates/steps/step-3.php:25
-#: templates/steps/step-3.php:40
+#: templates/partials/_confirmation-popup.php:26
+#: templates/steps/step-3.php:26
+#: templates/steps/step-3.php:41
 msgid "User ID"
 msgstr "ID користувача"
 
-#: templates/steps/step-3.php:26
+#: src/Services/UbdwpPrivacy.php:308
+#: templates/steps/step-3.php:27
 msgid "Display name"
 msgstr "Відображуване ім'я"
 
-#: assets/admin/admin.js:771
-#: assets/admin/logs.js:73
+#: assets/src/jobs.js:58
+#: assets/src/logs.js:77
+#: assets/src/settings.js:98
+#: assets/src/users.js:963
 msgid "Dismiss this notice."
 msgstr "Закрити це повідомлення."
 
-#: src/Utils/UbdwpValidation.php:222
+#: src/Utils/UbdwpValidation.php:251
 msgid "Please enter a valid date in YYYY-MM-DD format."
 msgstr "Введіть коректну дату у форматі РРРР-ММ-ДД."
 
-#: src/Utils/UbdwpValidation.php:234
+#: src/Utils/UbdwpValidation.php:263
 msgid "Please enter a valid number for the selected comparison."
 msgstr "Введіть коректне число для вибраного порівняння."
 
@@ -530,7 +538,7 @@ msgid "This cannot be undone."
 msgstr "Цю дію неможливо скасувати."
 
 #: src/Helpers/UbdwpHelper.php:128
-#: templates/steps/step-3.php:36
+#: templates/steps/step-3.php:37
 msgid "Users that were not deleted"
 msgstr "Користувачі, яких не видалено"
 
@@ -554,7 +562,9 @@ msgstr "Захищено: адміністраторів та інших при�
 msgid "You do not have permission to delete this user."
 msgstr "У вас немає прав на видалення цього користувача."
 
+#: src/Cli/UbdwpCliCommand.php:610
 #: src/Helpers/UbdwpHelper.php:196
+#: src/Utils/UbdwpValidation.php:291
 msgid "The user selected to receive the content is not valid."
 msgstr "Користувач, якому має бути передано вміст, недійсний."
 
@@ -562,57 +572,57 @@ msgstr "Користувач, якому має бути передано вмі
 msgid "WordPress could not delete this user."
 msgstr "WordPress не вдалося видалити цього користувача."
 
-#: src/Helpers/UbdwpHelper.php:482
+#: src/Helpers/UbdwpHelper.php:555
 msgid "Administrators and other privileged users cannot be deleted with this plugin."
 msgstr "Адміністраторів та інших привілейованих користувачів не можна видалити цим плагіном."
 
-#: src/Helpers/UbdwpHelper.php:482
+#: src/Helpers/UbdwpHelper.php:555
 msgid "Protected"
 msgstr "Захищено"
 
-#: src/Utils/UbdwpValidation.php:226
+#: src/Utils/UbdwpValidation.php:255
 msgid "Please enter a valid date range: both dates in YYYY-MM-DD format, and the end date not before the start date."
 msgstr "Введіть коректний діапазон дат: обидві дати у форматі РРРР-ММ-ДД, кінцева дата не раніше початкової."
 
-#: src/Utils/UbdwpValidation.php:230
+#: src/Utils/UbdwpValidation.php:259
 msgid "Please choose a valid registration date comparison."
 msgstr "Виберіть коректне порівняння дати реєстрації."
 
-#: templates/partials/_confirmation-popup.php:30
-#: templates/steps/step-3.php:43
+#: templates/partials/_confirmation-popup.php:29
+#: templates/steps/step-3.php:44
 msgid "Reason"
 msgstr "Причина"
 
-#: templates/partials/_confirmation-popup.php:37
+#: templates/partials/_confirmation-popup.php:47
 msgid "Number of users to delete"
 msgstr "Кількість користувачів для видалення"
 
-#: templates/partials/_find_user_form.php:53
+#: templates/partials/_find_user_form.php:57
 msgid "Registration date comparison"
 msgstr "Порівняння дати реєстрації"
 
-#: templates/partials/_find_user_form.php:54
+#: templates/partials/_find_user_form.php:58
 msgid "On or after"
 msgstr "Того дня або пізніше"
 
-#: templates/partials/_find_user_form.php:55
+#: templates/partials/_find_user_form.php:59
 msgid "On or before"
 msgstr "Того дня або раніше"
 
-#: templates/partials/_find_user_form.php:56
+#: templates/partials/_find_user_form.php:60
 msgid "On"
 msgstr "У день"
 
-#: templates/partials/_find_user_form.php:57
+#: templates/partials/_find_user_form.php:61
 msgid "Between"
 msgstr "Між"
 
-#: templates/partials/_find_user_form.php:61
+#: templates/partials/_find_user_form.php:65
 msgid "and"
 msgstr "і"
 
 #: src/Helpers/UbdwpHelper.php:98
-#: templates/partials/_users_table.php:37
+#: templates/partials/_users_table.php:41
 msgid "Posts"
 msgstr "Записи"
 
@@ -634,28 +644,447 @@ msgstr "Залишено на цьому сайті"
 msgid "Posts moved to the trash"
 msgstr "Записи переміщено в кошик"
 
-#: templates/partials/_find_user_form.php:103
+#: templates/partials/_find_user_form.php:110
 msgid "Content"
 msgstr "Вміст"
 
-#: templates/partials/_find_user_form.php:108
+#: templates/partials/_find_user_form.php:115
 msgid "Only users without posts or comments on this site"
 msgstr "Лише користувачі без записів і коментарів на цьому сайті"
 
-#: templates/steps/step-3.php:28
+#: templates/steps/step-3.php:29
 msgid "Related content"
 msgstr "Пов’язаний вміст"
 
-#. translators: 1: number of users shown, 2: number of matching users.
-#: src/Handlers/UbdwpUsersHandler.php:234
-#, php-format
-msgid "Showing the first %1$d of %2$d matching users. Delete them, then run the preview again for the rest, or narrow down the filters."
-msgstr "Показано перших %1$d із %2$d знайдених користувачів. Видаліть їх і запустіть попередній перегляд ще раз для решти або звузьте фільтри."
-
-#: templates/partials/_find_user_form.php:77
+#: templates/partials/_find_user_form.php:83
 msgid "Meta is empty or missing"
 msgstr "Мета-поле порожнє або відсутнє"
 
-#: templates/partials/_find_user_form.php:96
+#: templates/partials/_find_user_form.php:103
 msgid "Tip: WordPress stores profile fields such as first_name for every user, even when they are blank. To find users who left a field empty, choose \"Meta is empty or missing\"."
 msgstr "Порада: WordPress зберігає поля профілю, як-от first_name, для кожного користувача, навіть якщо вони порожні. Щоб знайти користувачів із незаповненим полем, виберіть \"Мета-поле порожнє або відсутнє\"."
+
+#: src/Cli/UbdwpCliCommand.php:313
+msgid "Preparing the summary"
+msgstr "Підготовка підсумку"
+
+#: src/Cli/UbdwpCliCommand.php:333
+msgid "Dry run: no users were deleted."
+msgstr "Пробний запуск: жодного користувача не видалено."
+
+#. translators: %d: number of users.
+#: src/Cli/UbdwpCliCommand.php:339
+#, php-format
+msgid "Delete %d users? This cannot be undone."
+msgstr "Видалити користувачів: %d? Цю дію неможливо скасувати."
+
+#. translators: %d: job ID.
+#: src/Cli/UbdwpCliCommand.php:350
+#, php-format
+msgid "Background job %d created. Follow it with \"wp ubdwp jobs\"."
+msgstr "Створено фонове завдання %d. Стежте за ним командою \"wp ubdwp jobs\"."
+
+#: src/Cli/UbdwpCliCommand.php:430
+#: src/Utils/UbdwpValidation.php:275
+msgid "The deletion job was not found."
+msgstr "Завдання видалення не знайдено."
+
+#. translators: %d: job ID.
+#: src/Cli/UbdwpCliCommand.php:441
+#, php-format
+msgid "Job %d cancelled."
+msgstr "Завдання %d скасовано."
+
+#: src/Cli/UbdwpCliCommand.php:448
+msgid "Only running jobs that you started can be run."
+msgstr "Запускати можна лише завдання, що виконуються і які ви створили."
+
+#: src/Cli/UbdwpCliCommand.php:530
+msgid "Run this command as an administrator who can delete users, for example with --user=admin."
+msgstr "Запустіть команду від імені адміністратора, який може видаляти користувачів, наприклад з --user=admin."
+
+#: src/Cli/UbdwpCliCommand.php:559
+#: src/Utils/UbdwpValidation.php:267
+msgid "Please choose a valid email comparison."
+msgstr "Виберіть коректний спосіб порівняння email."
+
+#: src/Cli/UbdwpCliCommand.php:563
+msgid "Please choose a valid user meta comparison."
+msgstr "Виберіть коректний спосіб порівняння метаданих користувача."
+
+#: src/Cli/UbdwpCliCommand.php:641
+msgid "Deleting users"
+msgstr "Видалення користувачів"
+
+#. translators: %s: job status.
+#: src/Cli/UbdwpCliCommand.php:667
+#, php-format
+msgid "The job stopped with status: %s"
+msgstr "Завдання зупинилося зі статусом: %s"
+
+#. translators: 1: number of deleted users, 2: number of users that were not deleted.
+#: src/Cli/UbdwpCliCommand.php:671
+#, php-format
+msgid "Deleted users: %1$d. Not deleted: %2$d."
+msgstr "Видалено користувачів: %1$d. Не видалено: %2$d."
+
+#: src/Services/UbdwpBackgroundRunner.php:96
+msgid "The user who started this job can no longer delete users."
+msgstr "Користувач, який створив це завдання, більше не може видаляти користувачів."
+
+#: src/Services/UbdwpDeletionJobs.php:415
+msgid "Preparing"
+msgstr "Підготовка"
+
+#: src/Services/UbdwpDeletionJobs.php:416
+msgid "Waiting for confirmation"
+msgstr "Очікує підтвердження"
+
+#: src/Services/UbdwpDeletionJobs.php:417
+msgid "Running"
+msgstr "Виконується"
+
+#: src/Services/UbdwpDeletionJobs.php:418
+msgid "Completed"
+msgstr "Завершено"
+
+#: src/Services/UbdwpDeletionJobs.php:419
+msgid "Cancelled"
+msgstr "Скасовано"
+
+#: src/Services/UbdwpDeletionJobs.php:420
+msgid "Failed"
+msgstr "Помилка"
+
+#: src/Utils/UbdwpValidation.php:271
+msgid "The preview has expired. Please run the preview again."
+msgstr "Термін дії попереднього перегляду минув. Запустіть попередній перегляд ще раз."
+
+#: src/Utils/UbdwpValidation.php:279
+msgid "The deletion job cannot do this in its current state."
+msgstr "Завдання видалення не може виконати цю дію в поточному стані."
+
+#: src/Utils/UbdwpValidation.php:283
+msgid "The deletion job is being processed by another request. Please try again in a moment."
+msgstr "Завдання видалення зараз обробляє інший запит. Спробуйте ще раз за мить."
+
+#: src/Utils/UbdwpValidation.php:287
+msgid "Please type the number of users to confirm the deletion."
+msgstr "Введіть кількість користувачів, щоб підтвердити видалення."
+
+#: templates/jobs-page.php:34
+msgid "Started by"
+msgstr "Запустив"
+
+#: templates/jobs-page.php:35
+msgid "Mode"
+msgstr "Режим"
+
+#: templates/jobs-page.php:36
+msgid "Status"
+msgstr "Статус"
+
+#: templates/jobs-page.php:37
+msgid "Progress"
+msgstr "Прогрес"
+
+#: templates/jobs-page.php:38
+msgid "Deleted"
+msgstr "Видалено"
+
+#: templates/jobs-page.php:39
+msgid "Not deleted"
+msgstr "Не видалено"
+
+#: templates/jobs-page.php:40
+msgid "Created"
+msgstr "Створено"
+
+#: templates/jobs-page.php:41
+msgid "Actions"
+msgstr "Дії"
+
+#: templates/jobs-page.php:49
+msgid "Browser"
+msgstr "Браузер"
+
+#: templates/jobs-page.php:50
+msgid "Background"
+msgstr "Фоновий"
+
+#: templates/jobs-page.php:51
+msgid "WP-CLI"
+msgstr "WP-CLI"
+
+#: templates/partials/_confirmation-popup.php:35
+msgid "How to run the deletion"
+msgstr "Як виконати видалення"
+
+#: templates/partials/_confirmation-popup.php:38
+msgid "In this browser tab (keep the page open)"
+msgstr "У цій вкладці браузера (не закривайте сторінку)"
+
+#: templates/partials/_existing_user_form.php:25
+msgid "All users of this site"
+msgstr "Усі користувачі цього сайту"
+
+#: templates/partials/_find_user_form.php:43
+msgid "Ends with (for example @example.com)"
+msgstr "Закінчується на (наприклад, @example.com)"
+
+#: templates/partials/_find_user_form.php:120
+msgid "Only users without WooCommerce orders"
+msgstr "Лише користувачі без замовлень WooCommerce"
+
+#: templates/partials/_users_table.php:18
+msgid "Clear selection"
+msgstr "Зняти вибір"
+
+#: templates/steps/step-2.php:24
+msgid "Stop deletion"
+msgstr "Зупинити видалення"
+
+#: assets/src/users.js:441
+msgid "Preparing the summary…"
+msgstr "Підготовка підсумку…"
+
+#: assets/src/users.js:474
+#, js-format
+msgid "Preparing the summary… %d%%"
+msgstr "Підготовка підсумку… %d%%"
+
+#: assets/src/users.js:672
+#, js-format
+msgid "A background deletion is running: %1$d of %2$d users processed (%3$d%%)."
+msgstr "Виконується фонове видалення: оброблено %1$d з %2$d користувачів (%3$d%%)."
+
+#: assets/src/users.js:677
+#, js-format
+msgid "The background deletion is finished. Deleted users: %1$d. Not deleted: %2$d."
+msgstr "Фонове видалення завершено. Видалено користувачів: %1$d. Не видалено: %2$d."
+
+#: assets/src/users.js:744
+msgid "The deletion was stopped."
+msgstr "Видалення зупинено."
+
+#: assets/src/users.js:755
+msgid "The deleted users are listed on the Logs page."
+msgstr "Видалених користувачів наведено на сторінці журналу."
+
+#: assets/src/users.js:756
+#, js-format
+msgid "Only the first %d deleted users are listed here. All of them are listed on the Logs page."
+msgstr "Тут показано лише перших видалених користувачів: %d. Усіх наведено на сторінці журналу."
+
+#: templates/settings-page.php:57
+#: assets/src/users.js:760
+msgid "Open the Logs page"
+msgstr "Відкрити сторінку журналу"
+
+#: assets/src/users.js:880
+#, js-format
+msgid "All %d users of the preview are selected. Protected users will be skipped."
+msgstr "Вибрано всіх користувачів попереднього перегляду: %d. Захищених користувачів буде пропущено."
+
+#: assets/src/users.js:881
+#, js-format
+msgid "Selected users: %d."
+msgstr "Вибрано користувачів: %d."
+
+#: assets/src/users.js:884
+#, js-format
+msgid "Select all %d users of the preview"
+msgstr "Вибрати всіх користувачів попереднього перегляду: %d"
+
+#: assets/src/users.js:1066
+msgid "Select all users on this page"
+msgstr "Вибрати всіх користувачів на цій сторінці"
+
+#: src/Cli/UbdwpCliCommand.php:490
+#: assets/src/settings.js:41
+msgid "Apply the saved email setting to all existing log entries? Masked or removed data cannot be restored."
+msgstr "Застосувати збережене налаштування email до всіх наявних записів журналу? Замасковані або видалені дані неможливо відновити."
+
+#. translators: %d: number of log entries.
+#: src/Cli/UbdwpCliCommand.php:493
+#: assets/src/settings.js:44
+#, php-format,js-format
+msgid "Updated log entries: %d."
+msgstr "Оновлено записів журналу: %d."
+
+#: src/Cli/UbdwpCliCommand.php:502
+msgid "Use --older-than=<days> or --all."
+msgstr "Вкажіть --older-than=<днів> або --all."
+
+#: src/Cli/UbdwpCliCommand.php:507
+#: assets/src/settings.js:76
+msgid "Delete the whole log? This cannot be undone."
+msgstr "Видалити весь журнал? Цю дію неможливо скасувати."
+
+#. translators: %d: number of days.
+#: src/Cli/UbdwpCliCommand.php:509
+#: assets/src/settings.js:62
+#, php-format,js-format
+msgid "Delete log entries older than %d days? This cannot be undone."
+msgstr "Видалити записи журналу, старші за %d дн.? Цю дію неможливо скасувати."
+
+#. translators: %d: number of log entries.
+#: src/Cli/UbdwpCliCommand.php:514
+#: assets/src/settings.js:65
+#: assets/src/settings.js:79
+#, php-format,js-format
+msgid "Deleted log entries: %d."
+msgstr "Видалено записів журналу: %d."
+
+#: src/Handlers/UbdwpLogsHandler.php:132
+msgid "Anonymized user"
+msgstr "Анонімізований користувач"
+
+#: src/Pages/UbdwpSettingsPage.php:106
+#: assets/src/settings.js:57
+msgid "Please enter a number of days."
+msgstr "Введіть кількість днів."
+
+#: src/Services/UbdwpPrivacy.php:259
+#: src/Services/UbdwpPrivacy.php:275
+msgid "Users Bulk Delete With Preview log"
+msgstr "Журнал Users Bulk Delete With Preview"
+
+#: src/Services/UbdwpPrivacy.php:302
+#: src/Services/UbdwpPrivacy.php:317
+msgid "Bulk user deletion log"
+msgstr "Журнал масового видалення користувачів"
+
+#: src/Services/UbdwpPrivacy.php:305
+#: src/Services/UbdwpPrivacy.php:320
+msgid "Event"
+msgstr "Подія"
+
+#: src/Services/UbdwpPrivacy.php:305
+msgid "Your account was deleted"
+msgstr "Ваш обліковий запис видалено"
+
+#: src/Services/UbdwpPrivacy.php:306
+#: src/Services/UbdwpPrivacy.php:321
+msgid "Date"
+msgstr "Дата"
+
+#: src/Services/UbdwpPrivacy.php:320
+msgid "You deleted users"
+msgstr "Ви видалили користувачів"
+
+#: src/Services/UbdwpPrivacy.php:322
+msgid "Deleted users count"
+msgstr "Кількість видалених користувачів"
+
+#: src/Services/UbdwpPrivacy.php:415
+msgid "Suggested text:"
+msgstr "Запропонований текст:"
+
+#: src/Services/UbdwpPrivacy.php:416
+msgid "When administrators delete user accounts in bulk, we keep a log of the deletion for security and audit purposes. The log contains the ID of the deleted account, the date of the deletion and, depending on our settings, the email address and display name, which can be stored in full, masked or not at all. The log also records which administrator performed the deletion. Log entries are kept until they are deleted by an administrator or, if a retention period is set, until that period ends. You can request an export or erasure of this data."
+msgstr "Коли адміністратори масово видаляють облікові записи, ми ведемо журнал видалення з міркувань безпеки та аудиту. Журнал містить ID видаленого облікового запису, дату видалення і, залежно від наших налаштувань, адресу email та відображуване ім’я, які можуть зберігатися повністю, у замаскованому вигляді або не зберігатися зовсім. Журнал також фіксує, який адміністратор виконав видалення. Записи журналу зберігаються, доки їх не видалить адміністратор, або, якщо встановлено строк зберігання, до завершення цього строку. Ви можете запросити експорт або видалення цих даних."
+
+#: templates/settings-page.php:25
+msgid "Privacy"
+msgstr "Конфіденційність"
+
+#: templates/settings-page.php:29
+msgid "Keep log entries for"
+msgstr "Зберігати записи журналу"
+
+#: templates/settings-page.php:33
+msgid "days"
+msgstr "днів"
+
+#: templates/settings-page.php:35
+msgid "Older entries and finished deletion jobs are deleted automatically once a day. 0 keeps them until you delete them."
+msgstr "Старіші записи та завершені завдання видалення автоматично видаляються раз на день. 0 — зберігати, доки ви не видалите їх самі."
+
+#: templates/settings-page.php:39
+msgid "Emails and names in new entries"
+msgstr "Email та імена в нових записах"
+
+#: templates/settings-page.php:42
+msgid "Store masked (j***@example.com)"
+msgstr "Зберігати замаскованими (j***@example.com)"
+
+#: templates/settings-page.php:43
+msgid "Store in full"
+msgstr "Зберігати повністю"
+
+#: templates/settings-page.php:44
+msgid "Do not store (only user IDs)"
+msgstr "Не зберігати (лише ID користувачів)"
+
+#: templates/settings-page.php:46
+msgid "The log is also included in Tools → Export Personal Data and Erase Personal Data."
+msgstr "Журнал також враховується в розділах «Інструменти → Експорт персональних даних» і «Видалення персональних даних»."
+
+#: templates/settings-page.php:51
+msgid "Save privacy settings"
+msgstr "Зберегти налаштування конфіденційності"
+
+#: templates/settings-page.php:60
+msgid "Apply to existing entries"
+msgstr "Застосувати до наявних записів"
+
+#: templates/settings-page.php:61
+msgid "Delete entries older than the period above"
+msgstr "Видалити записи, старші за вказаний строк"
+
+#: templates/settings-page.php:62
+msgid "Delete the whole log"
+msgstr "Видалити весь журнал"
+
+#: assets/src/settings.js:32
+msgid "Privacy settings saved."
+msgstr "Налаштування конфіденційності збережено."
+
+#: src/Core/UbdwpLoader.php:100
+#: src/Core/UbdwpLoader.php:101
+#: src/Pages/UbdwpJobsPage.php:37
+msgid "Deletion Jobs"
+msgstr "Завдання видалення"
+
+#: src/Core/UbdwpLoader.php:118
+msgid "Bulk Users Delete Settings"
+msgstr "Налаштування масового видалення користувачів"
+
+#: src/Core/UbdwpLoader.php:119
+#: src/Core/UbdwpLoader.php:162
+#: src/Pages/UbdwpSettingsPage.php:42
+msgid "Settings"
+msgstr "Налаштування"
+
+#: src/Services/UbdwpPrivacy.php:414
+msgid "Users Bulk Delete With Preview keeps a log of bulk user deletions made by administrators. You can change what is stored and for how long on the plugin's Settings page."
+msgstr "Users Bulk Delete With Preview веде журнал масових видалень користувачів, які виконують адміністратори. Що саме зберігається і як довго, можна змінити на сторінці налаштувань плагіна."
+
+#: templates/jobs-page.php:25
+msgid "Deletions started on the Bulk Users Delete page or with WP-CLI. Background jobs continue after you leave the page; this page refreshes while a job is running."
+msgstr "Видалення, запущені на сторінці масового видалення або через WP-CLI. Фонові завдання тривають і після того, як ви залишите сторінку; поки завдання виконується, ця сторінка оновлюється."
+
+#: templates/jobs-page.php:27
+msgid "No deletion jobs yet."
+msgstr "Завдань видалення ще немає."
+
+#: templates/partials/_confirmation-popup.php:42
+msgid "In the background (you can leave this page; progress is shown on the Deletion Jobs page)"
+msgstr "У фоновому режимі (можна залишити сторінку; прогрес показано на сторінці завдань видалення)"
+
+#: templates/settings-page.php:54
+msgid "Log maintenance"
+msgstr "Обслуговування журналу"
+
+#: templates/settings-page.php:56
+msgid "These actions change the existing entries of the log and cannot be undone."
+msgstr "Ці дії змінюють наявні записи журналу, і їх неможливо скасувати."
+
+#: assets/src/users.js:565
+msgid "The deletion runs in the background. You can leave this page and follow it on the Deletion Jobs page."
+msgstr "Видалення виконується у фоновому режимі. Можна залишити цю сторінку і стежити за ним на сторінці завдань видалення."
+
+#: assets/src/users.js:566
+msgid "Open the Deletion Jobs page"
+msgstr "Відкрити сторінку завдань видалення"

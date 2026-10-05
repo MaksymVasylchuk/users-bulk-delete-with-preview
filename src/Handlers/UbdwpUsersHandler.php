@@ -52,19 +52,13 @@ class UbdwpUsersHandler {
 	 */
 	public function search_users_ajax( array $request ): array {
 		$search_term = $request['q'] ?? '';
-		$select_all  = ! empty( $request['select_all'] );
 
 		$args = array(
 			'search_columns' => array( 'user_login', 'user_email', 'display_name' ),
 			'fields'         => array( 'ID', 'display_name', 'user_email' ),
+			'search'         => '*' . $search_term . '*',
+			'number'         => 50, // Limit autocomplete results on large sites.
 		);
-
-		if ( $select_all ) {
-			$args['number'] = - 1; // Fetch all users.
-		} else {
-			$args['search'] = '*' . $search_term . '*';
-			$args['number'] = 50; // Limit autocomplete results on large sites.
-		}
 
 		$user_query = $this->repository->search_users_ajax( $args );
 		$results    = array();
@@ -111,13 +105,16 @@ class UbdwpUsersHandler {
 	 */
 	public function search_reassign_users_ajax( array $request ): array {
 		$search_term = $request['q'] ?? '';
-		$exclude     = array_filter( array_unique( array_map( 'absint', $request['exclude'] ?? array() ) ) );
+		// Users of the preview may be deleted, so they cannot receive content. The list can be very long,
+		// so it is checked in PHP instead of being sent to the database as an exclude list.
+		$excluded = array_flip( array_map( 'absint', (array) ( $request['preview_ids'] ?? array() ) ) );
+		$results  = array();
+		$offset   = 0;
 
 		$args = array(
 			'search_columns' => array( 'user_login', 'user_email', 'display_name' ),
 			'fields'         => array( 'ID', 'user_login', 'display_name' ),
-			'exclude'        => $exclude, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- Users selected for deletion must not receive reassigned content.
-			'number'         => 20,
+			'number'         => 100,
 			'orderby'        => 'user_login',
 			'order'          => 'ASC',
 		);
@@ -126,39 +123,68 @@ class UbdwpUsersHandler {
 			$args['search'] = '*' . $search_term . '*';
 		}
 
-		$user_query = $this->repository->search_users_ajax( $args );
-		$results    = array();
+		// Look at a few pages at most, so a preview of almost all users cannot make this slow.
+		for ( $page = 0; $page < 5 && count( $results ) < 20; $page++ ) {
+			$args['offset'] = $offset;
+			$users          = $this->repository->search_users_ajax( $args )->get_results();
 
-		foreach ( $user_query->get_results() as $user ) {
-			$results[] = array(
-				'id'   => (string) $user->ID,
-				'text' => sprintf( '%s (%s)', sanitize_user( $user->user_login ), sanitize_text_field( $user->display_name ) ),
-			);
+			foreach ( $users as $user ) {
+				if ( ! isset( $excluded[ (int) $user->ID ] ) && count( $results ) < 20 ) {
+					$results[] = array(
+						'id'   => (string) $user->ID,
+						'text' => sprintf( '%s (%s)', sanitize_user( $user->user_login ), sanitize_text_field( $user->display_name ) ),
+					);
+				}
+			}
+
+			if ( count( $users ) < $args['number'] ) {
+				break;
+			}
+
+			$offset += $args['number'];
 		}
 
 		return $results;
 	}
 
 	/**
-	 * Get users by their IDs.
+	 * Load one page of the preview table from the users of a preview.
 	 *
-	 * @param array<int> $user_ids List of user IDs.
+	 * @param array<int> $user_ids User IDs of the preview.
+	 * @param int        $start    Offset.
+	 * @param int        $length   Page size.
+	 * @param string     $search   Search term.
+	 * @param int        $column   Index of the sorted column.
+	 * @param string     $dir      Sort direction.
 	 *
-	 * @return array|\WP_Error List of users or error on failure.
+	 * @return array{rows: array<int, array<string, mixed>>, filtered: int} Table rows and the number of users matching the search.
 	 */
-	public function get_users_by_ids( array $user_ids ) {
-		if ( empty( $user_ids ) || ! is_array( $user_ids ) ) {
-			return new \WP_Error( 'invalid_input', UbdwpValidationFacade::get_error_message( 'invalid_input' ) );
+	public function get_preview_page( array $user_ids, int $start, int $length, string $search, int $column, string $dir ): array {
+		if ( empty( $user_ids ) ) {
+			return array( 'rows' => array(), 'filtered' => 0 );
 		}
 
-		$user_ids   = array_unique( array_map( 'intval', $user_ids ) );
-		$user_query = $this->repository->query_users_by_ids( $user_ids, $this->get_preview_limit() );
+		// Only these columns can be sorted on the server.
+		$orderby_map = array(
+			1 => 'ID',
+			2 => 'login',
+			3 => 'email',
+			4 => 'registered',
+		);
 
-		if ( ! empty( $user_query->get_results() ) ) {
-			return $this->build_preview_response( $user_query );
-		}
+		$query = $this->repository->query_preview_page(
+			$user_ids,
+			max( 0, $start ),
+			max( 1, min( 500, $length ) ),
+			$search,
+			$orderby_map[ $column ] ?? 'ID',
+			'desc' === strtolower( $dir ) ? 'DESC' : 'ASC'
+		);
 
-		return new \WP_Error( 'no_users_found', UbdwpValidationFacade::get_error_message( 'no_users_found' ) );
+		return array(
+			'rows'     => $this->prepare_users_for_table( $query->get_results() ),
+			'filtered' => (int) $query->get_total(),
+		);
 	}
 
 	/**
@@ -172,68 +198,6 @@ class UbdwpUsersHandler {
 		$post_counts = $this->repository->count_posts_by_authors( array_map( static fn( $user ) => (int) $user->ID, $users ) );
 
 		return UbdwpHelperFacade::prepare_users_for_table( $users, $post_counts );
-	}
-
-	/**
-	 * Get users by various filters.
-	 *
-	 * @param array<string, mixed> $request Request parameters.
-	 *
-	 * @return array|\WP_Error List of users or error on failure.
-	 */
-	public function get_users_by_filters( array $request ) {
-		$args = array(
-			'exclude'    => $this->current_user_id, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude --  In this case we need to exclude current user.
-			'meta_query'  => array(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query --  DB call is OK.
-			'date_query'  => array(),
-			'number'      => $this->get_preview_limit(),
-			'count_total' => true,
-		);
-
-		$user_query = $this->repository->get_users_by_filters( $args, $request );
-
-		if ( is_wp_error( $user_query ) ) {
-			return $user_query;
-		}
-
-		if ( ! empty( $user_query->get_results() ) ) {
-			return $this->build_preview_response( $user_query );
-		}
-
-		return new \WP_Error( 'no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message( 'no_users_found_with_given_filters' ) );
-	}
-
-	/**
-	 * Maximum number of users loaded into one preview.
-	 *
-	 * Keeps memory use and response size bounded on sites with very many users.
-	 *
-	 * @return int Limit.
-	 */
-	private function get_preview_limit(): int {
-		return max( 1, (int) apply_filters( 'ubdwp_preview_limit', 10000 ) );
-	}
-
-	/**
-	 * Build the preview response with table rows and the total number of matching users.
-	 *
-	 * @param \WP_User_Query $user_query Executed query with count_total enabled.
-	 *
-	 * @return array<string, mixed> Preview data.
-	 */
-	private function build_preview_response( \WP_User_Query $user_query ): array {
-		$rows  = $this->prepare_users_for_table( $user_query->get_results() );
-		$total = max( count( $rows ), (int) $user_query->get_total() );
-
-		return array(
-			'rows'      => $rows,
-			'total'     => $total,
-			'truncated' => $total > count( $rows ),
-			'message'   => $total > count( $rows )
-				/* translators: 1: number of users shown, 2: number of matching users. */
-				? sprintf( __( 'Showing the first %1$d of %2$d matching users. Delete them, then run the preview again for the rest, or narrow down the filters.', 'users-bulk-delete-with-preview' ), count( $rows ), $total )
-				: '',
-		);
 	}
 
 	/**
@@ -281,25 +245,23 @@ class UbdwpUsersHandler {
 	}
 
 	/**
-	 * Get users who purchased specific WooCommerce products.
+	 * Generate CSV content for users of the current site.
 	 *
-	 * @param array<string, mixed> $request Request parameters.
+	 * Users are loaded in chunks, so large exports do not keep every user object in memory.
 	 *
-	 * @return array|\WP_Error List of users or error on failure.
+	 * @param array<int> $user_ids User IDs.
+	 *
+	 * @return string CSV content.
 	 */
-	public function get_users_by_woocommerce_filters( array $request ) {
-		$products = array_unique( array_map( 'absint', (array) ( $request['products'] ?? array() ) ) );
-		$user_ids = $this->repository->get_users_by_product_purchase( $products, ! empty( $request['all_products'] ) );
+	public function generate_csv_for_ids( array $user_ids ): string {
+		$temp_file = $this->create_csv_file();
 
-		if ( ! empty( $user_ids ) ) {
-			$user_query = $this->repository->query_users_by_ids( array_unique( $user_ids ), $this->get_preview_limit() );
-
-			if ( ! empty( $user_query->get_results() ) ) {
-				return $this->build_preview_response( $user_query );
-			}
+		foreach ( array_chunk( array_values( array_unique( array_map( 'absint', $user_ids ) ) ), 1000 ) as $chunk ) {
+			$this->write_csv_rows( $temp_file, $this->repository->get_users_by_ids( $chunk ) );
+			UbdwpHelperFacade::flush_runtime_cache();
 		}
 
-		return new \WP_Error( 'no_users_found_with_given_filters', UbdwpValidationFacade::get_error_message( 'no_users_found_with_given_filters' ) );
+		return $this->read_csv_file( $temp_file );
 	}
 
 	/**
@@ -310,16 +272,36 @@ class UbdwpUsersHandler {
 	 * @return string CSV content.
 	 */
 	public function generate_csv( array $users ): string {
-		// Create a temporary file object in memory.
+		$temp_file = $this->create_csv_file();
+		$this->write_csv_rows( $temp_file, $users );
+
+		return $this->read_csv_file( $temp_file );
+	}
+
+	/**
+	 * Create an in-memory CSV file with the header row.
+	 *
+	 * @return \SplTempFileObject File.
+	 */
+	private function create_csv_file(): \SplTempFileObject {
 		$temp_file = new \SplTempFileObject();
 
 		// Explicit CSV control avoids the PHP 8.4 fputcsv() $escape deprecation.
 		$temp_file->setCsvControl( ',', '"', '' );
-
-		// Add CSV header.
 		$temp_file->fputcsv( array( 'ID', 'Username', 'Email', 'First Name', 'Last Name', 'Role' ) );
 
-		// Add user data.
+		return $temp_file;
+	}
+
+	/**
+	 * Write user rows to a CSV file.
+	 *
+	 * @param \SplTempFileObject $temp_file File.
+	 * @param array<object>      $users     Users.
+	 *
+	 * @return void
+	 */
+	private function write_csv_rows( \SplTempFileObject $temp_file, array $users ): void {
 		foreach ( $users as $user ) {
 			$temp_file->fputcsv( array(
 				(int) $user->ID,
@@ -330,7 +312,16 @@ class UbdwpUsersHandler {
 				$this->escape_csv_cell( implode( ', ', array_map( 'sanitize_text_field', $user->roles ) ) ),
 			) );
 		}
+	}
 
+	/**
+	 * Read the whole content of a CSV file.
+	 *
+	 * @param \SplTempFileObject $temp_file File.
+	 *
+	 * @return string CSV content.
+	 */
+	private function read_csv_file( \SplTempFileObject $temp_file ): string {
 		// Rewind the file pointer and retrieve the content.
 		$temp_file->rewind();
 		$csv_content = '';
@@ -354,10 +345,12 @@ class UbdwpUsersHandler {
 	 * Delete users and their related data.
 	 *
 	 * @param array<int, array<string, mixed>> $sanitized_users List of users to delete.
+	 * @param array<int, mixed>                $deleting        Users deleted by the same job (keys are user IDs);
+	 *                                                          they cannot receive reassigned content.
 	 *
 	 * @return array<string, mixed> Result of the deletion process.
 	 */
-	public function delete_users( array $sanitized_users ): array {
+	public function delete_users( array $sanitized_users, array $deleting = array() ): array {
 		$deleted_users = array();
 		$failed_users  = array();
 
@@ -366,7 +359,9 @@ class UbdwpUsersHandler {
 		foreach ( $sanitized_users as $user ) {
 			$unique_users[ (int) $user['id'] ] ??= $user;
 		}
-		$batch_ids = array_keys( $unique_users );
+		$batch_ids = $deleting + array_flip( array_keys( $unique_users ) );
+
+		cache_users( array_keys( $unique_users ) );
 
 		foreach ( $unique_users as $user_id => $user ) {
 			$block_reason = $this->get_block_reason( $user_id );
@@ -393,6 +388,20 @@ class UbdwpUsersHandler {
 				}
 			}
 
+			$reassign_value = $remove_related_content ? 'remove_all_related_content' : ( $reassign ?? '' );
+
+			/**
+			 * Fires before a user is deleted (or removed from the site on multisite) by the plugin,
+			 * while the user and their content still exist.
+			 *
+			 * @since 2.4.0
+			 *
+			 * @param int        $user_id   User ID.
+			 * @param int|string $reassign  User ID that receives the content, "remove_all_related_content", or "" for the WordPress default.
+			 * @param \WP_User   $user_data The user.
+			 */
+			do_action( 'ubdwp_before_delete_user', $user_id, $reassign_value, $user_data );
+
 			if ( $remove_related_content ) {
 				$this->delete_related_content( $user_id );
 			}
@@ -406,9 +415,21 @@ class UbdwpUsersHandler {
 				'user_id'      => $user_id,
 				'email'        => sanitize_email( $user_data->user_email ),
 				'display_name' => sanitize_text_field( $user_data->display_name ),
-				'reassign'     => $remove_related_content ? 'remove_all_related_content' : ( $reassign ?? '' ),
+				'reassign'     => $reassign_value,
 				'action'       => is_multisite() ? 'removed_from_site' : 'deleted',
 			);
+
+			/**
+			 * Fires after a user was deleted (or removed from the site on multisite) by the plugin.
+			 *
+			 * The entry contains the full email and name, before the privacy setting of the log is applied.
+			 *
+			 * @since 2.4.0
+			 *
+			 * @param int                  $user_id User ID.
+			 * @param array<string, mixed> $entry   user_id, email, display_name, reassign and action ("deleted" or "removed_from_site").
+			 */
+			do_action( 'ubdwp_user_deleted', $user_id, $deleted_users[ $user_id ] );
 		}
 
 		$template = UbdwpViewsFacade::render_template(
@@ -436,15 +457,19 @@ class UbdwpUsersHandler {
 	 * Summarize what a deletion request will do, without changing anything.
 	 *
 	 * @param array<int, array<string, mixed>> $sanitized_users Users selected for deletion.
+	 * @param array<int, mixed>                $deleting        Users deleted by the same job (keys are user IDs);
+	 *                                                          they cannot receive reassigned content.
 	 *
 	 * @return array<string, mixed> Summary for the confirmation dialog.
 	 */
-	public function get_delete_summary( array $sanitized_users ): array {
+	public function get_delete_summary( array $sanitized_users, array $deleting = array() ): array {
 		$unique_users = array();
 		foreach ( $sanitized_users as $user ) {
 			$unique_users[ (int) $user['id'] ] ??= $user;
 		}
-		$batch_ids = array_keys( $unique_users );
+		$batch_ids = $deleting + array_flip( array_keys( $unique_users ) );
+
+		cache_users( array_keys( $unique_users ) );
 
 		$summary = array(
 			'selected'         => count( $unique_users ),
@@ -514,9 +539,9 @@ class UbdwpUsersHandler {
 	/**
 	 * Normalize the reassign target for wp_delete_user().
 	 *
-	 * @param mixed      $reassign Reassign value from request.
-	 * @param int        $deleted_user_id User being deleted.
-	 * @param array<int> $batch_ids Users being deleted in the same request.
+	 * @param mixed             $reassign        Reassign value from request.
+	 * @param int               $deleted_user_id User being deleted.
+	 * @param array<int, mixed> $batch_ids       Users deleted by the same request or job (keys are user IDs).
 	 *
 	 * @return int|null Reassign user ID or null.
 	 */
@@ -526,7 +551,7 @@ class UbdwpUsersHandler {
 		if (
 			$reassign_id <= 0 ||
 			$reassign_id === $deleted_user_id ||
-			in_array( $reassign_id, $batch_ids, true ) ||
+			isset( $batch_ids[ $reassign_id ] ) ||
 			! get_userdata( $reassign_id )
 		) {
 			return null;
@@ -609,7 +634,7 @@ class UbdwpUsersHandler {
 		}
 
 		if ( $reassign ) {
-			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_author = %d", $user_id ) );
+			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_author = %d", $user_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Count for the confirmation summary, must reflect the current data.
 		}
 
 		$post_types = array();
@@ -625,7 +650,7 @@ class UbdwpUsersHandler {
 
 		$placeholders = implode( ',', array_fill( 0, count( $post_types ), '%s' ) );
 
-		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_author = %d AND post_type IN ($placeholders)", array_merge( array( $user_id ), $post_types ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are generated for each post type.
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_author = %d AND post_type IN ($placeholders)", array_merge( array( $user_id ), $post_types ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Placeholders are generated for each post type; count for the confirmation summary, must reflect the current data.
 	}
 
 	/**
@@ -644,7 +669,6 @@ class UbdwpUsersHandler {
 			'post_status'      => array_keys( get_post_stati() ),
 			'numberposts'      => -1,
 			'fields'           => 'ids',
-			'suppress_filters' => true,
 		) );
 	}
 
@@ -692,59 +716,5 @@ class UbdwpUsersHandler {
 		foreach ( $user_comments as $comment ) {
 			wp_delete_comment( $comment->comment_ID, true );
 		}
-	}
-
-	/**
-	 * Handle AJAX request for searching users to delete.
-	 *
-	 * @param string $type Type of search.
-	 * @param array<string, mixed> $request Request parameters.
-	 *
-	 * @return array|\WP_Error Result of the search.
-	 */
-	public function search_users_for_delete_ajax( string $type, array $request ) {
-		$keys = array(
-			'find_users_nonce',
-			'search_user_existing_nonce',
-			'search_user_meta_nonce',
-			'registration_date',
-			'registration_date_compare',
-			'registration_date_to',
-			'without_content',
-			'user_meta_value',
-			'user_email',
-			'filter_type',
-			'action',
-			'user_email_equal',
-			'user_meta_equal',
-			'user_search',
-			'products',
-			'all_products',
-			'user_role',
-			'user_meta',
-		);
-
-		$data_before_sanitize = array_intersect_key( $request, array_flip( $keys ) );
-		$sanitized_data       = UbdwpHelperFacade::sanitize_post_data( $data_before_sanitize );
-
-		switch ( $type ) {
-			case 'select_existing':
-				UbdwpValidationFacade::validate_user_search_for_existing_users( $sanitized_data );
-				$results = $this->get_users_by_ids( $sanitized_data['user_search'] ?? array() );
-				break;
-			case 'find_users':
-				UbdwpValidationFacade::validate_find_user_form( $sanitized_data );
-				$results = $this->get_users_by_filters( $sanitized_data );
-				break;
-			case 'find_users_by_woocommerce_filters':
-				UbdwpValidationFacade::validate_woocommerce_filters( $sanitized_data );
-				$results = $this->get_users_by_woocommerce_filters( $sanitized_data );
-				break;
-			default:
-				wp_send_json_error( array( 'message' => UbdwpValidationFacade::get_error_message( 'select_type' ) ) );
-				wp_die();
-		}
-
-		return $results;
 	}
 }

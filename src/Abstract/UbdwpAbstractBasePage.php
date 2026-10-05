@@ -74,6 +74,10 @@ abstract class UbdwpAbstractBasePage {
 			$this->verify_nonce( $nonce_field, $nonce_action, $request_type );
 			$this->check_permissions( $capabilities );
 
+			// admin-ajax.php, unlike admin.php, keeps the front-end memory limit. Large previews,
+			// summaries and exports need the admin limit (WP_MAX_MEMORY_LIMIT) to avoid running out of memory.
+			wp_raise_memory_limit( 'admin' );
+
 			$response = $callback();
 			wp_send_json_success( $response );
 		} catch ( \Throwable $e ) {
