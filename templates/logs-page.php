@@ -5,6 +5,8 @@
  * @package UsersBulkDeleteWithPreview\Templates
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Templates are included inside a render method, their variables are not global.
+
 $title = $title ?? '';
 
 if ( ! defined( 'ABSPATH' ) ) {

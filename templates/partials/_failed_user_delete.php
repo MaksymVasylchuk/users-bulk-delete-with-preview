@@ -5,6 +5,8 @@
  * @package UsersBulkDeleteWithPreview\Templates\Partials
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Templates are included inside a render method, their variables are not global.
+
 if ( ! defined( 'ABSPATH' ) ) {
 	// Security check: Ensure the file is not accessed directly.
 	echo 'Hi there! I\'m just a plugin, not much I can do when called directly.';

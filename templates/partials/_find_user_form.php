@@ -1,9 +1,11 @@
 <?php
 /**
- * Fins user filters elements
+ * Find users filter elements
  *
  * @package UsersBulkDeleteWithPreview\Templates\Partials
  */
+
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Templates are included inside a render method, their variables are not global.
 
 if ( ! defined( 'ABSPATH' ) ) {
 	// Security check: Ensure the file is not accessed directly.
@@ -19,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<label for="user_role"><?php esc_html_e( 'User Role', 'users-bulk-delete-with-preview' ); ?>:</label>
 		</th>
 		<td>
-			<select id="user_role" name="user_role[]" multiple="multiple" class="form-control">
+			<select id="user_role" name="user_role[]" multiple="multiple">
 				<?php foreach ( $roles as $role_key => $role ) : ?>
 					<option value="<?php echo esc_attr( $role_key ); ?>"><?php echo esc_html( $role['name'] ); ?></option>
 				<?php endforeach; ?>
@@ -40,8 +42,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<option value="notequal_to_str"><?php esc_html_e( 'Not equal to (string)', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="like_str"><?php esc_html_e( 'Like (string)', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="notlike_str"><?php esc_html_e( 'Not like (string)', 'users-bulk-delete-with-preview' ); ?></option>
+			<option value="endswith_str"><?php esc_html_e( 'Ends with (for example @example.com)', 'users-bulk-delete-with-preview' ); ?></option>
 		</select>
-		<input type="email" id="user_email" name="user_email" class="regular-text" placeholder="<?php esc_attr_e( 'Enter user email...', 'users-bulk-delete-with-preview' ); ?>">
+		<input type="text" id="user_email" name="user_email" class="regular-text" placeholder="<?php esc_attr_e( 'Enter user email...', 'users-bulk-delete-with-preview' ); ?>">
 		</div>
 	</td>
 </tr>
@@ -59,10 +62,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<option value="on"><?php esc_html_e( 'On', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="between"><?php esc_html_e( 'Between', 'users-bulk-delete-with-preview' ); ?></option>
 		</select>
-		<input type="text" id="registration_date" name="registration_date" class="regular-text ubdwp-short" placeholder="YYYY-MM-DD" autocomplete="off">
+		<input type="date" id="registration_date" name="registration_date" class="regular-text ubdwp-short" autocomplete="off">
 		<span id="registration_date_to_wrap" class="ubdwp-inline-group" style="display: none;">
 			<label for="registration_date_to"><?php esc_html_e( 'and', 'users-bulk-delete-with-preview' ); ?></label>
-			<input type="text" id="registration_date_to" name="registration_date_to" class="regular-text ubdwp-short" placeholder="YYYY-MM-DD" autocomplete="off">
+			<input type="date" id="registration_date_to" name="registration_date_to" class="regular-text ubdwp-short" autocomplete="off">
 		</span>
 		</div>
 	</td>
@@ -113,6 +116,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<input type="checkbox" id="without_content" name="without_content" value="1">
 			<?php esc_html_e( 'Only users without posts or comments on this site', 'users-bulk-delete-with-preview' ); ?>
 		</label>
+		<?php if ( ! empty( $woocommerce_active ) ) : ?>
+			<label for="without_wc_orders" class="ubdwp-checkbox">
+				<input type="checkbox" id="without_wc_orders" name="without_wc_orders" value="1">
+				<?php esc_html_e( 'Only users without WooCommerce orders', 'users-bulk-delete-with-preview' ); ?>
+			</label>
+		<?php endif; ?>
 	</td>
 </tr>
 <!-- Without Content -->

@@ -7,8 +7,8 @@
 **Contributors**: maksymvasylchuk  
 **Tags**: bulk delete, users delete with preview, users bulk delete with preview, users bulk clean with preview  
 **Requires at least**: 6.2  
-**Tested up to**: 7.1.2  
-**Stable tag**: 2.3.0  
+**Tested up to**: 7.1  
+**Stable tag**: 2.4.0  
 **Requires PHP**: 8.0  
 **License**: GPLv2 or later  
 **License URI**: [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -42,6 +42,9 @@ Introducing the **Users Bulk Delete With Preview** plugin – the ultimate solut
 
 7. **Export and Audit Tools**  
    Export selected users to CSV before taking action and keep a log of deletion operations. Exports are generated on demand and downloaded directly, so user data is never left in public upload folders.
+
+8. **Large Sites, Background Deletion and WP-CLI**  
+   The preview is paged on the server, so it works with tens of thousands of users. Deletions run in batches, in the browser tab or in the background, and can be followed and cancelled on the Deletion Jobs page. The same filters are available on the command line with `wp ubdwp find` and `wp ubdwp delete`.
 
 ## Minimum Requirements
 
@@ -141,7 +144,19 @@ For each user you can reassign their posts to another user, permanently remove a
 ### Does the plugin support network activation?
 Yes. When network activated, the plugin creates its log table for each site and initializes the table automatically for newly created sites.
 
+### How do I delete tens of thousands of users?
+Narrow the users down with the filters, open the preview and use "Select all users of the preview". In the confirmation, choose "In the background": the deletion runs in batches and continues after you close the page; follow it on the Deletion Jobs page. Back up your database first. On the command line, the same can be done with `wp ubdwp delete`.
+
+### Is there a WP-CLI command?
+Yes. Run the commands as an administrator with --user, for example: wp ubdwp find --role=subscriber --meta-key=first_name --meta-compare=empty --format=count --user=admin, then wp ubdwp delete with the same filters and --dry-run to see the summary, or --yes to delete. Use wp ubdwp jobs to list, run or cancel deletion jobs, and wp help ubdwp for all options.
+
+### What personal data does the plugin store (GDPR)?
+The deletion log stores the ID of each deleted account, the date and the administrator who deleted it. By default, emails and display names in new entries are masked (j***@example.com); on the Settings page you can store them in full or not at all, apply the setting to existing entries, set a retention period and delete old entries. The log is included in WordPress Tools > Export Personal Data and Erase Personal Data, and the plugin adds suggested text to the privacy policy guide. CSV exports are downloaded directly and never stored on the server.
+
 ## Upgrade Notice
+
+### 2.4.0
+Big update for large sites: server-side preview paging, background deletion jobs, WP-CLI commands and privacy tools for the log (masked emails by default, retention, personal data export and erasure). Jobs and settings have their own pages. No manual upgrade steps are required.
 
 ### 2.3.0
 Safer bulk deletion: administrators are protected, the confirmation shows exactly what will be deleted, large deletions need typed confirmation, and the registration date filter supports before, on and between. No manual upgrade steps are required.
@@ -173,14 +188,74 @@ Initial release of the Users Bulk Delete With Preview plugin. No upgrade steps r
 
 This plugin uses the following third-party libraries:
 
-- [Bootstrap](https://getbootstrap.com/) – Licensed under MIT License.
 - [jQuery](https://jquery.com/) – Licensed under MIT License.
-- [jQuery UI](https://jqueryui.com/) – Licensed under MIT License.
-- [jQuery UI Datepicker](https://jqueryui.com/datepicker/) – Licensed under MIT License.
 - [DataTables](https://datatables.net/) – Licensed under MIT License.
 - [Select2](https://select2.org/) – Licensed under MIT License.
 
+## Development
+
+The admin scripts and styles are written in `assets/src` and built into `assets/build` with [@wordpress/scripts](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-scripts/).
+
+```bash
+npm install
+npm run build      # production build
+npm run start      # rebuild on changes
+npm run i18n:pot   # update languages/users-bulk-delete-with-preview.pot
+npm run i18n:update # update the .po files from the .pot
+npm run i18n:mo    # compile the .mo files
+npm run i18n:json  # JavaScript translations from the .po files
+```
+
+Commit the contents of `assets/build` together with the sources: the plugin loads only the built files.
+
+### Hooks
+
+| Hook | Type | Use |
+|---|---|---|
+| `ubdwp_filter_form_fields` | action | Print extra filter rows (`<tr>`) in the search form; they are sent with the preview request |
+| `ubdwp_found_user_ids` | filter | `( $user_ids, $type, $request )` – narrow the users found by the filters |
+| `ubdwp_before_delete_user` | action | `( $user_id, $reassign, $user )` – before a user is deleted, while the user and content exist |
+| `ubdwp_user_deleted` | action | `( $user_id, $entry )` – after a user was deleted or removed from the site |
+| `ubdwp_job_created` | action | `( $job )` – a deletion job was created |
+| `ubdwp_job_finished` | action | `( $status, $job )` – a job was completed, cancelled or failed |
+| `ubdwp_settings_page` | action | Add sections to the Settings page |
+| `ubdwp_is_protected_user` | filter | Protect users from deletion |
+| `ubdwp_preview_limit`, `ubdwp_delete_batch_size`, `ubdwp_confirmation_threshold`, `ubdwp_background_time_budget` | filter | Limits of the preview, batches and confirmation |
+
 ## Changelog
+### 2.4.0
+*Release Date - 5 October 2026*
+* The preview now loads users page by page from the server, so it is no longer limited to 10,000 users and stays fast with tens of thousands of users
+* "Select all users of the preview" selects every matching user on all pages; single users can still be unselected
+* Deletions run as jobs in batches of 50 users (filterable with ubdwp_delete_batch_size), and the confirmation lets you run them in this browser tab or in the background
+* Background deletions use Action Scheduler when it is available (for example with WooCommerce) or WP-Cron, run as the user who started them and continue after the page is closed
+* New Deletion Jobs page with progress and a Cancel button; a running deletion can also be stopped from the progress bar
+* New WP-CLI commands: wp ubdwp find, wp ubdwp delete (with --dry-run, --reassign, --batch-size and --background) and wp ubdwp jobs
+* New email filter "Ends with", for example a domain such as @example.com
+* New filter: only users without WooCommerce orders
+* New "All users of this site" option for the existing users filter, instead of loading every user into the list
+* The typed confirmation for large deletions is now also checked by the server
+* Fixed the confirmation dialog and CSV export counting fewer users than selected for large selections (for example 1500 instead of 2230): servers with a low max_input_vars dropped part of the list. Deletion itself was not affected
+* Previews, summaries, exports and deletions now use the WordPress admin memory limit, so large previews no longer run out of memory on hosts with a low default memory limit
+* Large CSV exports are generated in chunks to keep memory use low
+* Content can no longer be reassigned to a user who is deleted later in the same deletion
+* Filter values with apostrophes (for example O'Brien) are no longer changed by WordPress slashes
+* The results step lists up to 1,000 deleted users; all of them are listed on the Logs page
+* The ubdwp_preview_limit filter now caps the number of users in a preview (no limit by default)
+* Restored the Ukrainian translation of the plugin name and translated all new texts into Ukrainian
+* Privacy: emails and names of deleted users are now stored masked in new log entries by default (j***@example.com); you can store them in full or not at all on the Settings page
+* Privacy: optional retention period for the log; older entries and finished deletion jobs are deleted automatically once a day
+* Privacy: "Apply to existing entries", "Delete entries older than" and "Delete the whole log" actions on the Settings page
+* Privacy: the log is included in Tools > Export Personal Data and Erase Personal Data (deleted users and the administrators who deleted them)
+* Privacy: suggested text for the privacy policy page
+* New WP-CLI command wp ubdwp logs purge|anonymize
+* Uninstalling removes the privacy settings and scheduled tasks
+* New hooks for extensions: ubdwp_filter_form_fields and ubdwp_found_user_ids (extra filters), ubdwp_before_delete_user and ubdwp_user_deleted, ubdwp_job_created and ubdwp_job_finished, ubdwp_settings_page
+* Deletion jobs and the plugin settings now have their own pages: Bulk Users Delete > Deletion Jobs and Bulk Users Delete > Settings; the Logs page shows only the log
+* The confirmation is now a native dialog and the registration date fields use the browser date picker; Bootstrap and jQuery UI are no longer loaded, which makes the plugin smaller and avoids style conflicts with other plugins
+* Wide preview tables scroll inside the table instead of the whole admin page
+* Scripts and styles are now built with @wordpress/scripts and include right-to-left styles; the readable sources are in assets/src
+
 ### 2.3.0
 *Release Date - 28 September 2026*
 * Administrators, users who can manage other users and super admins are now protected and cannot be deleted with the plugin (developers can change this with the ubdwp_is_protected_user filter)

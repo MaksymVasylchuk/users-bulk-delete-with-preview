@@ -107,4 +107,73 @@ class UbdwpLogsRepository extends UbdwpAbstractBaseRepository {
 			'%' . $this->wpdb->esc_like( $search_value ) . '%'
 		);
 	}
+
+	/**
+	 * Delete log records older than a number of days.
+	 *
+	 * @param int $days Age in days.
+	 *
+	 * @return int Number of deleted records.
+	 */
+	public function delete_older_than( int $days ): int {
+		// Deletion times are stored in the site's timezone (current_time( 'mysql' )).
+		$cutoff = wp_date( 'Y-m-d H:i:s', time() - max( 0, $days ) * DAY_IN_SECONDS );
+
+		return $this->execute( "DELETE FROM {$this->table_name} WHERE deletion_time < %s", array( $cutoff ) );
+	}
+
+	/**
+	 * Delete all log records.
+	 *
+	 * @return int Number of deleted records.
+	 */
+	public function delete_all(): int {
+		return $this->execute( "DELETE FROM {$this->table_name}" );
+	}
+
+	/**
+	 * Get log records after an ID, for processing all records in batches.
+	 *
+	 * @param int $after_id Last processed ID.
+	 * @param int $limit    Batch size.
+	 *
+	 * @return array<object> Records with ID, user_id and user_deleted_data.
+	 */
+	public function get_rows_after( int $after_id, int $limit ): array {
+		return $this->select(
+			"SELECT ID, user_id, user_deleted_data FROM {$this->table_name} WHERE ID > %d ORDER BY ID ASC LIMIT %d",
+			array( $after_id, $limit )
+		);
+	}
+
+	/**
+	 * Get log records about a person: deletions of their account or deletions they performed.
+	 *
+	 * @param string $json_email Email as it is encoded in the stored JSON (without quotes).
+	 * @param int    $user_id    Their user ID, 0 when the account no longer exists.
+	 * @param int    $limit      Number of records.
+	 * @param int    $offset     Offset.
+	 *
+	 * @return array<object> Records.
+	 */
+	public function get_rows_about_person( string $json_email, int $user_id, int $limit, int $offset ): array {
+		return $this->select(
+			"SELECT ID, user_id, user_deleted_data, deletion_time FROM {$this->table_name}
+            WHERE user_deleted_data LIKE %s OR ( %d > 0 AND user_id = %d )
+            ORDER BY ID ASC LIMIT %d OFFSET %d",
+			array( '%' . $this->wpdb->esc_like( '"' . $json_email . '"' ) . '%', $user_id, $user_id, $limit, $offset )
+		);
+	}
+
+	/**
+	 * Update a log record.
+	 *
+	 * @param int                  $log_id Record ID.
+	 * @param array<string, mixed> $fields Column values.
+	 *
+	 * @return void
+	 */
+	public function update_row( int $log_id, array $fields ): void {
+		$this->wpdb->update( $this->table_name, $fields, array( 'ID' => $log_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom plugin table.
+	}
 }

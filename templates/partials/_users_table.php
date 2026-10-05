@@ -5,6 +5,8 @@
  * @package UsersBulkDeleteWithPreview\Templates\Partials
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Templates are included inside a render method, their variables are not global.
+
 if ( ! defined( 'ABSPATH' ) ) {
 	// Security check: Ensure the file is not accessed directly.
 	echo 'Hi there! I\'m just a plugin, not much I can do when called directly.';
@@ -12,6 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <!-- Users table preview -->
+<div id="ubdwp_selection_info" class="ubdwp-selection-info" style="display: none;" aria-live="polite">
+	<span class="ubdwp-selection-text"></span>
+	<button type="button" class="button-link ubdwp-select-all-matching"></button>
+	<button type="button" class="button-link ubdwp-clear-selection"><?php esc_html_e( 'Clear selection', 'users-bulk-delete-with-preview' ); ?></button>
+</div>
 <div class="ubdwp-general-reassign">
 	<label for="generalSelect"><?php esc_html_e( 'Assign related content to user', 'users-bulk-delete-with-preview' ); ?>:</label>
 	<!-- General select dropdown outside the table -->

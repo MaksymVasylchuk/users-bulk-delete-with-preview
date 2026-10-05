@@ -5,6 +5,8 @@
  * @package UsersBulkDeleteWithPreview\Templates\Partials
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Templates are included inside a render method, their variables are not global.
+
 if ( ! defined( 'ABSPATH' ) ) {
 	// Security check: Ensure the file is not accessed directly.
 	echo 'Hi there! I\'m just a plugin, not much I can do when called directly.';
@@ -19,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<label for="products"><?php esc_html_e( 'Select products that bought user', 'users-bulk-delete-with-preview' ); ?>:</label>
 	</th>
 	<td>
-		<select id="products" name="products[]" multiple="multiple" class="form-control"></select>
+		<select id="products" name="products[]" multiple="multiple"></select>
 		<input type="hidden" id="search_products_nonce" name="search_products_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_search_products' ) ); ?>" />
 		<label for="selectAllProducts" class="ubdwp-checkbox">
 			<input type="checkbox" id="selectAllProducts" name="all_products" value="1">

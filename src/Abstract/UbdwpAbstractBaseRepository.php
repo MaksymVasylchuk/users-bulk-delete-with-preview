@@ -69,7 +69,7 @@ abstract class UbdwpAbstractBaseRepository {
 	 * @return array Results as objects.
 	 */
 	protected function select( string $query, array $params = array() ): array {
-		return $this->wpdb->get_results( $this->prepare_query( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  Query is prepared in "prepare_query".
+		return $this->wpdb->get_results( $this->prepare_query( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Query is prepared in "prepare_query".
 	}
 
 	/**
@@ -81,7 +81,7 @@ abstract class UbdwpAbstractBaseRepository {
 	 * @return array Results as a single column array.
 	 */
 	protected function get_col( string $query, array $params = array() ): array {
-		return $this->wpdb->get_col( $this->prepare_query( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  Query is prepared in "prepare_query".
+		return $this->wpdb->get_col( $this->prepare_query( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Query is prepared in "prepare_query".
 	}
 
 	/**
@@ -93,7 +93,19 @@ abstract class UbdwpAbstractBaseRepository {
 	 * @return mixed Single value result.
 	 */
 	protected function get_var( string $query, array $params = array() ): mixed {
-		return $this->wpdb->get_var( $this->prepare_query( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --  Query is prepared in "prepare_query".
+		return $this->wpdb->get_var( $this->prepare_query( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Query is prepared in "prepare_query".
+	}
+
+	/**
+	 * Execute a prepared query that changes data.
+	 *
+	 * @param string $query SQL query with placeholders.
+	 * @param array $params Parameters to bind to the query.
+	 *
+	 * @return int Number of affected rows.
+	 */
+	protected function execute( string $query, array $params = array() ): int {
+		return (int) $this->wpdb->query( $this->prepare_query( $query, $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Query is prepared in "prepare_query", custom plugin table.
 	}
 
 	/**
@@ -118,11 +130,9 @@ abstract class UbdwpAbstractBaseRepository {
 	/**
 	 * Count total rows in the table.
 	 *
-	 * @param string $where Optional WHERE clause for filtering.
-	 *
 	 * @return int Row count.
 	 */
-	protected function count( string $where = '' ): int {
-		return (int) $this->wpdb->get_var( "SELECT COUNT(*) FROM {$this->table_name} {$where}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name already escaped, and where clause also.
+	protected function count(): int {
+		return (int) $this->wpdb->get_var( "SELECT COUNT(*) FROM {$this->table_name}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table name is escaped, custom plugin table.
 	}
 }

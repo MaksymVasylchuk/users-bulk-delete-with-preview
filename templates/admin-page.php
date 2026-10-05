@@ -5,6 +5,8 @@
  * @package UsersBulkDeleteWithPreview\Templates
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Templates are included inside a render method, their variables are not global.
+
 if ( ! defined( 'ABSPATH' ) ) {
 	// Security check: Ensure the file is not accessed directly.
 	echo 'Hi there! I\'m just a plugin, not much I can do when called directly.';
@@ -16,6 +18,7 @@ $title = $title ?? '';
 <!-- Loader -->
 <div id="page_loader" style="display: none;">
 	<div class="loader"></div>
+	<p id="ubdwp_loader_text" class="ubdwp-loader-text" aria-live="polite"></p>
 </div>
 <!-- Loader -->
 

@@ -81,6 +81,7 @@ class UbdwpActivate {
 		global $wpdb;
 
 		$tables[] = $wpdb->get_blog_prefix( $site_id ) . 'ubdwp_logs';
+		$tables[] = $wpdb->get_blog_prefix( $site_id ) . 'ubdwp_jobs';
 
 		return $tables;
 	}
@@ -121,11 +122,36 @@ class UbdwpActivate {
             deletion_time DATETIME DEFAULT CURRENT_TIMESTAMP
         ) ENGINE='InnoDB' {$charset_collate};";
 
+		// Deletion jobs: a selection of users deleted in batches, in the browser, in the background or by WP-CLI.
+		$jobs_sql = "CREATE TABLE {$wpdb->prefix}ubdwp_jobs (
+  ID bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  user_id bigint(20) unsigned NOT NULL,
+  status varchar(20) NOT NULL DEFAULT 'draft',
+  mode varchar(20) NOT NULL DEFAULT 'browser',
+  total int(10) unsigned NOT NULL DEFAULT 0,
+  summary_position int(10) unsigned NOT NULL DEFAULT 0,
+  position int(10) unsigned NOT NULL DEFAULT 0,
+  deleted_count int(10) unsigned NOT NULL DEFAULT 0,
+  failed_count int(10) unsigned NOT NULL DEFAULT 0,
+  user_ids longtext NOT NULL,
+  reassign longtext NOT NULL,
+  summary longtext NOT NULL,
+  failed_users longtext NOT NULL,
+  message text NOT NULL,
+  lock_token varchar(32) NOT NULL DEFAULT '',
+  lock_until datetime DEFAULT NULL,
+  created_at datetime NOT NULL,
+  updated_at datetime NOT NULL,
+  PRIMARY KEY  (ID),
+  KEY status (status),
+  KEY user_id (user_id)
+) {$charset_collate};";
+
 		// Include the WordPress upgrade functions.
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-		// Create or update the database table.
-		dbDelta( $sql );
+		// Create or update the database tables.
+		dbDelta( array( $sql, $jobs_sql ) );
 
 		self::remove_legacy_export_files();
 

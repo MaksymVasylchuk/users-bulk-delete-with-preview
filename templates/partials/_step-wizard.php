@@ -5,6 +5,8 @@
  * @package UsersBulkDeleteWithPreview\Templates\Partials
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Templates are included inside a render method, their variables are not global.
+
 if ( ! defined( 'ABSPATH' ) ) {
 	// Security check: Ensure the file is not accessed directly.
 	echo 'Hi there! I\'m just a plugin, not much I can do when called directly.';
@@ -15,15 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="stepwizard">
 	<div class="stepwizard-row setup-panel">
 		<div class="stepwizard-step">
-			<a href="#step-1" id="step_icon_1" type="button" class="btn btn-primary btn-circle step_icon">1</a>
+			<span id="step_icon_1" class="step_icon is-active" aria-current="step">1</span>
 			<p><?php esc_html_e( 'Step', 'users-bulk-delete-with-preview' ); ?> 1</p>
 		</div>
 		<div class="stepwizard-step">
-			<a href="#step-2" type="button" id="step_icon_2" class="btn btn-default btn-circle step_icon" disabled="disabled">2</a>
+			<span id="step_icon_2" class="step_icon">2</span>
 			<p><?php esc_html_e( 'Step', 'users-bulk-delete-with-preview' ); ?> 2</p>
 		</div>
 		<div class="stepwizard-step">
-			<a href="#step-3" type="button" id="step_icon_3" class="btn btn-default btn-circle step_icon" disabled="disabled">3</a>
+			<span id="step_icon_3" class="step_icon">3</span>
 			<p><?php esc_html_e( 'Step', 'users-bulk-delete-with-preview' ); ?> 3</p>
 		</div>
 	</div>

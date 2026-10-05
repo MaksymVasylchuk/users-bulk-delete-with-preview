@@ -57,12 +57,7 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 	 */
 	public function register_admin_scripts( string $hook_suffix ): void {
 		if ( isset( $_GET['page'] ) && $_GET['page'] === 'ubdwp_admin_logs' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification not required here.
-			UbdwpHelperFacade::register_common_scripts( array(
-				'wpubdp-logs-js' => array(
-					'path' => 'assets/admin/logs.min.js',
-					'deps' => array( 'jquery', 'wpubdp-dataTables-js', 'wp-i18n' ),
-				),
-			) );
+			UbdwpHelperFacade::register_build_script( 'wpubdp-logs-js', 'logs', array( 'wpubdp-dataTables-js' ) );
 
 			UbdwpHelperFacade::localize_scripts( 'wpubdp-logs-js', array(
 				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
