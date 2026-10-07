@@ -14,10 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <!-- Step 1 -->
-<div id="step-1" class="form-step">
+<div id="ubdwp_step_1" class="ubdwp-form-step">
 	<!-- Search users form -->
-	<form action="#" method="post" id="search_users_form">
-		<input type="hidden" id="find_users_nonce" name="find_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_find_users' ) ); ?>">
+	<form action="#" method="post" id="ubdwp_search_users_form">
+		<input type="hidden" id="ubdwp_find_users_nonce" name="find_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_find_users' ) ); ?>">
 		<input type="hidden" name="action" value="ubdwp_search_users_for_delete">
 		<table class="form-table">
 			<tbody>
@@ -25,11 +25,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php if ( isset( $types ) && ! empty( $types ) ) : ?>
 				<tr>
 					<th scope="row">
-						<label for="filter_type"><?php esc_html_e( 'Choose filter type', 'users-bulk-delete-with-preview' ); ?>:</label>
+						<label for="ubdwp_filter_type"><?php esc_html_e( 'Choose filter type', 'users-bulk-delete-with-preview' ); ?>:</label>
 					</th>
 					<td>
 						<div class="form-group">
-							<select id="filter_type" name="filter_type">
+							<select id="ubdwp_filter_type" name="filter_type">
 								<?php foreach ( $types as $type_key => $type ) : ?>
 									<option value="<?php echo esc_attr( $type_key ); ?>"><?php echo esc_html( $type ); ?></option>
 								<?php endforeach; ?>
@@ -51,8 +51,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			 * Fires after the filter fields of the Bulk Users Delete page, inside the form table.
 			 *
 			 * Print table rows (<tr>) with your own fields; they are sent with the preview request.
-			 * Give a row the class of a filter type ("select_existing_form", "find_users_form" or
-			 * "woocommerce_filters_form") and style="display: none;" to show it only for that type, and narrow the result
+			 * Give a row the class of a filter type ("ubdwp-filter-existing", "ubdwp-filter-find" or
+			 * "ubdwp-filter-woocommerce") and style="display: none;" to show it only for that type, and narrow the result
 			 * with the "ubdwp_found_user_ids" filter.
 			 *
 			 * @since 2.4.0
@@ -64,7 +64,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</table>
 		<!-- Preview Button -->
 		<p class="submit">
-			<button type="button" class="button button-primary preview_before_remove"><?php esc_html_e( 'Preview', 'users-bulk-delete-with-preview' ); ?></button>
+			<button type="button" class="button button-primary ubdwp-preview-button"><?php esc_html_e( 'Preview', 'users-bulk-delete-with-preview' ); ?></button>
 		</p>
 	</form>
 	<!-- Search users form -->

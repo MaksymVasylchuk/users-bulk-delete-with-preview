@@ -401,12 +401,22 @@ class UbdwpDeletionJobs {
 	/**
 	 * Latest jobs of the current site.
 	 *
-	 * @param int $limit Number of jobs.
+	 * @param int $limit  Number of jobs.
+	 * @param int $offset Number of newer jobs to skip.
 	 *
 	 * @return array<object> Jobs without user lists.
 	 */
-	public function get_recent( int $limit = 20 ): array {
-		return $this->repository->get_recent( $limit );
+	public function get_recent( int $limit = 20, int $offset = 0 ): array {
+		return $this->repository->get_recent( $limit, $offset );
+	}
+
+	/**
+	 * Number of jobs of the current site.
+	 *
+	 * @return int Number of jobs.
+	 */
+	public function count(): int {
+		return $this->repository->count_all();
 	}
 
 	/**

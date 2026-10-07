@@ -14,15 +14,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <!-- Step 3 -->
-<div id="step-3" class="form-step" style="display: none;">
+<div id="ubdwp_step_3" class="ubdwp-form-step" style="display: none;">
     <div class="content">
-        <div id="user_delete_message">
+        <div id="ubdwp_user_delete_message">
             <!-- Success deletion -->
-            <p class="success_heading" id="user_delete_success_heading">
+            <p class="ubdwp-success-heading" id="ubdwp_user_delete_success_heading">
             </p>
             <p id="ubdwp_results_note" class="ubdwp-results-note" style="display: none;"></p>
 
-            <table id="user_delete_success_table" class="wp-list-table widefat fixed striped">
+            <table id="ubdwp_user_delete_success_table" class="wp-list-table widefat fixed striped">
                 <thead>
                 <tr>
                     <th><?php esc_html_e( 'User ID', 'users-bulk-delete-with-preview' ); ?></th>
@@ -31,11 +31,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <th><?php esc_html_e( 'Related content', 'users-bulk-delete-with-preview' ); ?></th>
                 </tr>
                 </thead>
-                <tbody id="user_delete_success_list">
+                <tbody id="ubdwp_user_delete_success_list">
                 </tbody>
             </table>
 
-            <div id="user_delete_failed" style="display: none;">
+            <div id="ubdwp_user_delete_failed" style="display: none;">
                 <h3><?php esc_html_e( 'Users that were not deleted', 'users-bulk-delete-with-preview' ); ?></h3>
                 <table class="wp-list-table widefat fixed striped">
                     <thead>
@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                         <th><?php esc_html_e( 'Reason', 'users-bulk-delete-with-preview' ); ?></th>
                     </tr>
                     </thead>
-                    <tbody id="user_delete_failed_list">
+                    <tbody id="ubdwp_user_delete_failed_list">
                     </tbody>
                 </table>
             </div>

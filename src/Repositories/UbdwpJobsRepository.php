@@ -137,12 +137,22 @@ class UbdwpJobsRepository extends UbdwpAbstractBaseRepository {
 	/**
 	 * Get the latest jobs of the site, without their user lists.
 	 *
-	 * @param int $limit Number of jobs.
+	 * @param int $limit  Number of jobs.
+	 * @param int $offset Number of newer jobs to skip.
 	 *
 	 * @return array<object> Jobs.
 	 */
-	public function get_recent( int $limit ): array {
-		return $this->select( 'SELECT ' . self::LIST_COLUMNS . " FROM {$this->table_name} ORDER BY ID DESC LIMIT %d", array( $limit ) );
+	public function get_recent( int $limit, int $offset = 0 ): array {
+		return $this->select( 'SELECT ' . self::LIST_COLUMNS . " FROM {$this->table_name} ORDER BY ID DESC LIMIT %d OFFSET %d", array( $limit, max( 0, $offset ) ) );
+	}
+
+	/**
+	 * Count all jobs of the current site.
+	 *
+	 * @return int Number of jobs.
+	 */
+	public function count_all(): int {
+		return $this->count();
 	}
 
 	/**

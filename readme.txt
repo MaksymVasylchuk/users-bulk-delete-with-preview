@@ -3,7 +3,7 @@ Contributors: maksymvasylchuk
 Tags: bulk delete, user management, delete users, preview delete, bulk clean
 Requires at least: 6.2
 Tested up to: 7.1.2
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -73,6 +73,8 @@ The manual installation method requires downloading the Users Bulk Delete With P
 6. Deletion Process
 7. Deleted Users Review
 8. Logs
+9. Deletion Jobs
+10. Settings
 
 == Frequently Asked Questions ==
 
@@ -126,6 +128,9 @@ The readable JavaScript and CSS sources are included in assets/src. The files in
 
 == Upgrade Notice ==
 
+= 2.4.1 =
+Fixes the deletion progress bar, which was not visible in 2.4.0, and adds pagination to the Deletion Jobs page. No manual upgrade steps are required.
+
 = 2.4.0 =
 Big update for large sites: server-side preview paging, background deletion jobs, WP-CLI commands and privacy tools for the log (masked emails by default, retention, personal data export and erasure). Jobs and settings have their own pages. No manual upgrade steps are required.
 
@@ -169,6 +174,19 @@ This plugin uses the following third-party libraries:
 – [Select2](https://select2.org/) – Licensed under MIT License.
 
 == Changelog ==
+= 2.4.1 =
+*Release Date - 7 October 2026*
+
+* Fixed the deletion progress bar not being visible since 2.4.0
+* The Deletion Jobs page is paged (20 jobs per page) and shows the number of jobs
+* The Deletion Jobs page refreshes only while a job is running, not while it waits for confirmation
+* WP-CLI: user data printed by the commands can no longer contain terminal control characters, and --format=csv escapes spreadsheet formulas like the CSV export
+* WP-CLI: permissions are checked before anything else is done
+* New screenshots of the Deletion Jobs and Settings pages
+* The Logs page is titled "Logs", like its menu item; the Ukrainian translation now also covers the plugin description
+* Fewer conflicts with other plugins: all element IDs and CSS classes of the plugin pages are now prefixed (ubdwp), so markup or styles of other plugins cannot break the confirmation dialog, the progress bar or the loader
+* The Bulk Users Delete page no longer sends a needless job status request when it is opened
+
 = 2.4.0 =
 *Release Date - 5 October 2026*
 

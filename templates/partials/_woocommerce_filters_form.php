@@ -16,15 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 <!-- WooCommerce Filters Form -->
 <!-- Products -->
 <?php if ( ! empty( $woocommerce_active ) ) : ?>
-<tr class="woocommerce_filters_form" style="display: none;">
+<tr class="ubdwp-filter-woocommerce" style="display: none;">
 	<th scope="row">
-		<label for="products"><?php esc_html_e( 'Select products that bought user', 'users-bulk-delete-with-preview' ); ?>:</label>
+		<label for="ubdwp_products"><?php esc_html_e( 'Select products that bought user', 'users-bulk-delete-with-preview' ); ?>:</label>
 	</th>
 	<td>
-		<select id="products" name="products[]" multiple="multiple"></select>
-		<input type="hidden" id="search_products_nonce" name="search_products_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_search_products' ) ); ?>" />
-		<label for="selectAllProducts" class="ubdwp-checkbox">
-			<input type="checkbox" id="selectAllProducts" name="all_products" value="1">
+		<select id="ubdwp_products" name="products[]" multiple="multiple"></select>
+		<input type="hidden" id="ubdwp_search_products_nonce" name="search_products_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_search_products' ) ); ?>" />
+		<label for="ubdwp_select_all_products" class="ubdwp-checkbox">
+			<input type="checkbox" id="ubdwp_select_all_products" name="all_products" value="1">
 			<?php esc_html_e( 'Select All', 'users-bulk-delete-with-preview' ); ?>
 		</label>
 	</td>

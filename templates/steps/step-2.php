@@ -14,13 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <!-- Step 2 -->
-<div id="step-2" class="form-step" style="display: none;">
+<div id="ubdwp_step_2" class="ubdwp-form-step" style="display: none;">
 
-    <div id="deleteProgressBar" style="display: none;">
-        <div class="progress">
-            <div id="progressBarInner" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div id="ubdwp_delete_progress" style="display: none;">
+        <div class="ubdwp-progress">
+            <div id="ubdwp_progress_bar" class="ubdwp-progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-        <div id="deletedCount" class="ubdwp-progress-count" aria-live="polite">0 / 0 (0%)</div>
+        <div id="ubdwp_deleted_count" class="ubdwp-progress-count" aria-live="polite">0 / 0 (0%)</div>
         <p id="ubdwp_background_note" class="ubdwp-progress-note" style="display: none;"></p>
         <p class="ubdwp-progress-actions">
             <button type="button" id="ubdwp_cancel_job" class="button button-secondary"><?php esc_html_e( 'Stop deletion', 'users-bulk-delete-with-preview' ); ?></button>

@@ -482,33 +482,33 @@ body {
    Step wizard, loader, progress, results
    ========================================================================== */
 
-.stepwizard-step, .success_list {
+.ubdwp-stepwizard-step, .ubdwp-success-list {
     text-align: center;
     padding: 0
 }
 
-#poststuff, #poststuff_logs {
+.ubdwp-page #poststuff, #ubdwp_poststuff {
     margin-top: 50px
 }
 
-.stepwizard {
+.ubdwp-stepwizard {
     display: table;
     width: 100%;
     position: relative;
     margin-bottom: 30px
 }
 
-.stepwizard-row {
+.ubdwp-stepwizard-row {
     display: table-row;
     position: relative
 }
 
-.stepwizard-step {
+.ubdwp-stepwizard-step {
     display: table-cell;
     position: relative
 }
 
-.stepwizard-row::before {
+.ubdwp-stepwizard-row::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -519,13 +519,13 @@ body {
     z-index: 1
 }
 
-.stepwizard-step p {
+.ubdwp-stepwizard-step p {
     margin-top: 10px;
     font-weight: 500;
     color: #555
 }
 
-.ubdwp-page .stepwizard .step_icon {
+.ubdwp-page .ubdwp-stepwizard .ubdwp-step-icon {
     position: relative;
     z-index: 2;
     display: inline-flex;
@@ -546,18 +546,18 @@ body {
     opacity: 1;
 }
 
-.ubdwp-page .stepwizard .step_icon.is-active {
+.ubdwp-page .ubdwp-stepwizard .ubdwp-step-icon.is-active {
     border-color: var(--ubdwp-accent);
     background: var(--ubdwp-accent);
     color: #fff;
 }
 
-.ubdwp-page .stepwizard .step_icon:focus {
+.ubdwp-page .ubdwp-stepwizard .ubdwp-step-icon:focus {
     box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--ubdwp-accent);
     outline: 2px solid transparent;
 }
 
-#page_loader {
+#ubdwp_page_loader {
     flex-direction: column;
     gap: 16px;
     position: fixed;
@@ -572,16 +572,16 @@ body {
     z-index: 9999
 }
 
-.loader {
+.ubdwp-loader {
     border: 8px solid #f3f3f3;
     border-radius: 50%;
     border-top: 8px solid var(--ubdwp-accent);
     width: 80px;
     height: 80px;
-    animation: 1.5s linear infinite spin
+    animation: 1.5s linear infinite ubdwp-spin
 }
 
-@keyframes spin {
+@keyframes ubdwp-spin {
     0% {
         transform: rotate(0)
     }
@@ -590,27 +590,30 @@ body {
     }
 }
 
-#deleteProgressBar {
+#ubdwp_delete_progress {
     margin-top: 20px
 }
 
-.progress {
+.ubdwp-progress {
+    display: flex;
+    overflow: hidden;
     height: 20px;
     border-radius: var(--ubdwp-radius);
-    background-color: #f1f1f1
+    background-color: var(--ubdwp-border-light)
 }
 
-.progress-bar {
-    background-color: #4caf50;
+.ubdwp-progress-bar {
+    height: 100%;
+    background-color: var(--ubdwp-accent);
     transition: width .5s
 }
 
-.success_list {
+.ubdwp-success-list {
     font-size: 20px;
     list-style-type: none
 }
 
-.success_heading {
+.ubdwp-success-heading {
     text-align: center;
     font-size: 24px;
     font-weight: 700
@@ -802,7 +805,65 @@ body {
 }
 
 .ubdwp-jobs {
-    margin-bottom: 24px;
+    margin-bottom: 0;
+}
+
+.ubdwp-page .ubdwp-jobs-nav {
+    height: auto;
+    margin: 12px 0 24px;
+}
+
+.ubdwp-page .ubdwp-jobs-nav .tablenav-pages {
+    display: flex;
+    align-items: center;
+    gap: var(--ubdwp-gap);
+    float: none;
+    justify-content: space-between;
+    margin: 0;
+}
+
+.ubdwp-pagination {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.ubdwp-pagination .page-numbers {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: var(--ubdwp-field-height);
+    height: var(--ubdwp-field-height);
+    padding: 0 12px;
+    border: 1px solid var(--ubdwp-border);
+    border-radius: var(--ubdwp-radius);
+    background: #fff;
+    color: var(--ubdwp-accent);
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.ubdwp-pagination a.page-numbers:hover {
+    border-color: var(--ubdwp-accent);
+    color: var(--ubdwp-accent-darker);
+}
+
+.ubdwp-pagination a.page-numbers:focus {
+    box-shadow: var(--ubdwp-focus-ring);
+    outline: 2px solid transparent;
+}
+
+.ubdwp-pagination .page-numbers.current {
+    background: var(--ubdwp-accent);
+    border-color: var(--ubdwp-accent);
+    color: #fff;
+}
+
+.ubdwp-pagination .page-numbers.dots {
+    border-color: transparent;
+    background: transparent;
+    color: var(--ubdwp-muted);
 }
 
 .ubdwp-page .button.ubdwp-button-danger-outline {

@@ -14,16 +14,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <!-- Existing Users Form -->
-<tr class="select_existing_form" style="display: none;">
-	<input type="hidden" id="search_user_existing_nonce" name="search_user_existing_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_search_users' ) ); ?>" />
+<tr class="ubdwp-filter-existing" style="display: none;">
+	<input type="hidden" id="ubdwp_search_user_existing_nonce" name="search_user_existing_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_search_users' ) ); ?>" />
 	<th scope="row">
-		<label for="user_search"><?php esc_html_e( 'Select existing users', 'users-bulk-delete-with-preview' ); ?>:</label>
+		<label for="ubdwp_user_search"><?php esc_html_e( 'Select existing users', 'users-bulk-delete-with-preview' ); ?>:</label>
 	</th>
 	<td>
-		<select id="user_search" name="user_search[]" multiple="multiple"></select>
+		<select id="ubdwp_user_search" name="user_search[]" multiple="multiple"></select>
 		<span class="invalid-feedback"></span>
-		<label for="selectAllUsers" class="ubdwp-checkbox">
-			<input type="checkbox" id="selectAllUsers" name="all_users" value="1">
+		<label for="ubdwp_select_all_users" class="ubdwp-checkbox">
+			<input type="checkbox" id="ubdwp_select_all_users" name="all_users" value="1">
 			<?php esc_html_e( 'All users of this site', 'users-bulk-delete-with-preview' ); ?>
 		</label>
 	</td>

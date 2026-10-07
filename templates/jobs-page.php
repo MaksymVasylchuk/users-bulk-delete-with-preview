@@ -7,8 +7,10 @@
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Templates are included inside a render method, their variables are not global.
 
-$title = $title ?? '';
-$jobs  = $jobs ?? array();
+$title      = $title ?? '';
+$jobs       = $jobs ?? array();
+$total      = $total ?? 0;
+$pagination = $pagination ?? '';
 
 if ( ! defined( 'ABSPATH' ) ) {
 	// Security check: Ensure the file is not accessed directly.
@@ -20,9 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 <!-- Deletion jobs page -->
 <div class="wrap ubdwp-page">
 	<h2><?php echo esc_html( $title ); ?></h2>
-	<div id="poststuff_logs">
+	<div id="ubdwp_poststuff">
 		<div id="post-body" class="metabox-holder columns-1">
-			<div id="notices">
+			<div id="ubdwp_notices">
 			</div>
 			<p class="description"><?php esc_html_e( 'Deletions started on the Bulk Users Delete page or with WP-CLI. Background jobs continue after you leave the page; this page refreshes while a job is running.', 'users-bulk-delete-with-preview' ); ?></p>
 			<?php if ( empty( $jobs ) ) : ?>
@@ -53,7 +55,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						'cli'        => __( 'WP-CLI', 'users-bulk-delete-with-preview' ),
 					);
 					?>
-					<tr>
+					<tr data-status="<?php echo esc_attr( $job['status'] ); ?>">
 						<td><?php echo esc_html( $job['job_id'] ); ?></td>
 						<td><?php echo esc_html( $owner ? $owner->user_login : '#' . $job['owner_id'] ); ?></td>
 						<td><?php echo esc_html( $modes[ $job['mode'] ] ?? $job['mode'] ); ?></td>
@@ -76,6 +78,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php endforeach; ?>
 				</tbody>
 			</table>
+			<div class="tablenav bottom ubdwp-jobs-nav">
+				<div class="tablenav-pages">
+					<span class="displaying-num">
+						<?php
+						/* translators: %s: Number of deletion jobs. */
+						echo esc_html( sprintf( _n( '%s job', '%s jobs', $total, 'users-bulk-delete-with-preview' ), number_format_i18n( $total ) ) );
+						?>
+					</span>
+					<?php if ( $pagination ) : ?>
+						<span class="ubdwp-pagination"><?php echo wp_kses_post( $pagination ); ?></span>
+					<?php endif; ?>
+				</div>
+			</div>
 			<?php endif; ?>
 		</div>
 	</div>

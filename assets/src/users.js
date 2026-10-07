@@ -8,7 +8,8 @@ import { __, sprintf } from '@wordpress/i18n';
 import './users.css';
 
 // Variables
-const form         = '#search_users_form'; // The ID of the user search form
+const form         = '#ubdwp_search_users_form'; // The ID of the user search form
+const resultsLimit = parseInt( ubdwpData.resultsLimit, 10 ) || 1000; // Deleted users listed on the results step
 const translations = ubdwpData.translations || {}; // Server-side translated strings
 let currentStep    = 1; // Tracks the current step in a multi-step process
 
@@ -39,8 +40,11 @@ $( document ).ready(
         handleSelectAllUsers();               // Handle "All users of this site"
         handleSelectAllProducts();            // Handle "Select All Products" functionality
 
-        if (ubdwpData.runningJobId) {
-            watchRunningBackgroundJob( ubdwpData.runningJobId );
+        // Localized values arrive as strings: "0" means there is no running job.
+        const runningJobId = parseInt( ubdwpData.runningJobId, 10 ) || 0;
+
+        if (runningJobId > 0) {
+            watchRunningBackgroundJob( runningJobId );
         }
     }
 );
@@ -49,7 +53,7 @@ $( document ).ready(
  * Initialize Select2 for user search
  */
 function initializeUserSearch() {
-    $( '#user_search' ).select2(
+    $( '#ubdwp_user_search' ).select2(
         {
             placeholder: __( 'Search for users', 'users-bulk-delete-with-preview' ),
             width: '400px',
@@ -61,7 +65,7 @@ function initializeUserSearch() {
                 data: params => ({
                     action: 'ubdwp_search_users',
                     q: params.term,
-                    nonce: $( '#search_user_existing_nonce' ).val()
+                    nonce: $( '#ubdwp_search_user_existing_nonce' ).val()
                 }),
                 processResults: data => {
                     clearErrors( form ); // Clear any existing errors
@@ -76,7 +80,7 @@ function initializeUserSearch() {
  * Initialize other dropdowns and date picker
  */
 function initializeDropdownsAndDatePicker() {
-    $( '#user_meta' ).select2(
+    $( '#ubdwp_user_meta' ).select2(
         {
             width: '400px',
             tags: true,
@@ -88,7 +92,7 @@ function initializeDropdownsAndDatePicker() {
                 data: params => ({
                     action: 'ubdwp_search_usermeta',
                     q: params.term,
-                    nonce: $( '#search_user_meta_nonce' ).val()
+                    nonce: $( '#ubdwp_search_user_meta_nonce' ).val()
                 }),
                 processResults: data => ({results: data.success && Array.isArray( data.data ) ? data.data : []})
             },
@@ -97,9 +101,9 @@ function initializeDropdownsAndDatePicker() {
         }
     );
 
-    initializeSelect2( '#user_role', __( 'Select user roles', 'users-bulk-delete-with-preview' ) );
+    initializeSelect2( '#ubdwp_user_role', __( 'Select user roles', 'users-bulk-delete-with-preview' ) );
     initializeSelect2(
-        '#products',
+        '#ubdwp_products',
         __( 'Select products that bought user', 'users-bulk-delete-with-preview' ),
         {
             ajax: {
@@ -110,7 +114,7 @@ function initializeDropdownsAndDatePicker() {
                 data: params => ({
                     action: 'ubdwp_search_products',
                     q: params.term || '',
-                    nonce: $( '#search_products_nonce' ).val()
+                    nonce: $( '#ubdwp_search_products_nonce' ).val()
                 }),
                 processResults: data => ({results: data.success ? data.data.results : []})
             }
@@ -118,20 +122,20 @@ function initializeDropdownsAndDatePicker() {
     );
 
     // The second date is only used for the "between" comparison
-    $( '#registration_date_compare' ).on(
+    $( '#ubdwp_registration_date_compare' ).on(
         'change',
         function () {
             const isBetween = 'between' === $( this ).val();
-            $( '#registration_date_to_wrap' ).toggle( isBetween );
+            $( '#ubdwp_registration_date_to_wrap' ).toggle( isBetween );
 
             if ( ! isBetween) {
-                $( '#registration_date_to' ).val( '' );
+                $( '#ubdwp_registration_date_to' ).val( '' );
             }
         }
     ).trigger( 'change' );
 
-    const select     = document.getElementById( 'user_meta_equal' );
-    const valueInput = document.getElementById( 'user_meta_value' );
+    const select     = document.getElementById( 'ubdwp_user_meta_equal' );
+    const valueInput = document.getElementById( 'ubdwp_user_meta_value' );
 
     function toggleInput() {
         if (select.value === 'meta_not_exists' || select.value === 'meta_is_empty') {
@@ -168,10 +172,10 @@ function initializeSelect2(selector, placeholder, options = {}) {
  * Handle "All users of this site": the server finds them, so the user list is not needed
  */
 function handleSelectAllUsers() {
-    $( '#selectAllUsers' ).on(
+    $( '#ubdwp_select_all_users' ).on(
         'change',
         function () {
-            $( '#user_search' ).val( null ).prop( 'disabled', $( this ).is( ':checked' ) ).trigger( 'change' );
+            $( '#ubdwp_user_search' ).val( null ).prop( 'disabled', $( this ).is( ':checked' ) ).trigger( 'change' );
         }
     );
 }
@@ -180,13 +184,13 @@ function handleSelectAllUsers() {
  * Handle "Select All Products" checkbox functionality
  */
 function handleSelectAllProducts() {
-    $( '#selectAllProducts' ).on(
+    $( '#ubdwp_select_all_products' ).on(
         'change',
         function () {
             // "Select All" matches customers who bought any product, so the product list is not needed
             const allProducts = $( this ).is( ':checked' );
 
-            $( '#products' ).val( null ).prop( 'disabled', allProducts ).trigger( 'change' );
+            $( '#ubdwp_products' ).val( null ).prop( 'disabled', allProducts ).trigger( 'change' );
         }
     );
 }
@@ -231,7 +235,7 @@ function request(data) {
  * @return {object} Request data with the nonce
  */
 function jobRequest(data) {
-    return request( Object.assign( {delete_users_nonce: $( '#delete_users_nonce' ).val()}, data ) );
+    return request( Object.assign( {delete_users_nonce: $( '#ubdwp_delete_users_nonce' ).val()}, data ) );
 }
 
 /**
@@ -239,7 +243,7 @@ function jobRequest(data) {
  */
 function initializeEventListeners() {
     // Handle navigation between steps
-    $( '.previous_step' ).click(
+    $( '.ubdwp-previous-step' ).click(
         () => {
             currentStep--;
             showStep( currentStep );
@@ -247,21 +251,21 @@ function initializeEventListeners() {
     );
 
     // Handle filter type changes
-    $( '#filter_type' ).change(
+    $( '#ubdwp_filter_type' ).change(
         function () {
             const selectedType = $( this ).val();
 
-            $( '.select_existing_form, .find_users_form, .woocommerce_filters_form' ).hide();
+            $( '.ubdwp-filter-existing, .ubdwp-filter-find, .ubdwp-filter-woocommerce' ).hide();
 
             switch (selectedType) {
                 case 'select_existing':
-                    $( '.select_existing_form' ).show();
+                    $( '.ubdwp-filter-existing' ).show();
                     break;
                 case 'find_users':
-                    $( '.find_users_form' ).show();
+                    $( '.ubdwp-filter-find' ).show();
                     break;
                 case 'find_users_by_woocommerce_filters':
-                    $( '.woocommerce_filters_form' ).show();
+                    $( '.ubdwp-filter-woocommerce' ).show();
                     break;
             }
         }
@@ -270,7 +274,7 @@ function initializeEventListeners() {
     // Find the users and store them as a preview on the server
     $( document ).on(
         'click',
-        '.preview_before_remove',
+        '.ubdwp-preview-button',
         function (e) {
             e.preventDefault();
             clearWordpressError();
@@ -310,15 +314,15 @@ function initializeEventListeners() {
     );
 
     // Show the summary before deleting
-    $( document ).on( 'click', '.deleteButton', prepareDeletion );
+    $( document ).on( 'click', '.ubdwp-delete-button', prepareDeletion );
 
     // Enable the delete button only when the typed number matches
     $( document ).on(
         'input',
         '#ubdwp_confirm_input',
         function () {
-            const expected = String( $( '#confirmDelete' ).data( 'expected' ) || '' );
-            $( '#confirmDelete' ).prop( 'disabled', '' !== expected && $( this ).val().trim() !== expected );
+            const expected = String( $( '#ubdwp_confirm_delete' ).data( 'expected' ) || '' );
+            $( '#ubdwp_confirm_delete' ).prop( 'disabled', '' !== expected && $( this ).val().trim() !== expected );
         }
     );
 
@@ -330,8 +334,8 @@ function initializeEventListeners() {
             if ('Enter' === e.key) {
                 e.preventDefault();
 
-                if ( ! $( '#confirmDelete' ).prop( 'disabled' )) {
-                    $( '#confirmDelete' ).trigger( 'click' );
+                if ( ! $( '#ubdwp_confirm_delete' ).prop( 'disabled' )) {
+                    $( '#ubdwp_confirm_delete' ).trigger( 'click' );
                 }
             }
         }
@@ -340,7 +344,7 @@ function initializeEventListeners() {
     // Close the dialog with its close buttons, or with a click outside of it (Esc closes it natively)
     $( document ).on( 'click', '[data-ubdwp-close]', closeConfirmDialog );
 
-    $( '#confirmModal' ).on(
+    $( '#ubdwp_confirm_modal' ).on(
         'click',
         function (e) {
             if (e.target === this) {
@@ -350,10 +354,10 @@ function initializeEventListeners() {
     );
 
     // Start the deletion
-    $( document ).on( 'click', '#confirmDelete', startDeletion );
+    $( document ).on( 'click', '#ubdwp_confirm_delete', startDeletion );
 
     // A summary that was not confirmed is not kept as a job
-    $( '#confirmModal' ).on(
+    $( '#ubdwp_confirm_modal' ).on(
         'close',
         () => {
             if (job.id && ! job.started) {
@@ -369,7 +373,7 @@ function initializeEventListeners() {
     // Handle export button click
     $( document ).on(
         'click',
-        '.export-users-button',
+        '.ubdwp-export-button',
         function (e) {
             e.preventDefault();
             clearWordpressError();
@@ -383,7 +387,7 @@ function initializeEventListeners() {
             request(
                 {
                     action: 'ubdwp_export_users',
-                    export_users_nonce: $( '#export_users_nonce' ).val(),
+                    export_users_nonce: $( '#ubdwp_export_users_nonce' ).val(),
                     token: preview.token,
                     selection_json: getSelectionJson()
                 }
@@ -401,7 +405,7 @@ function initializeEventListeners() {
  * Open the confirmation dialog and focus the confirmation field, or the safe Cancel button
  */
 function openConfirmDialog() {
-    const dialog = document.getElementById( 'confirmModal' );
+    const dialog = document.getElementById( 'ubdwp_confirm_modal' );
 
     if ( ! dialog.open) {
         dialog.showModal();
@@ -414,7 +418,7 @@ function openConfirmDialog() {
  * Close the confirmation dialog
  */
 function closeConfirmDialog() {
-    const dialog = document.getElementById( 'confirmModal' );
+    const dialog = document.getElementById( 'ubdwp_confirm_modal' );
 
     if (dialog.open) {
         dialog.close();
@@ -511,7 +515,7 @@ function showDeleteSummary(status) {
     $( '#ubdwp_delete_mode' ).toggle( summary.deletable > 0 );
     $( 'input[name="ubdwp_delete_mode"][value="' + (summary.deletable > 2000 ? 'background' : 'browser') + '"]' ).prop( 'checked', true );
 
-    const $confirm = $( '#confirmDelete' );
+    const $confirm = $( '#ubdwp_confirm_delete' );
     $( '#ubdwp_confirm_input' ).val( '' );
 
     if (summary.deletable < 1) {
@@ -533,7 +537,7 @@ function showDeleteSummary(status) {
  * Start the confirmed job in the browser or in the background
  */
 function startDeletion() {
-    if ($( '#confirmDelete' ).prop( 'disabled' ) || ! job.id) {
+    if ($( '#ubdwp_confirm_delete' ).prop( 'disabled' ) || ! job.id) {
         return;
     }
 
@@ -544,8 +548,8 @@ function startDeletion() {
     job.listed   = 0;
     job.stopping = false;
 
-    $( '#user_delete_success_list, #user_delete_failed_list' ).empty();
-    $( '#user_delete_failed, #ubdwp_results_note' ).hide();
+    $( '#ubdwp_user_delete_success_list, #ubdwp_user_delete_failed_list' ).empty();
+    $( '#ubdwp_user_delete_failed, #ubdwp_results_note' ).hide();
     disableButtonsOnTheSecondStep();
     showProgressBar();
 
@@ -664,7 +668,7 @@ function watchRunningBackgroundJob(jobId) {
     const $notice = $( '<div>', {class: 'notice notice-info ubdwp-job-notice'} ).append( $( '<p>' ) );
     const $text   = $notice.find( 'p' );
 
-    $( '#notices' ).append( $notice );
+    $( '#ubdwp_notices' ).append( $notice );
 
     pollJob(
         jobId,
@@ -704,10 +708,10 @@ function appendResults(template) {
     }
 
     const $rows = $( $.parseHTML( template.trim() ) ).filter( 'tr' );
-    const space = ubdwpData.resultsLimit - job.listed;
+    const space = resultsLimit - job.listed;
 
     if (space > 0) {
-        $( '#user_delete_success_list' ).append( $rows.slice( 0, space ) );
+        $( '#ubdwp_user_delete_success_list' ).append( $rows.slice( 0, space ) );
     }
 
     job.listed += $rows.length;
@@ -721,8 +725,8 @@ function appendResults(template) {
 function updateProgress(status) {
     const position = Math.min( status.position, status.total );
 
-    $( '#progressBarInner' ).css( 'width', status.percent + '%' ).attr( 'aria-valuenow', status.percent );
-    $( '#deletedCount' ).text( `${position} / ${status.total} (${status.percent}%)` );
+    $( '#ubdwp_progress_bar' ).css( 'width', status.percent + '%' ).attr( 'aria-valuenow', status.percent );
+    $( '#ubdwp_deleted_count' ).text( `${position} / ${status.total} (${status.percent}%)` );
 }
 
 /**
@@ -745,15 +749,15 @@ function finishDeletion(status) {
     }
 
     if (status.failed_users_template && status.failed_users_template.trim()) {
-        $( '#user_delete_failed_list' ).html( status.failed_users_template );
-        $( '#user_delete_failed' ).show();
+        $( '#ubdwp_user_delete_failed_list' ).html( status.failed_users_template );
+        $( '#ubdwp_user_delete_failed' ).show();
     }
 
     // Background jobs and very large deletions are listed on the Logs page
-    if ('background' === job.mode || job.listed > ubdwpData.resultsLimit) {
+    if ('background' === job.mode || job.listed > resultsLimit) {
         const note = 'background' === job.mode
             ? __( 'The deleted users are listed on the Logs page.', 'users-bulk-delete-with-preview' )
-            : sprintf( __( 'Only the first %d deleted users are listed here. All of them are listed on the Logs page.', 'users-bulk-delete-with-preview' ), ubdwpData.resultsLimit );
+            : sprintf( __( 'Only the first %d deleted users are listed here. All of them are listed on the Logs page.', 'users-bulk-delete-with-preview' ), resultsLimit );
 
         $( '#ubdwp_results_note' ).empty().append(
             document.createTextNode( note + ' ' ),
@@ -761,8 +765,8 @@ function finishDeletion(status) {
         ).show();
     }
 
-    $( '#user_delete_success_table' ).toggle( job.listed > 0 );
-    $( '#user_delete_success_heading' ).text( message );
+    $( '#ubdwp_user_delete_success_table' ).toggle( job.listed > 0 );
+    $( '#ubdwp_user_delete_success_heading' ).text( message );
     job.id      = 0;
     currentStep = 3;
     showStep( currentStep );
@@ -834,7 +838,7 @@ function isSelected(id) {
  * Show the checkboxes and reassign values of the current page from the selection
  */
 function applySelectionToRows() {
-    const $checkboxes = $( '#userTable tbody input.user-checkbox' );
+    const $checkboxes = $( '#ubdwp_user_table tbody input.user-checkbox' );
 
     $checkboxes.each(
         function () {
@@ -844,7 +848,7 @@ function applySelectionToRows() {
         }
     );
 
-    $( '#userTable tbody select.user-select' ).each(
+    $( '#ubdwp_user_table tbody select.user-select' ).each(
         function () {
             const id    = String( $( this ).closest( 'tr' ).find( 'input.user-checkbox' ).val() );
             const value = Object.prototype.hasOwnProperty.call( selection.reassign, id ) ? selection.reassign[ id ] : selection.defaultReassign;
@@ -855,7 +859,7 @@ function applySelectionToRows() {
 
     const $enabled = $checkboxes.filter( ':not(:disabled)' );
     const checked  = $enabled.filter( ':checked' ).length;
-    const header   = $( '#select-all' ).get( 0 );
+    const header   = $( '#ubdwp_select_all' ).get( 0 );
 
     if (header) {
         header.checked       = $enabled.length > 0 && checked === $enabled.length;
@@ -913,10 +917,10 @@ function downloadFile(content, fileName, mimeType) {
  */
 function showStep(step) {
     clearWordpressError();
-    $( '.form-step' ).hide();
-    $( '#step-' + step ).show();
-    $( '.step_icon' ).removeClass( 'is-active' ).removeAttr( 'aria-current' );
-    $( '#step_icon_' + step ).addClass( 'is-active' ).attr( 'aria-current', 'step' );
+    $( '.ubdwp-form-step' ).hide();
+    $( '#ubdwp_step_' + step ).show();
+    $( '.ubdwp-step-icon' ).removeClass( 'is-active' ).removeAttr( 'aria-current' );
+    $( '#ubdwp_step_icon_' + step ).addClass( 'is-active' ).attr( 'aria-current', 'step' );
 }
 
 /**
@@ -966,8 +970,8 @@ function createWordpressError(message, type = 'error') {
     );
 
     errorDiv.append( messageParagraph, dismissButton );
-    $( '#notices' ).find( '.notice:not(.ubdwp-job-notice)' ).remove();
-    $( '#notices' ).prepend( errorDiv );
+    $( '#ubdwp_notices' ).find( '.notice:not(.ubdwp-job-notice)' ).remove();
+    $( '#ubdwp_notices' ).prepend( errorDiv );
 }
 
 /**
@@ -977,16 +981,16 @@ function createWordpressError(message, type = 'error') {
  */
 function showLoader(text = '') {
     $( '#ubdwp_loader_text' ).text( text );
-    $( '#page_loader' ).show();
+    $( '#ubdwp_page_loader' ).show();
 }
 
 /**
  * Show the progress bar
  */
 function showProgressBar() {
-    $( '#deleteProgressBar' ).show();
-    $( '#progressBarInner' ).css( 'width', '0%' );
-    $( '#deletedCount' ).text( '' );
+    $( '#ubdwp_delete_progress' ).show();
+    $( '#ubdwp_progress_bar' ).css( 'width', '0%' );
+    $( '#ubdwp_deleted_count' ).text( '' );
     $( '#ubdwp_background_note' ).hide();
     $( '#ubdwp_cancel_job' ).prop( 'disabled', false );
 }
@@ -995,46 +999,46 @@ function showProgressBar() {
  * Hide the progress bar
  */
 function hideProgressBar() {
-    $( '#deleteProgressBar' ).hide();
+    $( '#ubdwp_delete_progress' ).hide();
 }
 
 /**
  * Disable buttons
  */
 function disableButtonsOnTheSecondStep() {
-    $( '.previous_step, .export-users-button, .deleteButton' ).prop( 'disabled', true );
+    $( '.ubdwp-previous-step, .ubdwp-export-button, .ubdwp-delete-button' ).prop( 'disabled', true );
 }
 
 /**
  * Activate buttons
  */
 function activateButtonsOnTheSecondStep() {
-    $( '.previous_step, .export-users-button, .deleteButton' ).prop( 'disabled', false );
+    $( '.ubdwp-previous-step, .ubdwp-export-button, .ubdwp-delete-button' ).prop( 'disabled', false );
 }
 
 /**
  * Hide the loading spinner
  */
 function hideLoader() {
-    $( '#page_loader' ).hide();
+    $( '#ubdwp_page_loader' ).hide();
     $( '#ubdwp_loader_text' ).text( '' );
 }
 
 function clearWordpressError() {
-    $( '#notices' ).find( '.notice:not(.ubdwp-job-notice)' ).remove();
+    $( '#ubdwp_notices' ).find( '.notice:not(.ubdwp-job-notice)' ).remove();
 }
 
 /**
  * Set up the preview table: rows are loaded page by page from the server
  */
 function setupUserTable() {
-    if ($.fn.DataTable.isDataTable( '#userTable' )) {
-        $( '#userTable' ).DataTable().clear().destroy();
+    if ($.fn.DataTable.isDataTable( '#ubdwp_user_table' )) {
+        $( '#ubdwp_user_table' ).DataTable().clear().destroy();
     }
 
     const escapeText = $.fn.dataTable.render.text();
 
-    const usersTable = $( '#userTable' ).DataTable(
+    const usersTable = $( '#ubdwp_user_table' ).DataTable(
         {
             serverSide: true,
             processing: true,
@@ -1063,7 +1067,7 @@ function setupUserTable() {
             },
             columns: [
                 {
-                    title: '<input type="checkbox" id="select-all" aria-label="' + escapeAttribute( __( 'Select all users on this page', 'users-bulk-delete-with-preview' ) ) + '">',
+                    title: '<input type="checkbox" id="ubdwp_select_all" aria-label="' + escapeAttribute( __( 'Select all users on this page', 'users-bulk-delete-with-preview' ) ) + '">',
                     data: 'checkbox',
                     orderable: false,
                     searchable: false
@@ -1162,7 +1166,7 @@ function getReassignSelect2Options(width) {
  * Initialize Select2 on reassign selects of the currently drawn rows
  */
 function initializeVisibleReassignSelects() {
-    $( '#userTable tbody select.user-select' ).each(
+    $( '#ubdwp_user_table tbody select.user-select' ).each(
         function () {
             if ( ! $( this ).data( 'select2' )) {
                 $( this ).select2( getReassignSelect2Options( '200px' ) );
@@ -1190,7 +1194,7 @@ function setReassignSelectValue($select, value, text) {
  * Initialize general select options and selection handlers for the user table
  */
 function initializeGeneralSelectOptions() {
-    const $generalSelect = $( '#generalSelect' );
+    const $generalSelect = $( '#ubdwp_general_select' );
 
     if ($generalSelect.data( 'select2' )) {
         $generalSelect.select2( 'destroy' );
@@ -1209,13 +1213,13 @@ function initializeGeneralSelectOptions() {
         .select2( getReassignSelect2Options( '400px' ) );
 
     // Header checkbox: select or unselect the users of the current page
-    $( '#userTable' ).off( '.ubdwp' ).on(
+    $( '#ubdwp_user_table' ).off( '.ubdwp' ).on(
         'click.ubdwp',
-        '#select-all',
+        '#ubdwp_select_all',
         function () {
             const checked = this.checked;
 
-            $( '#userTable tbody input.user-checkbox:not(:disabled)' ).each(
+            $( '#ubdwp_user_table tbody input.user-checkbox:not(:disabled)' ).each(
                 function () {
                     toggleUser( String( this.value ), checked );
                 }
@@ -1227,7 +1231,7 @@ function initializeGeneralSelectOptions() {
     );
 
     // Individual user checkbox
-    $( '#userTable tbody' ).off( '.ubdwp' ).on(
+    $( '#ubdwp_user_table tbody' ).off( '.ubdwp' ).on(
         'change.ubdwp',
         'input.user-checkbox',
         function () {

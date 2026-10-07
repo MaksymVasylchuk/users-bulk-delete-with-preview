@@ -8,7 +8,7 @@
 **Tags**: bulk delete, users delete with preview, users bulk delete with preview, users bulk clean with preview  
 **Requires at least**: 6.2  
 **Tested up to**: 7.1  
-**Stable tag**: 2.4.0  
+**Stable tag**: 2.4.1  
 **Requires PHP**: 8.0  
 **License**: GPLv2 or later  
 **License URI**: [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -118,6 +118,18 @@ The manual installation method requires downloading the Users Bulk Delete With P
    <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-8.png" alt="Logs" width="800" />
 </p>
 
+**9. Deletion Jobs**
+
+<p align="center">
+   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-9.png" alt="Deletion Jobs" width="800" />
+</p>
+
+**10. Settings**
+
+<p align="center">
+   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-10.png" alt="Settings" width="800" />
+</p>
+
 ## Frequently Asked Questions
 
 ### Does this plugin permanently delete users?
@@ -154,6 +166,9 @@ Yes. Run the commands as an administrator with --user, for example: wp ubdwp fin
 The deletion log stores the ID of each deleted account, the date and the administrator who deleted it. By default, emails and display names in new entries are masked (j***@example.com); on the Settings page you can store them in full or not at all, apply the setting to existing entries, set a retention period and delete old entries. The log is included in WordPress Tools > Export Personal Data and Erase Personal Data, and the plugin adds suggested text to the privacy policy guide. CSV exports are downloaded directly and never stored on the server.
 
 ## Upgrade Notice
+
+### 2.4.1
+Fixes the deletion progress bar, which was not visible in 2.4.0, and adds pagination to the Deletion Jobs page. No manual upgrade steps are required.
 
 ### 2.4.0
 Big update for large sites: server-side preview paging, background deletion jobs, WP-CLI commands and privacy tools for the log (masked emails by default, retention, personal data export and erasure). Jobs and settings have their own pages. No manual upgrade steps are required.
@@ -223,6 +238,18 @@ Commit the contents of `assets/build` together with the sources: the plugin load
 | `ubdwp_preview_limit`, `ubdwp_delete_batch_size`, `ubdwp_confirmation_threshold`, `ubdwp_background_time_budget` | filter | Limits of the preview, batches and confirmation |
 
 ## Changelog
+### 2.4.1
+*Release Date - 7 October 2026*
+* Fixed the deletion progress bar not being visible since 2.4.0
+* The Deletion Jobs page is paged (20 jobs per page) and shows the number of jobs
+* The Deletion Jobs page refreshes only while a job is running, not while it waits for confirmation
+* WP-CLI: user data printed by the commands can no longer contain terminal control characters, and --format=csv escapes spreadsheet formulas like the CSV export
+* WP-CLI: permissions are checked before anything else is done
+* New screenshots of the Deletion Jobs and Settings pages
+* The Logs page is titled "Logs", like its menu item; the Ukrainian translation now also covers the plugin description
+* Fewer conflicts with other plugins: all element IDs and CSS classes of the plugin pages are now prefixed (ubdwp), so markup or styles of other plugins cannot break the confirmation dialog, the progress bar or the loader
+* The Bulk Users Delete page no longer sends a needless job status request when it is opened
+
 ### 2.4.0
 *Release Date - 5 October 2026*
 * The preview now loads users page by page from the server, so it is no longer limited to 10,000 users and stays fast with tens of thousands of users

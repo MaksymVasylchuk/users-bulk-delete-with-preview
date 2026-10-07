@@ -20,12 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 <!-- Settings page -->
 <div class="wrap ubdwp-page">
 	<h2><?php echo esc_html( $title ); ?></h2>
-	<div id="poststuff_logs">
+	<div id="ubdwp_poststuff">
 		<div id="post-body" class="metabox-holder columns-1">
-			<div id="notices">
+			<div id="ubdwp_notices">
 			</div>
 			<h3><?php esc_html_e( 'Privacy', 'users-bulk-delete-with-preview' ); ?></h3>
-			<input type="hidden" id="privacy_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_privacy' ) ); ?>">
+			<input type="hidden" id="ubdwp_privacy_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_privacy' ) ); ?>">
 			<table class="form-table ubdwp-privacy" role="presentation">
 				<tr>
 					<th scope="row"><label for="ubdwp_retention_days"><?php esc_html_e( 'Keep log entries for', 'users-bulk-delete-with-preview' ); ?></label></th>
