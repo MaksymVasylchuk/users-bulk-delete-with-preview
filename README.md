@@ -239,7 +239,7 @@ Commit the contents of `assets/build` together with the sources: the plugin load
 
 ## Changelog
 ### 2.4.1
-*Release Date - TBD*
+*Release Date - 7 October 2026*
 * Fixed the deletion progress bar not being visible since 2.4.0
 * The Deletion Jobs page is paged (20 jobs per page) and shows the number of jobs
 * The Deletion Jobs page refreshes only while a job is running, not while it waits for confirmation
