@@ -13,7 +13,7 @@ import { __, sprintf } from '@wordpress/i18n';
  * @param {function} onSuccess - Called with the response data
  */
 const privacyRequest = (data, onSuccess) => {
-    $.post( ubdwpData.ajaxurl, Object.assign( {privacy_nonce: $( '#privacy_nonce' ).val()}, data ) ).done(
+    $.post( ubdwpData.ajaxurl, Object.assign( {privacy_nonce: $( '#ubdwp_privacy_nonce' ).val()}, data ) ).done(
         response => {
             if (response && response.success) {
                 onSuccess( response.data );
@@ -101,5 +101,5 @@ function createWordpressError(message, type = 'error') {
     );
 
     errorDiv.append( messageParagraph, dismissButton );
-    $( '#notices' ).html( errorDiv );
+    $( '#ubdwp_notices' ).html( errorDiv );
 }

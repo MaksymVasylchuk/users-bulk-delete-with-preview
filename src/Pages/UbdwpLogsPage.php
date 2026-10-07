@@ -43,7 +43,7 @@ class UbdwpLogsPage extends UbdwpAbstractBasePage {
 	 */
 	public function render(): void {
 		$data = array(
-			'title' => __( 'Logs Page', 'users-bulk-delete-with-preview' ),
+			'title' => __( 'Logs', 'users-bulk-delete-with-preview' ),
 		);
 		$this->render_template( 'logs-page.php', $data );
 	}

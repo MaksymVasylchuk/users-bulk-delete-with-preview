@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Users Bulk Delete With Preview 2.4.0\n"
+"Project-Id-Version: Users Bulk Delete With Preview 2.4.1\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
 "Last-Translator: \n"
 "Language-Team: Your Team <translations@example.com>\n"
@@ -82,7 +82,7 @@ msgstr "Видалити користувачів"
 #: src/Core/UbdwpLoader.php:110
 #: src/Core/UbdwpLoader.php:161
 msgid "Logs"
-msgstr "Журнали"
+msgstr "Журнал"
 
 #: src/Helpers/UbdwpHelper.php:38
 msgid "Choose from existing users"
@@ -181,9 +181,6 @@ msgstr "Виберіть користувача"
 msgid "Remove all related content"
 msgstr "Видаліть весь пов'язаний вміст"
 
-#: src/Pages/UbdwpLogsPage.php:46
-msgid "Logs Page"
-msgstr "Сторінка журналів"
 
 #: src/Pages/UbdwpUsersPage.php:50
 msgid "Users Management"
@@ -410,22 +407,22 @@ msgstr "Масове видалення користувачів із попер
 #. Plugin URI of the plugin
 #: ubdwp-users-bulk-delete-with-preview.php
 msgid "https://github.com/MaksymVasylchuk/users-bulk-delete-with-preview"
-msgstr ""
+msgstr "https://github.com/MaksymVasylchuk/users-bulk-delete-with-preview"
 
 #. Description of the plugin
 #: ubdwp-users-bulk-delete-with-preview.php
 msgid "Effortlessly delete multiple WordPress users with our Users Bulk Delete With Preview plugin. View and confirm user details before removal to ensure accuracy and avoid mistakes. Streamline your user management process with ease and confidence!"
-msgstr ""
+msgstr "Легко видаляйте багатьох користувачів WordPress за допомогою плагіна Users Bulk Delete With Preview. Переглядайте й підтверджуйте дані користувачів перед видаленням, щоб уникнути помилок. Керуйте користувачами просто й упевнено!"
 
 #. Author of the plugin
 #: ubdwp-users-bulk-delete-with-preview.php
 msgid "maksymvasylchuk"
-msgstr ""
+msgstr "maksymvasylchuk"
 
 #. Author URI of the plugin
 #: ubdwp-users-bulk-delete-with-preview.php
 msgid "https://github.com/MaksymVasylchuk"
-msgstr ""
+msgstr "https://github.com/MaksymVasylchuk"
 
 #. translators: %d: ID of the deleted administrator who performed the deletion.
 #: src/Handlers/UbdwpLogsHandler.php:136
@@ -1088,3 +1085,12 @@ msgstr "Видалення виконується у фоновому режим
 #: assets/src/users.js:566
 msgid "Open the Deletion Jobs page"
 msgstr "Відкрити сторінку завдань видалення"
+
+#: templates/jobs-page.php:86
+#. translators: %s: Number of deletion jobs.
+#, php-format
+msgid "%s job"
+msgid_plural "%s jobs"
+msgstr[0] "%s завдання"
+msgstr[1] "%s завдання"
+msgstr[2] "%s завдань"

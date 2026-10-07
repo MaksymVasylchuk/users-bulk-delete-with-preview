@@ -3,5 +3,5 @@
 		'jquery',
 		'wp-i18n'
 	),
-	'version' => '21254273418888e55c48'
+	'version' => '9b4eae1c5f399748377e'
 );

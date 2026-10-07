@@ -10,7 +10,7 @@ const translations = ubdwpData.translations || {};
 const escapeText   = $.fn.dataTable.render.text();
 
 // Initialize DataTable for logs
-$( '#logs' ).DataTable(
+$( '#ubdwp_logs_table' ).DataTable(
     {
         "processing": true,           // Show processing indicator while data is loading
         "serverSide": true,           // Enable server-side processing
@@ -22,7 +22,7 @@ $( '#logs' ).DataTable(
             "url": ubdwpData.ajaxurl,   // URL to fetch data from
             "data": {
                 "action": 'ubdwp_logs_datatables', // Action to be handled by the server-side script
-                "logs_datatable_nonce": $('#logs_datatable_nonce').val()
+                "logs_datatable_nonce": $('#ubdwp_logs_datatable_nonce').val()
             },
             "dataSrc": function ( json ) {
               if(typeof json.success !== 'undefined' && !json.success) {
@@ -80,5 +80,5 @@ function createWordpressError(message) {
     );
 
     errorDiv.append( messageParagraph, dismissButton );
-    $( '#notices' ).html( errorDiv );
+    $( '#ubdwp_notices' ).html( errorDiv );
 }

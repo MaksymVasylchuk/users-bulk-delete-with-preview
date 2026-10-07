@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Users Bulk Delete With Preview 2.4.0\n"
+"Project-Id-Version: Users Bulk Delete With Preview 2.4.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/users-bulk-delete-with-preview\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-05T14:37:24+00:00\n"
+"POT-Creation-Date: 2026-10-06T08:22:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: users-bulk-delete-with-preview\n"
@@ -79,88 +79,88 @@ msgstr ""
 msgid "Background job %d created. Follow it with \"wp ubdwp jobs\"."
 msgstr ""
 
-#: src/Cli/UbdwpCliCommand.php:430
+#: src/Cli/UbdwpCliCommand.php:431
 #: src/Utils/UbdwpValidation.php:275
 msgid "The deletion job was not found."
 msgstr ""
 
 #. translators: %d: job ID.
-#: src/Cli/UbdwpCliCommand.php:441
+#: src/Cli/UbdwpCliCommand.php:442
 #, php-format
 msgid "Job %d cancelled."
 msgstr ""
 
-#: src/Cli/UbdwpCliCommand.php:448
+#: src/Cli/UbdwpCliCommand.php:449
 msgid "Only running jobs that you started can be run."
 msgstr ""
 
-#: src/Cli/UbdwpCliCommand.php:490
+#: src/Cli/UbdwpCliCommand.php:491
 #: assets/src/settings.js:41
 msgid "Apply the saved email setting to all existing log entries? Masked or removed data cannot be restored."
 msgstr ""
 
 #. translators: %d: number of log entries.
-#: src/Cli/UbdwpCliCommand.php:493
+#: src/Cli/UbdwpCliCommand.php:494
 #: assets/src/settings.js:44
 #, php-format,js-format
 msgid "Updated log entries: %d."
 msgstr ""
 
-#: src/Cli/UbdwpCliCommand.php:502
+#: src/Cli/UbdwpCliCommand.php:503
 msgid "Use --older-than=<days> or --all."
 msgstr ""
 
-#: src/Cli/UbdwpCliCommand.php:507
+#: src/Cli/UbdwpCliCommand.php:508
 #: assets/src/settings.js:76
 msgid "Delete the whole log? This cannot be undone."
 msgstr ""
 
 #. translators: %d: number of days.
-#: src/Cli/UbdwpCliCommand.php:509
+#: src/Cli/UbdwpCliCommand.php:510
 #: assets/src/settings.js:62
 #, php-format,js-format
 msgid "Delete log entries older than %d days? This cannot be undone."
 msgstr ""
 
 #. translators: %d: number of log entries.
-#: src/Cli/UbdwpCliCommand.php:514
+#: src/Cli/UbdwpCliCommand.php:515
 #: assets/src/settings.js:65
 #: assets/src/settings.js:79
 #, php-format,js-format
 msgid "Deleted log entries: %d."
 msgstr ""
 
-#: src/Cli/UbdwpCliCommand.php:530
+#: src/Cli/UbdwpCliCommand.php:529
 msgid "Run this command as an administrator who can delete users, for example with --user=admin."
 msgstr ""
 
-#: src/Cli/UbdwpCliCommand.php:559
+#: src/Cli/UbdwpCliCommand.php:600
 #: src/Utils/UbdwpValidation.php:267
 msgid "Please choose a valid email comparison."
 msgstr ""
 
-#: src/Cli/UbdwpCliCommand.php:563
+#: src/Cli/UbdwpCliCommand.php:604
 msgid "Please choose a valid user meta comparison."
 msgstr ""
 
-#: src/Cli/UbdwpCliCommand.php:610
+#: src/Cli/UbdwpCliCommand.php:651
 #: src/Helpers/UbdwpHelper.php:196
 #: src/Utils/UbdwpValidation.php:291
 msgid "The user selected to receive the content is not valid."
 msgstr ""
 
-#: src/Cli/UbdwpCliCommand.php:641
+#: src/Cli/UbdwpCliCommand.php:682
 msgid "Deleting users"
 msgstr ""
 
 #. translators: %s: job status.
-#: src/Cli/UbdwpCliCommand.php:667
+#: src/Cli/UbdwpCliCommand.php:708
 #, php-format
 msgid "The job stopped with status: %s"
 msgstr ""
 
 #. translators: 1: number of deleted users, 2: number of users that were not deleted.
-#: src/Cli/UbdwpCliCommand.php:671
+#: src/Cli/UbdwpCliCommand.php:712
 #, php-format
 msgid "Deleted users: %1$d. Not deleted: %2$d."
 msgstr ""
@@ -172,7 +172,7 @@ msgstr ""
 
 #: src/Core/UbdwpLoader.php:100
 #: src/Core/UbdwpLoader.php:101
-#: src/Pages/UbdwpJobsPage.php:37
+#: src/Pages/UbdwpJobsPage.php:45
 msgid "Deletion Jobs"
 msgstr ""
 
@@ -182,6 +182,7 @@ msgstr ""
 
 #: src/Core/UbdwpLoader.php:110
 #: src/Core/UbdwpLoader.php:161
+#: src/Pages/UbdwpLogsPage.php:46
 msgid "Logs"
 msgstr ""
 
@@ -258,46 +259,46 @@ msgid "No matching records found"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:94
-#: templates/jobs-page.php:33
-#: templates/logs-page.php:31
-#: templates/partials/_users_table.php:36
+#: templates/jobs-page.php:37
+#: templates/logs-page.php:33
+#: templates/partials/_users_table.php:38
 msgid "ID"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:95
-#: templates/partials/_confirmation-popup.php:27
-#: templates/partials/_users_table.php:37
-#: templates/steps/step-3.php:42
+#: templates/partials/_confirmation-popup.php:29
+#: templates/partials/_users_table.php:39
+#: templates/steps/step-3.php:44
 msgid "Username"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:96
 #: src/Services/UbdwpPrivacy.php:307
-#: templates/partials/_confirmation-popup.php:28
-#: templates/partials/_users_table.php:38
-#: templates/steps/step-3.php:28
-#: templates/steps/step-3.php:43
+#: templates/partials/_confirmation-popup.php:30
+#: templates/partials/_users_table.php:40
+#: templates/steps/step-3.php:30
+#: templates/steps/step-3.php:45
 msgid "Email"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:97
-#: templates/partials/_users_table.php:39
+#: templates/partials/_users_table.php:41
 msgid "Registered"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:98
-#: templates/partials/_users_table.php:41
+#: templates/partials/_users_table.php:43
 msgid "Posts"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:99
-#: templates/partials/_users_table.php:40
+#: templates/partials/_users_table.php:42
 msgid "Role"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:100
-#: templates/partials/_users_table.php:21
-#: templates/partials/_users_table.php:42
+#: templates/partials/_users_table.php:23
+#: templates/partials/_users_table.php:44
 msgid "Assign related content to user"
 msgstr ""
 
@@ -391,7 +392,7 @@ msgid "This cannot be undone."
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:128
-#: templates/steps/step-3.php:37
+#: templates/steps/step-3.php:39
 msgid "Users that were not deleted"
 msgstr ""
 
@@ -445,10 +446,6 @@ msgstr ""
 msgid "Protected"
 msgstr ""
 
-#: src/Pages/UbdwpLogsPage.php:46
-msgid "Logs Page"
-msgstr ""
-
 #: src/Pages/UbdwpSettingsPage.php:106
 #: assets/src/settings.js:57
 msgid "Please enter a number of days."
@@ -462,27 +459,27 @@ msgstr ""
 msgid "The user who started this job can no longer delete users."
 msgstr ""
 
-#: src/Services/UbdwpDeletionJobs.php:415
+#: src/Services/UbdwpDeletionJobs.php:472
 msgid "Preparing"
 msgstr ""
 
-#: src/Services/UbdwpDeletionJobs.php:416
+#: src/Services/UbdwpDeletionJobs.php:473
 msgid "Waiting for confirmation"
 msgstr ""
 
-#: src/Services/UbdwpDeletionJobs.php:417
+#: src/Services/UbdwpDeletionJobs.php:474
 msgid "Running"
 msgstr ""
 
-#: src/Services/UbdwpDeletionJobs.php:418
+#: src/Services/UbdwpDeletionJobs.php:475
 msgid "Completed"
 msgstr ""
 
-#: src/Services/UbdwpDeletionJobs.php:419
+#: src/Services/UbdwpDeletionJobs.php:476
 msgid "Cancelled"
 msgstr ""
 
-#: src/Services/UbdwpDeletionJobs.php:420
+#: src/Services/UbdwpDeletionJobs.php:477
 msgid "Failed"
 msgstr ""
 
@@ -511,7 +508,7 @@ msgid "Date"
 msgstr ""
 
 #: src/Services/UbdwpPrivacy.php:308
-#: templates/steps/step-3.php:27
+#: templates/steps/step-3.php:29
 msgid "Display name"
 msgstr ""
 
@@ -611,388 +608,396 @@ msgstr ""
 msgid "Please type the number of users to confirm the deletion."
 msgstr ""
 
-#: templates/jobs-page.php:25
+#: templates/jobs-page.php:29
 msgid "Deletions started on the Bulk Users Delete page or with WP-CLI. Background jobs continue after you leave the page; this page refreshes while a job is running."
 msgstr ""
 
-#: templates/jobs-page.php:27
+#: templates/jobs-page.php:31
 msgid "No deletion jobs yet."
 msgstr ""
 
-#: templates/jobs-page.php:34
+#: templates/jobs-page.php:38
 msgid "Started by"
 msgstr ""
 
-#: templates/jobs-page.php:35
+#: templates/jobs-page.php:39
 msgid "Mode"
 msgstr ""
 
-#: templates/jobs-page.php:36
+#: templates/jobs-page.php:40
 msgid "Status"
 msgstr ""
 
-#: templates/jobs-page.php:37
+#: templates/jobs-page.php:41
 msgid "Progress"
 msgstr ""
 
-#: templates/jobs-page.php:38
+#: templates/jobs-page.php:42
 msgid "Deleted"
 msgstr ""
 
-#: templates/jobs-page.php:39
+#: templates/jobs-page.php:43
 msgid "Not deleted"
 msgstr ""
 
-#: templates/jobs-page.php:40
+#: templates/jobs-page.php:44
 msgid "Created"
 msgstr ""
 
-#: templates/jobs-page.php:41
+#: templates/jobs-page.php:45
 msgid "Actions"
 msgstr ""
 
-#: templates/jobs-page.php:49
+#: templates/jobs-page.php:53
 msgid "Browser"
 msgstr ""
 
-#: templates/jobs-page.php:50
+#: templates/jobs-page.php:54
 msgid "Background"
 msgstr ""
 
-#: templates/jobs-page.php:51
+#: templates/jobs-page.php:55
 msgid "WP-CLI"
 msgstr ""
 
-#: templates/jobs-page.php:70
-#: templates/partials/_confirmation-popup.php:52
+#: templates/jobs-page.php:74
+#: templates/partials/_confirmation-popup.php:54
 msgid "Cancel"
 msgstr ""
 
-#: templates/logs-page.php:32
+#. translators: %s: Number of deletion jobs.
+#: templates/jobs-page.php:86
+#, php-format
+msgid "%s job"
+msgid_plural "%s jobs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/logs-page.php:34
 msgid "User"
 msgstr ""
 
-#: templates/logs-page.php:33
+#: templates/logs-page.php:35
 msgid "Deleted Users Count"
 msgstr ""
 
-#: templates/logs-page.php:34
+#: templates/logs-page.php:36
 msgid "Deleted User Data"
 msgstr ""
 
-#: templates/logs-page.php:35
+#: templates/logs-page.php:37
 msgid "Deletion Time"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:18
+#: templates/partials/_confirmation-popup.php:20
 msgid "Confirm Deletion"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:19
+#: templates/partials/_confirmation-popup.php:21
 msgid "Close"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:26
-#: templates/steps/step-3.php:26
-#: templates/steps/step-3.php:41
+#: templates/partials/_confirmation-popup.php:28
+#: templates/steps/step-3.php:28
+#: templates/steps/step-3.php:43
 msgid "User ID"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:29
-#: templates/steps/step-3.php:44
+#: templates/partials/_confirmation-popup.php:31
+#: templates/steps/step-3.php:46
 msgid "Reason"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:35
+#: templates/partials/_confirmation-popup.php:37
 msgid "How to run the deletion"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:38
+#: templates/partials/_confirmation-popup.php:40
 msgid "In this browser tab (keep the page open)"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:42
+#: templates/partials/_confirmation-popup.php:44
 msgid "In the background (you can leave this page; progress is shown on the Deletion Jobs page)"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:47
+#: templates/partials/_confirmation-popup.php:49
 msgid "Number of users to delete"
 msgstr ""
 
-#: templates/partials/_confirmation-popup.php:53
+#: templates/partials/_confirmation-popup.php:55
 msgid "Delete"
 msgstr ""
 
-#: templates/partials/_existing_user_form.php:18
+#: templates/partials/_existing_user_form.php:20
 msgid "Select existing users"
 msgstr ""
 
-#: templates/partials/_existing_user_form.php:25
+#: templates/partials/_existing_user_form.php:27
 msgid "All users of this site"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:19
+#: templates/partials/_find_user_form.php:21
 msgid "User Role"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:34
+#: templates/partials/_find_user_form.php:36
 msgid "User Email"
-msgstr ""
-
-#: templates/partials/_find_user_form.php:39
-#: templates/partials/_find_user_form.php:84
-msgid "Equal to (string)"
-msgstr ""
-
-#: templates/partials/_find_user_form.php:40
-#: templates/partials/_find_user_form.php:85
-msgid "Not equal to (string)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:41
 #: templates/partials/_find_user_form.php:86
-msgid "Like (string)"
+msgid "Equal to (string)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:42
 #: templates/partials/_find_user_form.php:87
-msgid "Not like (string)"
+msgid "Not equal to (string)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:43
-msgid "Ends with (for example @example.com)"
+#: templates/partials/_find_user_form.php:88
+msgid "Like (string)"
+msgstr ""
+
+#: templates/partials/_find_user_form.php:44
+#: templates/partials/_find_user_form.php:89
+msgid "Not like (string)"
 msgstr ""
 
 #: templates/partials/_find_user_form.php:45
+msgid "Ends with (for example @example.com)"
+msgstr ""
+
+#: templates/partials/_find_user_form.php:47
 msgid "Enter user email..."
 msgstr ""
 
-#: templates/partials/_find_user_form.php:53
+#: templates/partials/_find_user_form.php:55
 msgid "User Registration Date"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:57
+#: templates/partials/_find_user_form.php:59
 msgid "Registration date comparison"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:58
+#: templates/partials/_find_user_form.php:60
 msgid "On or after"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:59
+#: templates/partials/_find_user_form.php:61
 msgid "On or before"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:60
+#: templates/partials/_find_user_form.php:62
 msgid "On"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:61
+#: templates/partials/_find_user_form.php:63
 msgid "Between"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:65
+#: templates/partials/_find_user_form.php:67
 msgid "and"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:75
+#: templates/partials/_find_user_form.php:77
 msgid "User Meta"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:82
+#: templates/partials/_find_user_form.php:84
 msgid "Meta does not exist"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:83
+#: templates/partials/_find_user_form.php:85
 msgid "Meta is empty or missing"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:88
+#: templates/partials/_find_user_form.php:90
 msgid "Equal to (date)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:89
+#: templates/partials/_find_user_form.php:91
 msgid "Not equal to (date)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:90
+#: templates/partials/_find_user_form.php:92
 msgid "Less than (date)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:91
+#: templates/partials/_find_user_form.php:93
 msgid "Less than or equal to (date)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:92
+#: templates/partials/_find_user_form.php:94
 msgid "Greater than (date)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:93
+#: templates/partials/_find_user_form.php:95
 msgid "Greater than or equal to (date)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:94
+#: templates/partials/_find_user_form.php:96
 msgid "Equal to (number)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:95
+#: templates/partials/_find_user_form.php:97
 msgid "Not equal to (number)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:96
+#: templates/partials/_find_user_form.php:98
 msgid "Less than (number)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:97
+#: templates/partials/_find_user_form.php:99
 msgid "Less than or equal to (number)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:98
+#: templates/partials/_find_user_form.php:100
 msgid "Greater than (number)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:99
+#: templates/partials/_find_user_form.php:101
 msgid "Greater than or equal to (number)"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:101
+#: templates/partials/_find_user_form.php:103
 msgid "Enter user meta value"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:103
+#: templates/partials/_find_user_form.php:105
 msgid "Tip: WordPress stores profile fields such as first_name for every user, even when they are blank. To find users who left a field empty, choose \"Meta is empty or missing\"."
 msgstr ""
 
-#: templates/partials/_find_user_form.php:110
+#: templates/partials/_find_user_form.php:112
 msgid "Content"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:115
+#: templates/partials/_find_user_form.php:117
 msgid "Only users without posts or comments on this site"
 msgstr ""
 
-#: templates/partials/_find_user_form.php:120
+#: templates/partials/_find_user_form.php:122
 msgid "Only users without WooCommerce orders"
 msgstr ""
 
-#: templates/partials/_step-2-buttons.php:16
+#: templates/partials/_step-2-buttons.php:18
 msgid "Previous step"
 msgstr ""
 
-#: templates/partials/_step-2-buttons.php:19
+#: templates/partials/_step-2-buttons.php:21
 msgid "Export Selected Users"
 msgstr ""
 
-#: templates/partials/_step-2-buttons.php:22
+#: templates/partials/_step-2-buttons.php:24
 msgid "Delete selected users"
 msgstr ""
 
-#: templates/partials/_step-wizard.php:19
-#: templates/partials/_step-wizard.php:23
-#: templates/partials/_step-wizard.php:27
+#: templates/partials/_step-wizard.php:21
+#: templates/partials/_step-wizard.php:25
+#: templates/partials/_step-wizard.php:29
 msgid "Step"
 msgstr ""
 
-#: templates/partials/_users_table.php:18
+#: templates/partials/_users_table.php:20
 msgid "Clear selection"
 msgstr ""
 
-#: templates/partials/_users_table.php:35
+#: templates/partials/_users_table.php:37
 msgid "Select"
 msgstr ""
 
-#: templates/partials/_woocommerce_filters_form.php:19
+#: templates/partials/_woocommerce_filters_form.php:21
 #: assets/src/users.js:103
 msgid "Select products that bought user"
 msgstr ""
 
-#: templates/partials/_woocommerce_filters_form.php:26
+#: templates/partials/_woocommerce_filters_form.php:28
 msgid "Select All"
 msgstr ""
 
-#: templates/settings-page.php:25
+#: templates/settings-page.php:27
 msgid "Privacy"
 msgstr ""
 
-#: templates/settings-page.php:29
+#: templates/settings-page.php:31
 msgid "Keep log entries for"
 msgstr ""
 
-#: templates/settings-page.php:33
+#: templates/settings-page.php:35
 msgid "days"
 msgstr ""
 
-#: templates/settings-page.php:35
+#: templates/settings-page.php:37
 msgid "Older entries and finished deletion jobs are deleted automatically once a day. 0 keeps them until you delete them."
 msgstr ""
 
-#: templates/settings-page.php:39
+#: templates/settings-page.php:41
 msgid "Emails and names in new entries"
 msgstr ""
 
-#: templates/settings-page.php:42
+#: templates/settings-page.php:44
 msgid "Store masked (j***@example.com)"
 msgstr ""
 
-#: templates/settings-page.php:43
+#: templates/settings-page.php:45
 msgid "Store in full"
 msgstr ""
 
-#: templates/settings-page.php:44
+#: templates/settings-page.php:46
 msgid "Do not store (only user IDs)"
 msgstr ""
 
-#: templates/settings-page.php:46
+#: templates/settings-page.php:48
 msgid "The log is also included in Tools → Export Personal Data and Erase Personal Data."
 msgstr ""
 
-#: templates/settings-page.php:51
+#: templates/settings-page.php:53
 msgid "Save privacy settings"
 msgstr ""
 
-#: templates/settings-page.php:54
+#: templates/settings-page.php:56
 msgid "Log maintenance"
 msgstr ""
 
-#: templates/settings-page.php:56
+#: templates/settings-page.php:58
 msgid "These actions change the existing entries of the log and cannot be undone."
 msgstr ""
 
-#: templates/settings-page.php:57
+#: templates/settings-page.php:59
 #: assets/src/users.js:760
 msgid "Open the Logs page"
 msgstr ""
 
-#: templates/settings-page.php:60
+#: templates/settings-page.php:62
 msgid "Apply to existing entries"
 msgstr ""
 
-#: templates/settings-page.php:61
+#: templates/settings-page.php:63
 msgid "Delete entries older than the period above"
 msgstr ""
 
-#: templates/settings-page.php:62
+#: templates/settings-page.php:64
 msgid "Delete the whole log"
 msgstr ""
 
-#: templates/steps/step-1.php:26
+#: templates/steps/step-1.php:28
 msgid "Choose filter type"
 msgstr ""
 
-#: templates/steps/step-1.php:51
+#: templates/steps/step-1.php:67
 msgid "Preview"
 msgstr ""
 
-#: templates/steps/step-2.php:24
+#: templates/steps/step-2.php:26
 msgid "Stop deletion"
 msgstr ""
 
-#: templates/steps/step-3.php:29
+#: templates/steps/step-3.php:31
 msgid "Related content"
 msgstr ""
 
-#: assets/src/jobs.js:34
-#: assets/src/jobs.js:40
+#: assets/src/jobs.js:35
+#: assets/src/jobs.js:41
 #: assets/src/logs.js:29
 #: assets/src/logs.js:39
 #: assets/src/settings.js:21
@@ -1003,7 +1008,7 @@ msgstr ""
 msgid "An unexpected error occurred."
 msgstr ""
 
-#: assets/src/jobs.js:58
+#: assets/src/jobs.js:59
 #: assets/src/logs.js:77
 #: assets/src/settings.js:98
 #: assets/src/users.js:963

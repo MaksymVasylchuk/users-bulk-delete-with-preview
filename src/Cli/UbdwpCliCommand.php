@@ -203,7 +203,7 @@ class UbdwpCliCommand {
 			UbdwpHelperFacade::flush_runtime_cache();
 		}
 
-		\WP_CLI\Utils\format_items( $format, $items, array( 'ID', 'user_login', 'user_email', 'registered', 'roles', 'posts', 'protected' ) );
+		\WP_CLI\Utils\format_items( $format, $this->clean_items( $items, 'csv' === $format ), array( 'ID', 'user_login', 'user_email', 'registered', 'roles', 'posts', 'protected' ) );
 	}
 
 	/**
@@ -419,7 +419,8 @@ class UbdwpCliCommand {
 				);
 			}
 
-			\WP_CLI\Utils\format_items( \WP_CLI\Utils\get_flag_value( $assoc_args, 'format', 'table' ), $items, array( 'ID', 'status', 'mode', 'user', 'progress', 'deleted', 'failed', 'created', 'message' ) );
+			$format = \WP_CLI\Utils\get_flag_value( $assoc_args, 'format', 'table' );
+			\WP_CLI\Utils\format_items( $format, $this->clean_items( $items, 'csv' === $format ), array( 'ID', 'status', 'mode', 'user', 'progress', 'deleted', 'failed', 'created', 'message' ) );
 
 			return;
 		}
@@ -522,13 +523,53 @@ class UbdwpCliCommand {
 	 * @return void
 	 */
 	private function prepare( bool $delete = false ): void {
-		UbdwpActivate::ubdwp_maybe_upgrade_current_site();
-
 		$can_view = current_user_can( 'manage_options' ) && current_user_can( 'list_users' );
 
 		if ( ! get_current_user_id() || ! $can_view || ( $delete && ! UbdwpBackgroundRunner::can_delete_users() ) ) {
 			\WP_CLI::error( __( 'Run this command as an administrator who can delete users, for example with --user=admin.', 'users-bulk-delete-with-preview' ) );
 		}
+
+		UbdwpActivate::ubdwp_maybe_upgrade_current_site();
+	}
+
+	/**
+	 * Make values stored in the database safe to print in a terminal.
+	 *
+	 * Control characters are removed, so data such as a user login or email cannot send escape
+	 * sequences to the terminal. For CSV output, cells are also escaped against spreadsheet formulas.
+	 *
+	 * @param array<int, array<string, mixed>> $items Rows to print.
+	 * @param bool                             $csv   Whether the rows are printed as CSV.
+	 *
+	 * @return array<int, array<string, mixed>> Rows that are safe to print.
+	 */
+	private function clean_items( array $items, bool $csv = false ): array {
+		$handler = $csv ? new UbdwpUsersHandler( get_current_user_id() ) : null;
+
+		return array_map(
+			function ( array $item ) use ( $handler ): array {
+				foreach ( $item as $key => $value ) {
+					if ( is_string( $value ) ) {
+						$value        = self::clean_text( $value );
+						$item[ $key ] = $handler ? $handler->escape_csv_cell( $value ) : $value;
+					}
+				}
+
+				return $item;
+			},
+			$items
+		);
+	}
+
+	/**
+	 * Remove control characters (C0, DEL and C1) from a text printed in a terminal.
+	 *
+	 * @param string $text Text.
+	 *
+	 * @return string Text without control characters.
+	 */
+	private static function clean_text( string $text ): string {
+		return (string) preg_replace( '/[\x00-\x1F\x7F]|\xC2[\x80-\x9F]/', '', $text );
 	}
 
 	/**
@@ -659,7 +700,7 @@ class UbdwpCliCommand {
 		$status = $jobs->to_status( $job );
 
 		if ( ! empty( $status['failed_users'] ) ) {
-			\WP_CLI\Utils\format_items( 'table', $status['failed_users'], array( 'user_id', 'login', 'email', 'message' ) );
+			\WP_CLI\Utils\format_items( 'table', $this->clean_items( $status['failed_users'] ), array( 'user_id', 'login', 'email', 'message' ) );
 		}
 
 		if ( UbdwpDeletionJobs::STATUS_DONE !== $status['status'] ) {
@@ -685,7 +726,7 @@ class UbdwpCliCommand {
 		\WP_CLI::line( sprintf( is_multisite() ? $translations['summaryRemovable'] : $translations['summaryDeletable'], $summary['deletable'] ) );
 
 		if ( $summary['reassign_users'] > 0 ) {
-			\WP_CLI::line( sprintf( $translations['summaryReassign'], $summary['reassign_users'], $summary['reassign_posts'], implode( ', ', $summary['reassign_targets'] ) ) );
+			\WP_CLI::line( sprintf( $translations['summaryReassign'], $summary['reassign_users'], $summary['reassign_posts'], self::clean_text( implode( ', ', $summary['reassign_targets'] ) ) ) );
 		}
 
 		if ( $summary['default_users'] > 0 ) {
@@ -698,7 +739,7 @@ class UbdwpCliCommand {
 
 		if ( $summary['skipped_count'] > 0 ) {
 			\WP_CLI::line( sprintf( $translations['summarySkipped'], $summary['skipped_count'] ) );
-			\WP_CLI\Utils\format_items( 'table', array_slice( $summary['skipped'], 0, 50 ), array( 'user_id', 'login', 'email', 'message' ) );
+			\WP_CLI\Utils\format_items( 'table', $this->clean_items( array_slice( $summary['skipped'], 0, 50 ) ), array( 'user_id', 'login', 'email', 'message' ) );
 		}
 	}
 }

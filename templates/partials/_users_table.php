@@ -20,18 +20,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<button type="button" class="button-link ubdwp-clear-selection"><?php esc_html_e( 'Clear selection', 'users-bulk-delete-with-preview' ); ?></button>
 </div>
 <div class="ubdwp-general-reassign">
-	<label for="generalSelect"><?php esc_html_e( 'Assign related content to user', 'users-bulk-delete-with-preview' ); ?>:</label>
+	<label for="ubdwp_general_select"><?php esc_html_e( 'Assign related content to user', 'users-bulk-delete-with-preview' ); ?>:</label>
 	<!-- General select dropdown outside the table -->
-	<select id="generalSelect" class="general-select">
+	<select id="ubdwp_general_select" class="general-select">
 	</select>
 </div>
-<input type="hidden" id="delete_users_nonce" name="delete_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_delete_users' ) ); ?>">
-<input type="hidden" name="action" value="ubdwp_delete_users" id="delete_users_action">
-<input type="hidden" id="export_users_nonce" name="export_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_export_users' ) ); ?>">
+<input type="hidden" id="ubdwp_delete_users_nonce" name="delete_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_delete_users' ) ); ?>">
+<input type="hidden" name="action" value="ubdwp_delete_users" id="ubdwp_delete_users_action">
+<input type="hidden" id="ubdwp_export_users_nonce" name="export_users_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_export_users' ) ); ?>">
 
-<form action="#" method="post" id="select_users_for_delete">
+<form action="#" method="post" id="ubdwp_select_users_for_delete">
 
-	<table id="userTable" class="display" style="width:100%">
+	<table id="ubdwp_user_table" class="display" style="width:100%">
 		<thead>
 		<tr>
 			<th><?php esc_html_e( 'Select', 'users-bulk-delete-with-preview' ); ?></th>

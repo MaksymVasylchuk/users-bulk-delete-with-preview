@@ -14,10 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <!-- Confirmation Modal -->
-<dialog id="confirmModal" class="ubdwp-dialog" aria-labelledby="confirmModalLabel">
+<dialog id="ubdwp_confirm_modal" class="ubdwp-dialog" aria-labelledby="ubdwp_confirm_modal_label">
 	<div class="ubdwp-dialog-content">
 			<div class="ubdwp-dialog-header">
-				<h2 class="ubdwp-dialog-title" id="confirmModalLabel"><?php esc_html_e( 'Confirm Deletion', 'users-bulk-delete-with-preview' ); ?></h2>
+				<h2 class="ubdwp-dialog-title" id="ubdwp_confirm_modal_label"><?php esc_html_e( 'Confirm Deletion', 'users-bulk-delete-with-preview' ); ?></h2>
 				<button type="button" class="ubdwp-dialog-close" data-ubdwp-close aria-label="<?php esc_attr_e( 'Close', 'users-bulk-delete-with-preview' ); ?>"><span aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="ubdwp-dialog-body">
@@ -52,7 +52,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 			<div class="ubdwp-dialog-footer">
 				<button type="button" id="ubdwp_cancel_delete" class="button button-secondary" data-ubdwp-close><?php esc_html_e( 'Cancel', 'users-bulk-delete-with-preview' ); ?></button>
-				<button type="button" id="confirmDelete" class="button button-primary ubdwp-button-danger"><?php esc_html_e( 'Delete', 'users-bulk-delete-with-preview' ); ?></button>
+				<button type="button" id="ubdwp_confirm_delete" class="button button-primary ubdwp-button-danger"><?php esc_html_e( 'Delete', 'users-bulk-delete-with-preview' ); ?></button>
 			</div>
 	</div>
 </dialog>

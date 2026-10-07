@@ -6,8 +6,9 @@
 import $ from 'jquery';
 import { __ } from '@wordpress/i18n';
 
-// Refresh the list while a job is running, so its progress stays current
-if ($( '.ubdwp-cancel-job' ).length) {
+// Refresh the list while a job is running, so its progress stays current. Jobs that are still being
+// prepared are not watched: an interrupted preparation would keep the page reloading until it is pruned.
+if ($( '#ubdwp_jobs tr[data-status="running"]' ).length) {
     setTimeout( () => window.location.reload(), 10000 );
 }
 
@@ -61,5 +62,5 @@ function createWordpressError(message) {
     );
 
     errorDiv.append( messageParagraph, dismissButton );
-    $( '#notices' ).html( errorDiv );
+    $( '#ubdwp_notices' ).html( errorDiv );
 }

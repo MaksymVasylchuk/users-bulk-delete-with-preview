@@ -532,7 +532,7 @@ class UbdwpUsersHandler {
 	 *
 	 * @return string Safe CSV cell value.
 	 */
-	private function escape_csv_cell( string $value ): string {
+	public function escape_csv_cell( string $value ): string {
 		return preg_match( '/^[=+\-@\t\r]/', $value ) ? "'" . $value : $value;
 	}
 

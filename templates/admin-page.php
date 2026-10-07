@@ -16,8 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 $title = $title ?? '';
 ?>
 <!-- Loader -->
-<div id="page_loader" style="display: none;">
-	<div class="loader"></div>
+<div id="ubdwp_page_loader" style="display: none;">
+	<div class="ubdwp-loader"></div>
 	<p id="ubdwp_loader_text" class="ubdwp-loader-text" aria-live="polite"></p>
 </div>
 <!-- Loader -->
@@ -28,7 +28,7 @@ $title = $title ?? '';
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-1">
 
-			<div id="notices">
+			<div id="ubdwp_notices">
 			</div>
 
 			<?php require_once 'partials/_step-wizard.php'; ?>
