@@ -18,15 +18,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="ubdwp-stepwizard-row setup-panel">
 		<div class="ubdwp-stepwizard-step">
 			<span id="ubdwp_step_icon_1" class="ubdwp-step-icon is-active" aria-current="step">1</span>
-			<p><?php esc_html_e( 'Step', 'users-bulk-delete-with-preview' ); ?> 1</p>
+			<p><?php esc_html_e( 'Find users', 'users-bulk-delete-with-preview' ); ?></p>
 		</div>
 		<div class="ubdwp-stepwizard-step">
 			<span id="ubdwp_step_icon_2" class="ubdwp-step-icon">2</span>
-			<p><?php esc_html_e( 'Step', 'users-bulk-delete-with-preview' ); ?> 2</p>
+			<p><?php esc_html_e( 'Review and select', 'users-bulk-delete-with-preview' ); ?></p>
 		</div>
 		<div class="ubdwp-stepwizard-step">
 			<span id="ubdwp_step_icon_3" class="ubdwp-step-icon">3</span>
-			<p><?php esc_html_e( 'Step', 'users-bulk-delete-with-preview' ); ?> 3</p>
+			<p><?php esc_html_e( 'Result', 'users-bulk-delete-with-preview' ); ?></p>
 		</div>
 	</div>
 </div>

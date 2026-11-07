@@ -14,6 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <!-- Find Users Form -->
+<!-- Group: Account -->
+<tr class="ubdwp-filter-find ubdwp-filter-group" style="display: none;">
+	<th colspan="2" scope="colgroup"><h3 class="ubdwp-filter-group-title"><?php esc_html_e( 'Account', 'users-bulk-delete-with-preview' ); ?></h3></th>
+</tr>
 <!-- User Role -->
 <?php if ( isset( $roles ) && ! empty( $roles ) ) : ?>
 	<tr class="ubdwp-filter-find" style="display: none;">
@@ -37,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</th>
 	<td>
 		<div class="ubdwp-field-row">
-		<select name="user_email_equal" id="ubdwp_user_email_equal" class="ubdwp-operator">
+		<select name="user_email_equal" id="ubdwp_user_email_equal" class="ubdwp-operator" data-ubdwp-ignore="1">
 			<option value="equal_to_str"><?php esc_html_e( 'Equal to (string)', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="notequal_to_str"><?php esc_html_e( 'Not equal to (string)', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="like_str"><?php esc_html_e( 'Like (string)', 'users-bulk-delete-with-preview' ); ?></option>
@@ -56,7 +60,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</th>
 	<td>
 		<div class="ubdwp-field-row">
-		<select name="registration_date_compare" id="ubdwp_registration_date_compare" class="ubdwp-operator" aria-label="<?php esc_attr_e( 'Registration date comparison', 'users-bulk-delete-with-preview' ); ?>">
+		<select name="registration_date_compare" id="ubdwp_registration_date_compare" class="ubdwp-operator" data-ubdwp-ignore="1" aria-label="<?php esc_attr_e( 'Registration date comparison', 'users-bulk-delete-with-preview' ); ?>">
 			<option value="after"><?php esc_html_e( 'On or after', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="before"><?php esc_html_e( 'On or before', 'users-bulk-delete-with-preview' ); ?></option>
 			<option value="on"><?php esc_html_e( 'On', 'users-bulk-delete-with-preview' ); ?></option>
@@ -71,6 +75,82 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</td>
 </tr>
 <!-- User Registration Date -->
+<?php
+/**
+ * Fires at the end of the "Account" group of "Find users according to certain criteria", to add rows (<tr>) of
+ * other plugins to the group. Give the rows the class "ubdwp-filter-find" and style="display: none;".
+ *
+ * @since 2.5.0
+ */
+do_action( 'ubdwp_find_fields_account' );
+?>
+<!-- Group: Activity -->
+<tr class="ubdwp-filter-find ubdwp-filter-group" style="display: none;">
+	<th colspan="2" scope="colgroup"><h3 class="ubdwp-filter-group-title"><?php esc_html_e( 'Activity', 'users-bulk-delete-with-preview' ); ?></h3></th>
+</tr>
+<!-- Without Content -->
+<tr class="ubdwp-filter-find" style="display: none;">
+	<th scope="row">
+		<?php esc_html_e( 'Content', 'users-bulk-delete-with-preview' ); ?>:
+	</th>
+	<td>
+		<label for="ubdwp_without_content" class="ubdwp-checkbox">
+			<input type="checkbox" id="ubdwp_without_content" name="without_content" value="1">
+			<?php esc_html_e( 'Only users without posts or comments on this site', 'users-bulk-delete-with-preview' ); ?>
+		</label>
+		<?php if ( ! empty( $woocommerce_active ) ) : ?>
+			<label for="ubdwp_without_wc_orders" class="ubdwp-checkbox">
+				<input type="checkbox" id="ubdwp_without_wc_orders" name="without_wc_orders" value="1">
+				<?php esc_html_e( 'Only users without WooCommerce orders', 'users-bulk-delete-with-preview' ); ?>
+			</label>
+		<?php endif; ?>
+	</td>
+</tr>
+<!-- Without Content -->
+<?php
+/**
+ * Fires at the end of the "Activity" group of "Find users according to certain criteria", to add rows (<tr>) of
+ * other plugins to the group. Give the rows the class "ubdwp-filter-find" and style="display: none;".
+ *
+ * @since 2.5.0
+ */
+do_action( 'ubdwp_find_fields_activity' );
+?>
+<?php if ( has_action( 'ubdwp_find_fields_spam' ) ) : ?>
+<!-- Group: Spam signs -->
+<tr class="ubdwp-filter-find ubdwp-filter-group" style="display: none;">
+	<th colspan="2" scope="colgroup"><h3 class="ubdwp-filter-group-title"><?php esc_html_e( 'Spam signs', 'users-bulk-delete-with-preview' ); ?></h3></th>
+</tr>
+<?php
+/**
+ * Fires at the end of the "Spam signs" group of "Find users according to certain criteria", to add rows (<tr>) of
+ * other plugins to the group. Give the rows the class "ubdwp-filter-find" and style="display: none;".
+ *
+ * @since 2.5.0
+ */
+do_action( 'ubdwp_find_fields_spam' );
+?>
+<?php endif; ?>
+<?php if ( has_action( 'ubdwp_find_fields_fraud' ) ) : ?>
+<!-- Group: Fraud signals -->
+<tr class="ubdwp-filter-find ubdwp-filter-group" style="display: none;">
+	<th colspan="2" scope="colgroup"><h3 class="ubdwp-filter-group-title"><?php esc_html_e( 'Fraud signals', 'users-bulk-delete-with-preview' ); ?></h3></th>
+</tr>
+<?php
+/**
+ * Fires at the end of the "Fraud signals" group of "Find users according to certain criteria", to add rows (<tr>) of
+ * other plugins to the group. Give the rows the class "ubdwp-filter-find" and style="display: none;". The group is
+ * only shown when something is hooked.
+ *
+ * @since 2.5.0
+ */
+do_action( 'ubdwp_find_fields_fraud' );
+?>
+<?php endif; ?>
+<!-- Group: Advanced -->
+<tr class="ubdwp-filter-find ubdwp-filter-group" style="display: none;">
+	<th colspan="2" scope="colgroup"><h3 class="ubdwp-filter-group-title"><?php esc_html_e( 'Advanced', 'users-bulk-delete-with-preview' ); ?></h3></th>
+</tr>
 <!-- User Meta -->
 <tr class="ubdwp-filter-find" style="display: none;">
 	<th scope="row">
@@ -80,7 +160,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<input type="hidden" id="ubdwp_search_user_meta_nonce" name="search_user_meta_nonce" value="<?php echo esc_attr( wp_create_nonce( 'ubdwp_search_usermeta' ) ); ?>" />
 		<div class="ubdwp-field-row">
 		<select class="regular-text" name="user_meta" id="ubdwp_user_meta"></select>
-		<select name="user_meta_equal" id="ubdwp_user_meta_equal" class="ubdwp-operator">
+		<select name="user_meta_equal" id="ubdwp_user_meta_equal" data-ubdwp-ignore="1" class="ubdwp-operator">
             <option value="meta_not_exists"><?php esc_html_e( 'Meta does not exist', 'users-bulk-delete-with-preview' ); ?></option>
             <option value="meta_is_empty"><?php esc_html_e( 'Meta is empty or missing', 'users-bulk-delete-with-preview' ); ?></option>
             <option value="equal_to_str"><?php esc_html_e( 'Equal to (string)', 'users-bulk-delete-with-preview' ); ?></option>
@@ -106,23 +186,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</td>
 </tr>
 <!-- User Meta -->
-<!-- Without Content -->
-<tr class="ubdwp-filter-find" style="display: none;">
-	<th scope="row">
-		<?php esc_html_e( 'Content', 'users-bulk-delete-with-preview' ); ?>:
-	</th>
-	<td>
-		<label for="ubdwp_without_content" class="ubdwp-checkbox">
-			<input type="checkbox" id="ubdwp_without_content" name="without_content" value="1">
-			<?php esc_html_e( 'Only users without posts or comments on this site', 'users-bulk-delete-with-preview' ); ?>
-		</label>
-		<?php if ( ! empty( $woocommerce_active ) ) : ?>
-			<label for="ubdwp_without_wc_orders" class="ubdwp-checkbox">
-				<input type="checkbox" id="ubdwp_without_wc_orders" name="without_wc_orders" value="1">
-				<?php esc_html_e( 'Only users without WooCommerce orders', 'users-bulk-delete-with-preview' ); ?>
-			</label>
-		<?php endif; ?>
-	</td>
-</tr>
-<!-- Without Content -->
+<?php
+/**
+ * Fires at the end of the "Advanced" group of "Find users according to certain criteria", to add rows (<tr>) of
+ * other plugins to the group. Give the rows the class "ubdwp-filter-find" and style="display: none;".
+ *
+ * @since 2.5.0
+ */
+do_action( 'ubdwp_find_fields_advanced' );
+?>
 <!-- Find Users Form -->

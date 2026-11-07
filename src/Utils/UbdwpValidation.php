@@ -25,6 +25,21 @@ class UbdwpValidation {
 	public function get_error_message( string $code ): string {
 		$messages = $this->get_error_messages();
 
+		if ( ! isset( $messages[ $code ] ) ) {
+			/**
+			 * Filters the messages of error codes the plugin does not know, for example codes of an add-on.
+			 *
+			 * @since 2.5.0
+			 *
+			 * @param array<string, string> $messages Translated plain-text messages keyed by error code.
+			 */
+			$extra = (array) apply_filters( 'ubdwp_error_messages', array() );
+
+			if ( isset( $extra[ $code ] ) && is_string( $extra[ $code ] ) ) {
+				return esc_html( $extra[ $code ] );
+			}
+		}
+
 		return $messages[ $code ] ?? esc_html__(
 			'An unknown error occurred.',
 			'users-bulk-delete-with-preview'
@@ -59,14 +74,35 @@ class UbdwpValidation {
 	public function get_search_error( string $type, array $request ): ?string {
 		switch ( $type ) {
 			case 'select_existing':
-				return $this->get_existing_users_error( $request );
+				$error = $this->get_existing_users_error( $request );
+				break;
 			case 'find_users':
-				return $this->get_find_user_form_error( $request );
+				$error = $this->get_find_user_form_error( $request );
+				break;
 			case 'find_users_by_woocommerce_filters':
-				return $this->get_woocommerce_filters_error( $request );
+				$error = $this->get_woocommerce_filters_error( $request );
+				break;
 			default:
-				return 'select_type';
+				$error = 'select_type';
+				break;
 		}
+
+		/**
+		 * Filters the validation error of a user search.
+		 *
+		 * Return null to accept the search, for example when "at_least_one_required" is reported but the request has
+		 * criteria of another plugin, or when the type was added with "ubdwp_filter_types". Register messages of new
+		 * error codes with "ubdwp_error_messages".
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param string|null          $error   Error code, or null when the search is valid.
+		 * @param string               $type    Filter type.
+		 * @param array<string, mixed> $request Request data: fields of the plugin are sanitized, other fields are raw.
+		 */
+		$error = apply_filters( 'ubdwp_search_error', $error, $type, $request );
+
+		return is_string( $error ) && '' !== $error ? $error : null;
 	}
 
 	/**
@@ -229,7 +265,7 @@ class UbdwpValidation {
 				'users-bulk-delete-with-preview'
 			),
 			'at_least_one_required'             => esc_html__(
-				'At least one required field.',
+				'Please set at least one filter.',
 				'users-bulk-delete-with-preview'
 			),
 			'no_users_found_with_given_filters' => esc_html__(

@@ -57,6 +57,7 @@ class UbdwpLoader {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_styles' ) );
+		add_action( 'in_admin_header', array( $this, 'remove_foreign_notices' ), PHP_INT_MAX );
 
 		// Add action links to the plugin list.
 		add_filter( 'plugin_action_links_' . WPUBDP_BASE_NAME, array( $this, 'action_links' ) );
@@ -78,6 +79,63 @@ class UbdwpLoader {
 
 		// Initialize page objects.
 		$this->init_pages();
+	}
+
+	/**
+	 * Keep the pages of the plugin free of the notices of other plugins and of WordPress: long lists of banners push
+	 * the form down. The notices stay on every other page of the admin area.
+	 *
+	 * @return void
+	 */
+	public function remove_foreign_notices(): void {
+		global $hook_suffix, $wp_filter;
+
+		if ( ! is_string( $hook_suffix ) || ! UbdwpHelperFacade::is_plugin_page( $hook_suffix ) ) {
+			return;
+		}
+
+		foreach ( array( 'admin_notices', 'all_admin_notices', 'network_admin_notices', 'user_admin_notices' ) as $hook ) {
+			if ( ! isset( $wp_filter[ $hook ] ) ) {
+				continue;
+			}
+
+			foreach ( $wp_filter[ $hook ]->callbacks as $priority => $callbacks ) {
+				foreach ( $callbacks as $callback ) {
+					if ( ! $this->is_own_notice( $callback['function'] ) ) {
+						remove_action( $hook, $callback['function'], $priority );
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Whether a notice callback belongs to this plugin or an add-on of it.
+	 *
+	 * @param mixed $callback Callback.
+	 *
+	 * @return bool True when it does.
+	 */
+	private function is_own_notice( $callback ): bool {
+		$own = false;
+
+		if ( $callback instanceof \Closure ) {
+			$own = str_contains( wp_normalize_path( (string) ( new \ReflectionFunction( $callback ) )->getFileName() ), '/users-bulk-delete-with-preview' );
+		} else {
+			$target = is_array( $callback ) ? $callback[0] : $callback;
+			$class  = is_object( $target ) ? get_class( $target ) : (string) $target;
+			$own    = str_starts_with( $class, 'UsersBulkDeleteWithPreview' );
+		}
+
+		/**
+		 * Filters whether a notice stays on the pages of the plugin, where notices of other plugins are removed.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param bool  $own      Whether the notice belongs to the plugin or an add-on of it.
+		 * @param mixed $callback Callback of the notice.
+		 */
+		return (bool) apply_filters( 'ubdwp_keep_admin_notice', $own, $callback );
 	}
 
 	/**
@@ -171,8 +229,15 @@ class UbdwpLoader {
 	 * @return void
 	 */
 	public function load_text_domain(): void {
-		unload_textdomain( 'users-bulk-delete-with-preview' );
-		load_plugin_textdomain( 'users-bulk-delete-with-preview', false, dirname( WPUBDP_BASE_NAME ) . '/languages/' ); // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Loads the translations bundled in /languages, which WordPress does not load on its own.
+		$domain = 'users-bulk-delete-with-preview';
+		$locale = apply_filters( 'plugin_locale', determine_locale(), $domain ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core filter.
+
+		unload_textdomain( $domain );
+
+		// The translations bundled in /languages first: they always match this version. The language pack from
+		// translate.wordpress.org adds the languages and strings the plugin does not bundle.
+		load_textdomain( $domain, WPUBDP_PLUGIN_DIR . "languages/{$domain}-{$locale}.mo", $locale );
+		load_textdomain( $domain, WP_LANG_DIR . "/plugins/{$domain}-{$locale}.mo", $locale );
 	}
 
 	/**

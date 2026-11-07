@@ -808,6 +808,20 @@ body {
     margin-bottom: 0;
 }
 
+.ubdwp-jobs th,
+.ubdwp-jobs td {
+    overflow-wrap: normal;
+    word-break: normal;
+}
+
+@media screen and (max-width: 782px) {
+
+    .ubdwp-jobs td[data-colname]::before {
+        content: attr(data-colname) ": ";
+        font-weight: 600;
+    }
+}
+
 .ubdwp-page .ubdwp-jobs-nav {
     height: auto;
     margin: 12px 0 24px;
@@ -906,4 +920,230 @@ body {
     .ubdwp-page div.dt-container .dt-search input.dt-input {
         width: 100%;
     }
+}
+
+/* ==========================================================================
+   Settings page: tabs and cards
+   ========================================================================== */
+
+.ubdwp-settings-tabs {
+    margin-bottom: 16px;
+}
+
+.ubdwp-card {
+    max-width: 960px;
+    margin: 0 0 20px;
+    padding: 0;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.ubdwp-card-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.ubdwp-card-title {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 0;
+    font-size: 15px;
+}
+
+.ubdwp-card-title .dashicons {
+    color: #2271b1;
+}
+
+.ubdwp-card-description {
+    margin: 6px 0 0;
+    color: #50575e;
+}
+
+.ubdwp-card .form-table {
+    margin: 0;
+}
+
+.ubdwp-card .form-table th,
+.ubdwp-card .form-table td {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.ubdwp-card .form-table th {
+    width: 220px;
+}
+
+.ubdwp-card .form-table tr + tr {
+    border-top: 1px solid #f0f0f1;
+}
+
+.ubdwp-card-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 0;
+    padding: 12px 20px;
+    border-top: 1px solid #f0f0f1;
+    border-radius: 0 0 4px 4px;
+    background: #f6f7f7;
+}
+
+@media screen and (max-width: 782px) {
+
+    .ubdwp-card .form-table th {
+        width: auto;
+        padding-bottom: 0;
+    }
+
+    .ubdwp-card-footer .button {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Groups of "Find users according to certain criteria" */
+.form-table tr.ubdwp-filter-group th {
+    padding: 24px 0 6px;
+    border-bottom: 1px solid #dcdcde;
+}
+
+.form-table tr.ubdwp-filter-group:first-of-type th {
+    padding-top: 8px;
+}
+
+.ubdwp-filter-group-title {
+    margin: 0;
+    color: #1d2327;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+/* Filter groups that collapse */
+tr.ubdwp-group-collapsed {
+    display: none !important;
+}
+
+.ubdwp-group-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ubdwp-gap);
+    padding: 2px 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    cursor: pointer;
+}
+
+.ubdwp-group-toggle::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    margin-right: 2px;
+    border-right: 2px solid var(--ubdwp-muted);
+    border-bottom: 2px solid var(--ubdwp-muted);
+    transform: rotate(-45deg);
+    transition: transform .15s ease;
+}
+
+.ubdwp-group-toggle[aria-expanded="true"]::before {
+    transform: rotate(45deg);
+}
+
+.ubdwp-group-toggle:hover {
+    color: var(--ubdwp-accent);
+}
+
+.ubdwp-group-toggle:focus {
+    border-radius: var(--ubdwp-radius);
+    box-shadow: var(--ubdwp-focus-ring);
+    outline: 2px solid transparent;
+}
+
+.ubdwp-group-count {
+    min-width: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: var(--ubdwp-accent);
+    color: #fff;
+    font-size: 11px;
+    line-height: 18px;
+    letter-spacing: 0;
+    text-align: center;
+}
+
+.ubdwp-group-count[hidden] {
+    display: none;
+}
+
+/* Actions of the form: always on the screen */
+.ubdwp-form-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    margin: 16px -20px 0 0;
+    padding: 12px 20px 12px 0;
+    border-top: 1px solid var(--ubdwp-border-light);
+    background: #f0f0f1;
+}
+
+.ubdwp-form-actions p.submit {
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.ubdwp-form-message {
+    margin: 0 0 12px;
+    padding: 8px 12px;
+    border-left: 4px solid var(--ubdwp-danger);
+    background: #fcf0f1;
+}
+
+.ubdwp-form-message[hidden],
+.ubdwp-clear-filters[hidden] {
+    display: none;
+}
+
+.ubdwp-form-actions-end {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.ubdwp-active-filters {
+    color: var(--ubdwp-muted);
+}
+
+.ubdwp-preview-total {
+    margin: 0 0 12px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+@media screen and (max-width: 782px) {
+    .ubdwp-form-actions {
+        margin-right: 0;
+        padding-right: 0;
+    }
+
+    .ubdwp-form-actions-end {
+        margin-left: 0;
+    }
+}
+
+/* Notices that other plugins add with JavaScript; the plugin's own stay in #ubdwp_notices. */
+.ubdwp-page > .notice,
+.ubdwp-page > .updated,
+.ubdwp-page > .error {
+    display: none !important;
 }

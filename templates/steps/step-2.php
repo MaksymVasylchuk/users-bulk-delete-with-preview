@@ -27,6 +27,8 @@ if ( ! defined( 'ABSPATH' ) ) {
         </p>
     </div>
 
+	<p id="ubdwp_preview_total" class="ubdwp-preview-total"></p>
+
 	<?php require __DIR__ . '/../partials/_step-2-buttons.php'; ?>
 
 	<div class="content">
