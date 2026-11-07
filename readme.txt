@@ -184,7 +184,7 @@ This plugin uses the following third-party libraries:
 *Release Date - 7 November 2026*
 
 * The "Find users according to certain criteria" filters are grouped (Account, Activity, Spam signs, Fraud signals, Advanced) and show how many filters are set; a "Clear filters" button resets them, and the Preview button stays in view while you scroll
-* A search without any filter set now asks you to set one ("Please set at least one filter.")
+* Clearer message for a search without any filter: "Please set at least one filter." instead of "At least one required field."
 * Notices of other plugins are hidden on the pages of the plugin, so they do not push the form down
 * The confirmation says what will really happen: on a multisite network the users lose their role on the site and their network accounts stay
 * The summary no longer lists "0 post(s) will be deleted", and the result says "Handled by WordPress (posts go to the trash)" instead of claiming that posts were moved
