@@ -26,6 +26,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<div id="ubdwp_notices">
 			</div>
+			<?php
+			/**
+			 * Fires above the table of the Logs page, to add actions of other plugins.
+			 *
+			 * @since 2.5.0
+			 */
+			do_action( 'ubdwp_logs_page_actions' );
+			?>
 			<!-- Logs table -->
 			<table id="ubdwp_logs_table" class="display" style="width:100%">
 				<thead>

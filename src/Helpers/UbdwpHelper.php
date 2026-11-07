@@ -43,6 +43,28 @@ class UbdwpHelper {
 			$types['find_users_by_woocommerce_filters'] = __( 'Find users using WooCommerce filters', 'users-bulk-delete-with-preview' );
 		}
 
+		/**
+		 * Filters the filter types of the Bulk Users Delete page.
+		 *
+		 * A type added here shows the form rows with the class "ubdwp-filter-type-{type}" and finds its users with the
+		 * "ubdwp_custom_filter_user_ids" filter. The built-in types cannot be removed.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param array<string, string> $types Type labels keyed by type.
+		 */
+		$filtered = apply_filters( 'ubdwp_filter_types', $types );
+
+		if ( is_array( $filtered ) ) {
+			foreach ( $filtered as $type => $label ) {
+				$type = sanitize_key( (string) $type );
+
+				if ( '' !== $type && ! isset( $types[ $type ] ) && is_string( $label ) ) {
+					$types[ $type ] = $label;
+				}
+			}
+		}
+
 		return $types;
 	}
 
@@ -90,6 +112,8 @@ class UbdwpHelper {
 	 * @return array<string, string> Translation strings for the User table.
 	 */
 	public function get_user_table_translation(): array {
+		$confirm = $this->get_confirm_texts();
+
 		return array(
 			'id'            => __( 'ID', 'users-bulk-delete-with-preview' ),
 			'username'      => __( 'Username', 'users-bulk-delete-with-preview' ),
@@ -122,11 +146,41 @@ class UbdwpHelper {
 			'summaryKeep'     => __( '%d user(s): their content stays on this site', 'users-bulk-delete-with-preview' ),
 			/* translators: 1: number of users, 2: number of posts, 3: number of comments. */
 			'summaryRemove'   => __( '%1$d user(s): %2$d post(s) and %3$d comment(s) will be permanently deleted', 'users-bulk-delete-with-preview' ),
-			/* translators: %d: number of users. */
-			'confirmTyping'   => __( 'This cannot be undone. Type %d to confirm.', 'users-bulk-delete-with-preview' ),
-			'confirmIrreversible' => __( 'This cannot be undone.', 'users-bulk-delete-with-preview' ),
+			'confirmTyping'   => $confirm['typing'],
+			'confirmIrreversible' => $confirm['plain'],
 			'failedHeading'   => __( 'Users that were not deleted', 'users-bulk-delete-with-preview' ),
 		);
+	}
+
+	/**
+	 * Get the warnings shown before users are deleted.
+	 *
+	 * @return array{typing: string, plain: string, cli: string} Warnings, "typing" and "cli" with %d for the number of users.
+	 */
+	public function get_confirm_texts(): array {
+		/**
+		 * Filters the warnings shown before users are deleted, for example when they can be restored.
+		 *
+		 * @param array{typing: string, plain: string, cli: string} $texts Warnings, "typing" and "cli" with %d for the number of users.
+		 */
+		// On a network the users only lose their role on this site: their accounts stay and can be added back.
+		$texts = is_multisite()
+			? array(
+				/* translators: %d: number of users. */
+				'typing' => __( 'The users lose their role on this site; their accounts stay on the network. Type %d to confirm.', 'users-bulk-delete-with-preview' ),
+				'plain'  => __( 'The users lose their role on this site; their accounts stay on the network.', 'users-bulk-delete-with-preview' ),
+				/* translators: %d: number of users. */
+				'cli'    => __( 'Remove %d users from this site?', 'users-bulk-delete-with-preview' ),
+			)
+			: array(
+				/* translators: %d: number of users. */
+				'typing' => __( 'This cannot be undone. Type %d to confirm.', 'users-bulk-delete-with-preview' ),
+				'plain'  => __( 'This cannot be undone.', 'users-bulk-delete-with-preview' ),
+				/* translators: %d: number of users. */
+				'cli'    => __( 'Delete %d users? This cannot be undone.', 'users-bulk-delete-with-preview' ),
+			);
+
+		return apply_filters( 'ubdwp_confirm_texts', $texts );
 	}
 
 	/**
@@ -176,7 +230,7 @@ class UbdwpHelper {
 
 		return is_multisite()
 			? __( 'Kept on this site', 'users-bulk-delete-with-preview' )
-			: __( 'Posts moved to the trash', 'users-bulk-delete-with-preview' );
+			: __( 'Handled by WordPress (posts go to the trash)', 'users-bulk-delete-with-preview' );
 	}
 
 	/**
@@ -221,12 +275,25 @@ class UbdwpHelper {
 	 * @return bool True if the page is a plugin-specific page, otherwise false.
 	 */
 	public function is_plugin_page( string $hook_suffix ): bool {
-		return $hook_suffix === 'toplevel_page_ubdwp_admin' || ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce check is not required, because we just check if this page is a plugin page, and the method returns true or false.
-					'ubdwp_admin',
-					'ubdwp_admin_jobs',
-					'ubdwp_admin_logs',
-					'ubdwp_admin_settings',
-				), true ) );
+		if ( $hook_suffix === 'toplevel_page_ubdwp_admin' ) {
+			return true;
+		}
+
+		/**
+		 * Filters the admin page slugs that load the plugin styles and scripts, for example pages of an add-on.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param array<string> $pages Page slugs (the "page" query argument).
+		 */
+		$pages = (array) apply_filters( 'ubdwp_plugin_pages', array(
+			'ubdwp_admin',
+			'ubdwp_admin_jobs',
+			'ubdwp_admin_logs',
+			'ubdwp_admin_settings',
+		) );
+
+		return isset( $_GET['page'] ) && in_array( $_GET['page'], $pages, true ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce check is not required, because we just check if this page is a plugin page, and the method returns true or false.
 	}
 
 	/**

@@ -8,7 +8,7 @@
 **Tags**: bulk delete, users delete with preview, users bulk delete with preview, users bulk clean with preview  
 **Requires at least**: 6.2  
 **Tested up to**: 7.1  
-**Stable tag**: 2.4.1  
+**Stable tag**: 2.5.0  
 **Requires PHP**: 8.0  
 **License**: GPLv2 or later  
 **License URI**: [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -45,6 +45,9 @@ Introducing the **Users Bulk Delete With Preview** plugin – the ultimate solut
 
 8. **Large Sites, Background Deletion and WP-CLI**  
    The preview is paged on the server, so it works with tens of thousands of users. Deletions run in batches, in the browser tab or in the background, and can be followed and cancelled on the Deletion Jobs page. The same filters are available on the command line with `wp ubdwp find` and `wp ubdwp delete`.
+
+9. **Translations**  
+   The plugin is available in English, Ukrainian, German, French, Spanish, Italian and Portuguese (Brazil).
 
 ## Minimum Requirements
 
@@ -167,6 +170,9 @@ The deletion log stores the ID of each deleted account, the date and the adminis
 
 ## Upgrade Notice
 
+### 2.5.0
+Grouped search filters, clearer confirmations (also on multisite), a fix that stops negative numbers of days from deleting log entries, and German, French, Spanish, Italian and Portuguese (Brazil) translations. No manual upgrade steps are required.
+
 ### 2.4.1
 Fixes the deletion progress bar, which was not visible in 2.4.0, and adds pagination to the Deletion Jobs page. No manual upgrade steps are required.
 
@@ -228,6 +234,19 @@ Commit the contents of `assets/build` together with the sources: the plugin load
 | Hook | Type | Use |
 |---|---|---|
 | `ubdwp_filter_form_fields` | action | Print extra filter rows (`<tr>`) in the search form; they are sent with the preview request |
+| `ubdwp_filter_types` | filter | `( $types )` – add filter types to "Choose filter type" |
+| `ubdwp_custom_filter_user_ids` | filter | `( $ids, $type, $request, $current_user_id )` – return the user IDs of an added filter type |
+| `ubdwp_search_error` | filter | `( $error, $type, $request )` – validate the request of a filter type; return an error code to stop the search |
+| `ubdwp_error_messages` | filter | `( $messages )` – messages of error codes added by an add-on |
+| `ubdwp_selected_user_ids` | filter | `( $ids, $request )` – change the users chosen in "Choose from existing users" |
+| `ubdwp_find_fields_account`, `_activity`, `_spam`, `_fraud`, `_advanced` | action | Print rows in a group of "Find users according to certain criteria" |
+| `ubdwp_filter_form_top`, `ubdwp_filter_form_buttons` | action | Print content above the filters or next to their buttons |
+| `ubdwp_export_columns`, `ubdwp_export_row` | filter | `( $columns )`, `( $row, $user, $columns )` – columns of "Export Selected Users" |
+| `ubdwp_settings_tabs`, `ubdwp_settings_tab` | filter, action | `( $tabs )`, `( $current_tab )` – add tabs to the Settings page |
+| `ubdwp_logs_page_actions` | action | Print buttons on the Logs page |
+| `ubdwp_plugin_pages` | filter | `( $pages )` – page slugs that load the plugin assets and hide notices of other plugins |
+| `ubdwp_keep_admin_notice` | filter | `( $keep, $callback )` – keep a notice of another plugin on the plugin pages |
+| `ubdwp_confirm_texts` | filter | `( $texts )` – warnings before a deletion (`typing`, `plain`, `cli`) |
 | `ubdwp_found_user_ids` | filter | `( $user_ids, $type, $request )` – narrow the users found by the filters |
 | `ubdwp_before_delete_user` | action | `( $user_id, $reassign, $user )` – before a user is deleted, while the user and content exist |
 | `ubdwp_user_deleted` | action | `( $user_id, $entry )` – after a user was deleted or removed from the site |
@@ -238,6 +257,19 @@ Commit the contents of `assets/build` together with the sources: the plugin load
 | `ubdwp_preview_limit`, `ubdwp_delete_batch_size`, `ubdwp_confirmation_threshold`, `ubdwp_background_time_budget` | filter | Limits of the preview, batches and confirmation |
 
 ## Changelog
+### 2.5.0
+*Release Date - 7 November 2026*
+* The "Find users according to certain criteria" filters are grouped (Account, Activity, Spam signs, Fraud signals, Advanced) and show how many filters are set; a "Clear filters" button resets them, and the Preview button stays in view while you scroll
+* A search without any filter set now asks you to set one ("Please set at least one filter.")
+* Notices of other plugins are hidden on the pages of the plugin, so they do not push the form down
+* The confirmation says what will really happen: on a multisite network the users lose their role on the site and their network accounts stay
+* The summary no longer lists "0 post(s) will be deleted", and the result says "Handled by WordPress (posts go to the trash)" instead of claiming that posts were moved
+* Fixed: a negative number of days in the log settings, the "Delete entries older than the period above" button and wp ubdwp logs purge was read as a positive number (-5 became 5 days) and could delete log entries; it is now rejected
+* WP-CLI: when none of the users can be deleted, wp ubdwp delete says so instead of reporting a dry run
+* Deletion Jobs page: column titles and usernames are no longer broken in the middle of a word, and on phones every value shows its column name
+* New translations: German, French, Spanish, Italian and Portuguese (Brazil); the Ukrainian translation is complete. The translations bundled with the plugin are used first and the language pack from translate.wordpress.org adds the ones the plugin does not bundle
+* For developers: hooks for add-ons to add filter types and filter fields, export columns, settings tabs, pages, error messages and confirmation texts (see the Hooks section of the GitHub readme)
+
 ### 2.4.1
 *Release Date - 7 October 2026*
 * Fixed the deletion progress bar not being visible since 2.4.0

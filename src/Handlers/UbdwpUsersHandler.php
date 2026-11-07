@@ -288,9 +288,39 @@ class UbdwpUsersHandler {
 
 		// Explicit CSV control avoids the PHP 8.4 fputcsv() $escape deprecation.
 		$temp_file->setCsvControl( ',', '"', '' );
-		$temp_file->fputcsv( array( 'ID', 'Username', 'Email', 'First Name', 'Last Name', 'Role' ) );
+		$temp_file->fputcsv( array_map( array( $this, 'escape_csv_cell' ), array_values( $this->get_csv_columns() ) ) );
 
 		return $temp_file;
+	}
+
+	/**
+	 * Columns of the CSV export.
+	 *
+	 * @return array<string, string> Column headers keyed by column.
+	 */
+	private function get_csv_columns(): array {
+		$columns = array(
+			'id'         => 'ID',
+			'username'   => 'Username',
+			'email'      => 'Email',
+			'first_name' => 'First Name',
+			'last_name'  => 'Last Name',
+			'role'       => 'Role',
+		);
+
+		/**
+		 * Filters the columns of the CSV export of selected users.
+		 *
+		 * Add columns here and fill them with the "ubdwp_export_row" filter. The built-in columns cannot be removed.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param array<string, string> $columns Column headers keyed by column.
+		 */
+		$filtered = apply_filters( 'ubdwp_export_columns', $columns );
+
+		// Built-in columns keep their place and header; added columns follow them.
+		return is_array( $filtered ) ? $columns + array_filter( $filtered, 'is_string' ) : $columns;
 	}
 
 	/**
@@ -302,15 +332,37 @@ class UbdwpUsersHandler {
 	 * @return void
 	 */
 	private function write_csv_rows( \SplTempFileObject $temp_file, array $users ): void {
+		$columns = $this->get_csv_columns();
+
 		foreach ( $users as $user ) {
-			$temp_file->fputcsv( array(
-				(int) $user->ID,
-				$this->escape_csv_cell( sanitize_text_field( $user->user_login ) ),
-				$this->escape_csv_cell( sanitize_email( $user->user_email ) ),
-				$this->escape_csv_cell( sanitize_text_field( $user->first_name ) ),
-				$this->escape_csv_cell( sanitize_text_field( $user->last_name ) ),
-				$this->escape_csv_cell( implode( ', ', array_map( 'sanitize_text_field', $user->roles ) ) ),
-			) );
+			$row = array(
+				'id'         => (int) $user->ID,
+				'username'   => sanitize_text_field( $user->user_login ),
+				'email'      => sanitize_email( $user->user_email ),
+				'first_name' => sanitize_text_field( $user->first_name ),
+				'last_name'  => sanitize_text_field( $user->last_name ),
+				'role'       => implode( ', ', array_map( 'sanitize_text_field', $user->roles ) ),
+			);
+
+			/**
+			 * Filters the values of a user in the CSV export, keyed by column (see "ubdwp_export_columns").
+			 *
+			 * @since 2.5.0
+			 *
+			 * @param array<string, mixed> $row     Values keyed by column.
+			 * @param \WP_User             $user    User.
+			 * @param array<string, string> $columns Column headers keyed by column.
+			 */
+			$filtered = apply_filters( 'ubdwp_export_row', $row, $user, $columns );
+			$row      = is_array( $filtered ) ? array_merge( $filtered, $row ) : $row;
+			$cells    = array();
+
+			foreach ( array_keys( $columns ) as $column ) {
+				$value   = $row[ $column ] ?? '';
+				$cells[] = 'id' === $column ? (int) $value : $this->escape_csv_cell( is_scalar( $value ) ? (string) $value : '' );
+			}
+
+			$temp_file->fputcsv( $cells );
 		}
 	}
 

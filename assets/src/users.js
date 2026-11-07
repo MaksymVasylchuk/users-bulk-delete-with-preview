@@ -4,7 +4,7 @@
  * Built with @wordpress/scripts into assets/build/users.js (styles into assets/build/users.css).
  */
 import $ from 'jquery';
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import './users.css';
 
 // Variables
@@ -39,6 +39,7 @@ $( document ).ready(
         initializeEventListeners();           // Set up event listeners
         handleSelectAllUsers();               // Handle "All users of this site"
         handleSelectAllProducts();            // Handle "Select All Products" functionality
+        initializeFilterGroups();             // Collapsible filter groups, active filters
 
         // Localized values arrive as strings: "0" means there is no running job.
         const runningJobId = parseInt( ubdwpData.runningJobId, 10 ) || 0;
@@ -255,7 +256,8 @@ function initializeEventListeners() {
         function () {
             const selectedType = $( this ).val();
 
-            $( '.ubdwp-filter-existing, .ubdwp-filter-find, .ubdwp-filter-woocommerce' ).hide();
+            $( '.ubdwp-filter-existing, .ubdwp-filter-find, .ubdwp-filter-woocommerce, [class*="ubdwp-filter-type-"]' ).hide();
+            $( '.ubdwp-filter-type-' + selectedType ).show();
 
             switch (selectedType) {
                 case 'select_existing':
@@ -286,6 +288,13 @@ function initializeEventListeners() {
                     preview.token = data.token;
                     preview.total = parseInt( data.total, 10 ) || 0;
                     resetSelection();
+                    $( '#ubdwp_preview_total' ).text(
+                        sprintf(
+                            /* translators: %s: number of users. */
+                            _n( 'Found %s user. Select who to delete.', 'Found %s users. Select who to delete.', preview.total, 'users-bulk-delete-with-preview' ),
+                            preview.total.toLocaleString()
+                        )
+                    );
 
                     // Show step 2 first: DataTables measures the container to size paging and columns.
                     currentStep = 2;
@@ -497,7 +506,7 @@ function showDeleteSummary(status) {
         add( sprintf( translations.summaryReassign, summary.reassign_users, summary.reassign_posts, summary.reassign_targets.join( ', ' ) ) );
     }
 
-    if (summary.default_users > 0) {
+    if (summary.default_users > 0 && (summary.multisite || summary.default_posts > 0)) {
         add( summary.multisite ? sprintf( translations.summaryKeep, summary.default_users ) : sprintf( translations.summaryTrash, summary.default_users, summary.default_posts ) );
     }
 
@@ -911,6 +920,173 @@ function downloadFile(content, fileName, mimeType) {
 }
 
 /**
+ * Whether a field of the form differs from its starting value
+ *
+ * @param {HTMLElement} el - Field
+ * @return {boolean} True when it was set by the user.
+ */
+function isFieldSet(el) {
+    if ( el.disabled || el.hasAttribute( 'data-ubdwp-ignore' ) || ['hidden', 'file', 'button', 'search'].includes( el.type ) ) {
+        return false;
+    }
+
+    if ( 'checkbox' === el.type || 'radio' === el.type ) {
+        return el.checked && ! el.defaultChecked;
+    }
+
+    if ( 'SELECT' === el.tagName ) {
+        if ( el.multiple ) {
+            return el.selectedOptions.length > 0;
+        }
+
+        const start = $( el ).data( 'ubdwpStart' );
+
+        return ( el.value || '' ) !== ( undefined === start ? ( el.options[0] ? el.options[0].value : '' ) : start );
+    }
+
+    return '' !== el.value && el.value !== el.defaultValue;
+}
+
+/**
+ * Filter groups of the form: only the first one of a type starts open, a heading shows how many of its filters are
+ * set, so nothing is hidden unnoticed. Rows of a group stay controlled by the filter type; collapsing only adds a class.
+ */
+function initializeFilterGroups() {
+    const $form = $( form );
+
+    if ( ! $form.length) {
+        return;
+    }
+
+    const storageKey = 'ubdwp_open_groups';
+    const groups     = [];
+    let opened       = null;
+
+    try {
+        opened = JSON.parse( window.localStorage.getItem( storageKey ) );
+    } catch ( e ) {
+        opened = null;
+    }
+
+    const save = () => {
+        try {
+            window.localStorage.setItem( storageKey, JSON.stringify( groups.filter( ( group ) => group.open ).map( ( group ) => group.key ) ) );
+        } catch ( e ) {
+            // Only a convenience: the groups start closed next time.
+        }
+    };
+
+    const setOpen = ( group, open ) => {
+        group.open = open;
+        group.$rows.toggleClass( 'ubdwp-group-collapsed', ! open );
+        group.$button.attr( 'aria-expanded', open ? 'true' : 'false' );
+    };
+
+    const isVisibleType = ( group ) => group.$header.is( ':visible' );
+    const countSet      = ( group ) => group.$rows.filter(
+        ( i, row ) => $( row ).find( 'input, select, textarea' ).get().some( isFieldSet )
+    ).length;
+
+    const refresh = () => {
+        let total = 0;
+
+        groups.forEach(
+            ( group ) => {
+                const count = countSet( group );
+
+                group.$count.text( count ? String( count ) : '' ).prop( 'hidden', ! count );
+                total += isVisibleType( group ) ? count : 0;
+            }
+        );
+
+        // Rows outside the groups: the filters of the chosen type.
+        total += $form.find( 'tr:visible' ).not( '.ubdwp-filter-group, .ubdwpp-saved-filters-row' ).filter(
+            ( i, row ) => ! groups.some( ( group ) => group.$rows.is( row ) ) && 'ubdwp_filter_type' !== $( row ).find( 'select' ).attr( 'id' )
+        ).filter(
+            ( i, row ) => $( row ).find( 'input, select, textarea' ).get().some( isFieldSet )
+        ).length;
+
+        $( '#ubdwp_active_filters' ).text(
+            total
+                /* translators: %d: number of filters. */
+                ? sprintf( _n( '%d filter set', '%d filters set', total, 'users-bulk-delete-with-preview' ), total )
+                : ''
+        );
+        $( '.ubdwp-clear-filters' ).prop( 'hidden', ! total );
+    };
+
+    const openActive = () => groups.forEach(
+        ( group ) => {
+            if ( countSet( group ) ) {
+                setOpen( group, true );
+            }
+        }
+    );
+
+    $form.find( 'input, select, textarea' ).each(
+        function () {
+            if ( 'SELECT' === this.tagName && ! this.multiple ) {
+                $( this ).data( 'ubdwpStart', this.value || '' );
+            }
+        }
+    );
+
+    const seenTypes = {};
+
+    $form.find( 'tr.ubdwp-filter-group' ).each(
+        function ( index ) {
+            const $header = $( this );
+            const type    = this.className.split( /\s+/ ).find( ( name ) => name.startsWith( 'ubdwp-filter-' ) && 'ubdwp-filter-group' !== name );
+            const $title  = $header.find( '.ubdwp-filter-group-title' );
+            const $button = $( '<button type="button" class="ubdwp-group-toggle">' ).text( $title.text() );
+            const $count  = $( '<span class="ubdwp-group-count" hidden>' );
+            const key     = type + '-' + index;
+            const group   = {key, $header, $button, $count, $rows: $header.nextUntil( 'tr.ubdwp-filter-group' ).filter( '.' + type ), open: false};
+
+            $title.empty().append( $button.append( $count ) );
+            groups.push( group );
+            setOpen( group, Array.isArray( opened ) ? opened.includes( key ) : ! seenTypes[type] );
+            seenTypes[type] = true;
+
+            $button.on(
+                'click',
+                () => {
+                    setOpen( group, ! group.open );
+                    save();
+                }
+            );
+        }
+    );
+
+    $form.on( 'input change', refresh );
+    $( document ).on(
+        'ubdwp:filters-changed',
+        () => {
+            openActive();
+            refresh();
+        }
+    );
+
+    $( document ).on(
+        'click',
+        '.ubdwp-clear-filters',
+        () => {
+            const type = $( '#ubdwp_filter_type' ).val();
+
+            $form.get( 0 ).reset();
+            $( '#ubdwp_filter_type' ).val( type );
+            $form.find( 'select.select2-hidden-accessible' ).val( null );
+            $form.find( 'select' ).not( '#ubdwp_filter_type' ).trigger( 'change' );
+            $( document ).trigger( 'ubdwp:filters-cleared' );
+            clearWordpressError();
+            refresh();
+        }
+    );
+
+    refresh();
+}
+
+/**
  * Show the specified step in the form
  *
  * @param {number} step - The step number to show
@@ -946,9 +1122,18 @@ function clearErrors(form_id) {
  * @param {string} message - Error message
  */
 function showError(message) {
+    const text = 'string' === typeof message ? message : __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' );
+
     hideLoader();
     clearErrors( form );
-    createWordpressError( 'string' === typeof message ? message : __( 'An unexpected error occurred.', 'users-bulk-delete-with-preview' ) );
+
+    // The form is long: on its step the message goes to the bar that stays on the screen.
+    if ( 1 === currentStep ) {
+        $( '#ubdwp_form_message' ).text( text ).prop( 'hidden', false );
+        return;
+    }
+
+    createWordpressError( text );
 }
 
 /**
@@ -1025,6 +1210,7 @@ function hideLoader() {
 }
 
 function clearWordpressError() {
+    $( '#ubdwp_form_message' ).text( '' ).prop( 'hidden', true ).removeClass( 'is-success' );
     $( '#ubdwp_notices' ).find( '.notice:not(.ubdwp-job-notice)' ).remove();
 }
 

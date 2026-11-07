@@ -21,6 +21,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<input type="hidden" name="action" value="ubdwp_search_users_for_delete">
 		<table class="form-table">
 			<tbody>
+			<?php
+			/**
+			 * Fires at the top of the filter fields of the Bulk Users Delete page, before the filter type selector.
+			 *
+			 * Print table rows (<tr>) that apply to every filter type.
+			 *
+			 * @since 2.5.0
+			 */
+			do_action( 'ubdwp_filter_form_top' );
+			?>
 			<!-- Filter Type Selector -->
 			<?php if ( isset( $types ) && ! empty( $types ) ) : ?>
 				<tr>
@@ -52,8 +62,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			 *
 			 * Print table rows (<tr>) with your own fields; they are sent with the preview request.
 			 * Give a row the class of a filter type ("ubdwp-filter-existing", "ubdwp-filter-find" or
-			 * "ubdwp-filter-woocommerce") and style="display: none;" to show it only for that type, and narrow the result
-			 * with the "ubdwp_found_user_ids" filter.
+			 * "ubdwp-filter-woocommerce", or "ubdwp-filter-type-{type}" for a type added with "ubdwp_filter_types") and
+			 * style="display: none;" to show it only for that type, and narrow the result with the "ubdwp_found_user_ids"
+			 * filter.
 			 *
 			 * @since 2.4.0
 			 */
@@ -62,10 +73,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			</tbody>
 		</table>
-		<!-- Preview Button -->
+		<!-- Actions: stay on the screen while the form scrolls -->
+		<div class="ubdwp-form-actions">
+		<p id="ubdwp_form_message" class="ubdwp-form-message" role="alert" hidden></p>
 		<p class="submit">
 			<button type="button" class="button button-primary ubdwp-preview-button"><?php esc_html_e( 'Preview', 'users-bulk-delete-with-preview' ); ?></button>
+			<?php
+			/**
+			 * Fires after the Preview button of the Bulk Users Delete page, to add buttons of other plugins.
+			 *
+			 * @since 2.5.0
+			 */
+			do_action( 'ubdwp_filter_form_buttons' );
+			?>
+			<span class="ubdwp-form-actions-end">
+				<span id="ubdwp_active_filters" class="ubdwp-active-filters" aria-live="polite"></span>
+				<button type="button" class="button-link ubdwp-clear-filters" hidden><?php esc_html_e( 'Clear filters', 'users-bulk-delete-with-preview' ); ?></button>
+			</span>
 		</p>
+		</div>
 	</form>
 	<!-- Search users form -->
 </div>

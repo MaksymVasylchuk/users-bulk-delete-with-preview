@@ -1,0 +1,1174 @@
+# Copyright (C) 2026 maksymvasylchuk
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Users Bulk Delete With Preview 2.5.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/users-bulk-delete-with-preview\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Italian\n"
+"Language: it_IT\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-02T21:52:27+00:00\n"
+"PO-Revision-Date: 2026-11-02 12:00+0000\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: users-bulk-delete-with-preview\n"
+
+#. Plugin Name of the plugin
+#: ubdwp-users-bulk-delete-with-preview.php
+#: src/Services/UbdwpPrivacy.php:418
+msgid "Users Bulk Delete With Preview"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: ubdwp-users-bulk-delete-with-preview.php
+msgid "https://github.com/MaksymVasylchuk/users-bulk-delete-with-preview"
+msgstr "https://github.com/MaksymVasylchuk/users-bulk-delete-with-preview"
+
+#. Description of the plugin
+#: ubdwp-users-bulk-delete-with-preview.php
+msgid "Effortlessly delete multiple WordPress users with our Users Bulk Delete With Preview plugin. View and confirm user details before removal to ensure accuracy and avoid mistakes. Streamline your user management process with ease and confidence!"
+msgstr "Elimina facilmente più utenti WordPress con il plugin Users Bulk Delete With Preview. Controlla e conferma i dati degli utenti prima della rimozione per evitare errori. Gestisci i tuoi utenti con semplicità e sicurezza!"
+
+#. Author of the plugin
+#: ubdwp-users-bulk-delete-with-preview.php
+msgid "maksymvasylchuk"
+msgstr "maksymvasylchuk"
+
+#. Author URI of the plugin
+#: ubdwp-users-bulk-delete-with-preview.php
+msgid "https://github.com/MaksymVasylchuk"
+msgstr "https://github.com/MaksymVasylchuk"
+
+#. translators: %1$s is the method name; %2$s is the class name.
+#: src/Abstract/UbdwpAbstractFacade.php:61
+#, php-format
+msgid "Method %1$s does not exist in class %2$s."
+msgstr "Il metodo %1$s non esiste nella classe %2$s."
+
+#: src/Activators/UbdwpActivate.php:201
+msgid "This plugin requires PHP version 8.0 or higher."
+msgstr "Questo plugin richiede PHP 8.0 o superiore."
+
+#: src/Activators/UbdwpActivate.php:205
+#: src/Activators/UbdwpActivate.php:217
+msgid "Plugin Activation Error"
+msgstr "Errore di attivazione del plugin"
+
+#: src/Activators/UbdwpActivate.php:213
+msgid "You must update WordPress to version 6.2 or higher to use this plugin."
+msgstr "Devi aggiornare WordPress alla versione 6.2 o superiore per usare questo plugin."
+
+#: src/Cli/UbdwpCliCommand.php:313
+msgid "Preparing the summary"
+msgstr "Preparazione del riepilogo"
+
+#: src/Cli/UbdwpCliCommand.php:333
+msgid "No users were deleted: none of them can be deleted."
+msgstr "Nessun utente è stato eliminato: nessuno di loro può essere eliminato."
+
+#: src/Cli/UbdwpCliCommand.php:340
+msgid "Dry run: no users were deleted."
+msgstr "Simulazione: nessun utente è stato eliminato."
+
+#. translators: %d: job ID.
+#: src/Cli/UbdwpCliCommand.php:358
+#, php-format
+msgid "Background job %d created. Follow it with \"wp ubdwp jobs\"."
+msgstr "Attività in background %d creata. Seguila con \"wp ubdwp jobs\"."
+
+#: src/Cli/UbdwpCliCommand.php:439
+#: src/Utils/UbdwpValidation.php:311
+msgid "The deletion job was not found."
+msgstr "L'attività di eliminazione non è stata trovata."
+
+#. translators: %d: job ID.
+#: src/Cli/UbdwpCliCommand.php:450
+#, php-format
+msgid "Job %d cancelled."
+msgstr "Attività %d annullata."
+
+#: src/Cli/UbdwpCliCommand.php:457
+msgid "Only running jobs that you started can be run."
+msgstr "Solo le attività in corso avviate da te possono essere eseguite."
+
+#: src/Cli/UbdwpCliCommand.php:499
+#: assets/build/settings.js:1
+msgid "Apply the saved email setting to all existing log entries? Masked or removed data cannot be restored."
+msgstr "Applicare l'impostazione email salvata a tutte le voci esistenti del registro? I dati mascherati o rimossi non possono essere ripristinati."
+
+#. translators: %d: number of log entries.
+#: src/Cli/UbdwpCliCommand.php:502
+#: assets/build/settings.js:1
+#, php-format,js-format
+msgid "Updated log entries: %d."
+msgstr "Voci del registro aggiornate: %d."
+
+#: src/Cli/UbdwpCliCommand.php:512
+msgid "Use --older-than=<days> or --all."
+msgstr "Usa --older-than=<days> o --all."
+
+#: src/Cli/UbdwpCliCommand.php:517
+#: assets/build/settings.js:1
+msgid "Delete the whole log? This cannot be undone."
+msgstr "Eliminare l'intero registro? L'operazione non può essere annullata."
+
+#. translators: %d: number of days.
+#: src/Cli/UbdwpCliCommand.php:519
+#: assets/build/settings.js:1
+#, php-format,js-format
+msgid "Delete log entries older than %d days? This cannot be undone."
+msgstr "Eliminare le voci del registro più vecchie di %d giorni? L'operazione non può essere annullata."
+
+#. translators: %d: number of log entries.
+#: src/Cli/UbdwpCliCommand.php:524
+#: assets/build/settings.js:1
+#, php-format,js-format
+msgid "Deleted log entries: %d."
+msgstr "Voci del registro eliminate: %d."
+
+#: src/Cli/UbdwpCliCommand.php:538
+msgid "Run this command as an administrator who can delete users, for example with --user=admin."
+msgstr "Esegui questo comando come amministratore in grado di eliminare utenti, ad esempio con --user=admin."
+
+#: src/Cli/UbdwpCliCommand.php:609
+#: src/Utils/UbdwpValidation.php:303
+msgid "Please choose a valid email comparison."
+msgstr "Scegli un confronto email valido."
+
+#: src/Cli/UbdwpCliCommand.php:613
+msgid "Please choose a valid user meta comparison."
+msgstr "Scegli un confronto valido per i metadati utente."
+
+#: src/Cli/UbdwpCliCommand.php:660
+#: src/Helpers/UbdwpHelper.php:250
+#: src/Utils/UbdwpValidation.php:327
+msgid "The user selected to receive the content is not valid."
+msgstr "L'utente scelto per ricevere i contenuti non è valido."
+
+#: src/Cli/UbdwpCliCommand.php:691
+msgid "Deleting users"
+msgstr "Eliminazione degli utenti"
+
+#. translators: %s: job status.
+#: src/Cli/UbdwpCliCommand.php:717
+#, php-format
+msgid "The job stopped with status: %s"
+msgstr "L'attività si è fermata con lo stato: %s"
+
+#. translators: 1: number of deleted users, 2: number of users that were not deleted.
+#: src/Cli/UbdwpCliCommand.php:721
+#, php-format
+msgid "Deleted users: %1$d. Not deleted: %2$d."
+msgstr "Utenti eliminati: %1$d. Non eliminati: %2$d."
+
+#: src/Core/UbdwpLoader.php:148
+#: src/Core/UbdwpLoader.php:149
+msgid "Bulk Users Delete"
+msgstr ""
+
+#: src/Core/UbdwpLoader.php:158
+#: src/Core/UbdwpLoader.php:159
+#: src/Pages/UbdwpJobsPage.php:45
+msgid "Deletion Jobs"
+msgstr "Attività di eliminazione"
+
+#: src/Core/UbdwpLoader.php:167
+msgid "Bulk Users Delete Logs"
+msgstr "Registri di Bulk Users Delete"
+
+#: src/Core/UbdwpLoader.php:168
+#: src/Core/UbdwpLoader.php:219
+#: src/Pages/UbdwpLogsPage.php:46
+msgid "Logs"
+msgstr "Registri"
+
+#: src/Core/UbdwpLoader.php:176
+msgid "Bulk Users Delete Settings"
+msgstr "Impostazioni di Bulk Users Delete"
+
+#: src/Core/UbdwpLoader.php:177
+#: src/Core/UbdwpLoader.php:220
+#: src/Pages/UbdwpSettingsPage.php:45
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: src/Core/UbdwpLoader.php:218
+msgid "Delete users"
+msgstr "Elimina utenti"
+
+#: src/Handlers/UbdwpLogsHandler.php:132
+msgid "Anonymized user"
+msgstr "Utente anonimizzato"
+
+#. translators: %d: ID of the deleted administrator who performed the deletion.
+#: src/Handlers/UbdwpLogsHandler.php:136
+#, php-format
+msgid "Deleted user #%d"
+msgstr "Utente eliminato n. %d"
+
+#: src/Helpers/UbdwpHelper.php:38
+msgid "Choose from existing users"
+msgstr "Scegli tra gli utenti esistenti"
+
+#: src/Helpers/UbdwpHelper.php:39
+msgid "Find users according to certain criteria"
+msgstr "Trova utenti in base a determinati criteri"
+
+#: src/Helpers/UbdwpHelper.php:43
+msgid "Find users using WooCommerce filters"
+msgstr "Trova utenti con i filtri WooCommerce"
+
+#: src/Helpers/UbdwpHelper.php:97
+msgid "No data available in table"
+msgstr "Nessun dato disponibile nella tabella"
+
+#: src/Helpers/UbdwpHelper.php:98
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Visualizzati da _START_ a _END_ di _TOTAL_ voci"
+
+#: src/Helpers/UbdwpHelper.php:99
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Visualizzati da 0 a 0 di 0 voci"
+
+#: src/Helpers/UbdwpHelper.php:100
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(filtrate da _MAX_ voci totali)"
+
+#: src/Helpers/UbdwpHelper.php:101
+msgid "Show _MENU_ entries"
+msgstr "Mostra _MENU_ voci"
+
+#: src/Helpers/UbdwpHelper.php:102
+msgid "Loading..."
+msgstr "Caricamento..."
+
+#: src/Helpers/UbdwpHelper.php:103
+msgid "Processing..."
+msgstr "Elaborazione..."
+
+#: src/Helpers/UbdwpHelper.php:104
+msgid "Search"
+msgstr "Cerca"
+
+#: src/Helpers/UbdwpHelper.php:105
+msgid "No matching records found"
+msgstr "Nessun risultato trovato"
+
+#: src/Helpers/UbdwpHelper.php:118
+#: templates/jobs-page.php:34
+#: templates/jobs-page.php:59
+#: templates/logs-page.php:41
+#: templates/partials/_users_table.php:38
+msgid "ID"
+msgstr ""
+
+#: src/Helpers/UbdwpHelper.php:119
+#: templates/partials/_confirmation-popup.php:29
+#: templates/partials/_users_table.php:39
+#: templates/steps/step-3.php:44
+msgid "Username"
+msgstr "Nome utente"
+
+#: src/Helpers/UbdwpHelper.php:120
+#: src/Services/UbdwpPrivacy.php:307
+#: templates/partials/_confirmation-popup.php:30
+#: templates/partials/_users_table.php:40
+#: templates/steps/step-3.php:30
+#: templates/steps/step-3.php:45
+msgid "Email"
+msgstr "Email"
+
+#: src/Helpers/UbdwpHelper.php:121
+#: templates/partials/_users_table.php:41
+msgid "Registered"
+msgstr "Registrato"
+
+#: src/Helpers/UbdwpHelper.php:122
+#: templates/partials/_users_table.php:43
+msgid "Posts"
+msgstr "Articoli"
+
+#: src/Helpers/UbdwpHelper.php:123
+#: templates/partials/_users_table.php:42
+msgid "Role"
+msgstr "Ruolo"
+
+#: src/Helpers/UbdwpHelper.php:124
+#: templates/partials/_users_table.php:23
+#: templates/partials/_users_table.php:44
+msgid "Assign related content to user"
+msgstr "Assegna i contenuti correlati a un utente"
+
+#: src/Helpers/UbdwpHelper.php:125
+#: src/Helpers/UbdwpHelper.php:602
+msgid "Select a user"
+msgstr "Seleziona un utente"
+
+#: src/Helpers/UbdwpHelper.php:126
+#: src/Helpers/UbdwpHelper.php:604
+msgid "Remove all related content"
+msgstr "Rimuovi tutti i contenuti correlati"
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:128
+#, php-format
+msgid "Success! Selected users removed: %d."
+msgstr "Fatto! Utenti selezionati rimossi: %d."
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:130
+#, php-format
+msgid "Users that could not be removed: %d."
+msgstr "Utenti che non è stato possibile rimuovere: %d."
+
+#: src/Helpers/UbdwpHelper.php:131
+#: src/Utils/UbdwpValidation.php:279
+msgid "Please select at least one user for deletion."
+msgstr "Seleziona almeno un utente da eliminare."
+
+#: src/Helpers/UbdwpHelper.php:132
+msgid "None of the selected users can be deleted. See the reasons below."
+msgstr "Nessuno degli utenti selezionati può essere eliminato. Vedi i motivi qui sotto."
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:134
+#, php-format
+msgid "Selected users: %d"
+msgstr "Utenti selezionati: %d"
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:136
+#, php-format
+msgid "Will be deleted: %d"
+msgstr "Saranno eliminati: %d"
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:138
+#, php-format
+msgid "Will be removed from this site: %d"
+msgstr "Saranno rimossi da questo sito: %d"
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:140
+#, php-format
+msgid "Will be skipped: %d"
+msgstr "Saranno ignorati: %d"
+
+#. translators: 1: number of users, 2: number of posts, 3: comma-separated usernames.
+#: src/Helpers/UbdwpHelper.php:142
+#, php-format
+msgid "%1$d user(s): %2$d post(s) will be reassigned to %3$s"
+msgstr "%1$d utente/i: %2$d articolo/i saranno riassegnati a %3$s"
+
+#. translators: 1: number of users, 2: number of posts.
+#: src/Helpers/UbdwpHelper.php:144
+#, php-format
+msgid "%1$d user(s): %2$d post(s) will be deleted as by WordPress core (posts and pages go to the trash)"
+msgstr "%1$d utente/i: %2$d articolo/i saranno eliminati come fa WordPress (articoli e pagine vanno nel cestino)"
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:146
+#, php-format
+msgid "%d user(s): their content stays on this site"
+msgstr "%d utente/i: i loro contenuti restano su questo sito"
+
+#. translators: 1: number of users, 2: number of posts, 3: number of comments.
+#: src/Helpers/UbdwpHelper.php:148
+#, php-format
+msgid "%1$d user(s): %2$d post(s) and %3$d comment(s) will be permanently deleted"
+msgstr "%1$d utente/i: %2$d articolo/i e %3$d commento/i saranno eliminati definitivamente"
+
+#: src/Helpers/UbdwpHelper.php:151
+#: templates/steps/step-3.php:39
+msgid "Users that were not deleted"
+msgstr "Utenti non eliminati"
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:170
+#, php-format
+msgid "The users lose their role on this site; their accounts stay on the network. Type %d to confirm."
+msgstr "Gli utenti perdono il loro ruolo su questo sito; i loro account restano nella rete. Digita %d per confermare."
+
+#: src/Helpers/UbdwpHelper.php:171
+msgid "The users lose their role on this site; their accounts stay on the network."
+msgstr "Gli utenti perdono il loro ruolo su questo sito; i loro account restano nella rete."
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:173
+#, php-format
+msgid "Remove %d users from this site?"
+msgstr "Rimuovere %d utenti da questo sito?"
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:177
+#, php-format
+msgid "This cannot be undone. Type %d to confirm."
+msgstr "L'operazione non può essere annullata. Digita %d per confermare."
+
+#: src/Helpers/UbdwpHelper.php:178
+msgid "This cannot be undone."
+msgstr "L'operazione non può essere annullata."
+
+#. translators: %d: number of users.
+#: src/Helpers/UbdwpHelper.php:180
+#, php-format
+msgid "Delete %d users? This cannot be undone."
+msgstr "Eliminare %d utenti? L'operazione non può essere annullata."
+
+#: src/Helpers/UbdwpHelper.php:221
+msgid "Removed permanently"
+msgstr "Rimosso definitivamente"
+
+#. translators: %s: username that received the content.
+#: src/Helpers/UbdwpHelper.php:228
+#, php-format
+msgid "Reassigned to %s"
+msgstr "Riassegnato a %s"
+
+#: src/Helpers/UbdwpHelper.php:232
+msgid "Kept on this site"
+msgstr "Mantenuto su questo sito"
+
+#: src/Helpers/UbdwpHelper.php:233
+msgid "Handled by WordPress (posts go to the trash)"
+msgstr "Gestito da WordPress (gli articoli vanno nel cestino)"
+
+#: src/Helpers/UbdwpHelper.php:245
+msgid "User does not exist."
+msgstr "L'utente non esiste."
+
+#: src/Helpers/UbdwpHelper.php:246
+msgid "You cannot delete your own account."
+msgstr "Non puoi eliminare il tuo account."
+
+#: src/Helpers/UbdwpHelper.php:247
+msgid "User is not a member of this site."
+msgstr "L'utente non è membro di questo sito."
+
+#: src/Helpers/UbdwpHelper.php:248
+msgid "Protected: administrators and other privileged users cannot be deleted."
+msgstr "Protetto: gli amministratori e altri utenti con privilegi non possono essere eliminati."
+
+#: src/Helpers/UbdwpHelper.php:249
+msgid "You do not have permission to delete this user."
+msgstr "Non hai il permesso di eliminare questo utente."
+
+#: src/Helpers/UbdwpHelper.php:251
+msgid "WordPress could not delete this user."
+msgstr "WordPress non ha potuto eliminare questo utente."
+
+#: src/Helpers/UbdwpHelper.php:622
+msgid "Administrators and other privileged users cannot be deleted with this plugin."
+msgstr "Gli amministratori e altri utenti con privilegi non possono essere eliminati con questo plugin."
+
+#: src/Helpers/UbdwpHelper.php:622
+msgid "Protected"
+msgstr "Protetto"
+
+#: src/Pages/UbdwpSettingsPage.php:61
+#: templates/settings-page.php:12
+msgid "General"
+msgstr "Generale"
+
+#: src/Pages/UbdwpSettingsPage.php:115
+#: src/Pages/UbdwpSettingsPage.php:150
+#: assets/build/settings.js:1
+msgid "Please enter a number of days."
+msgstr "Inserisci un numero di giorni."
+
+#: src/Pages/UbdwpUsersPage.php:50
+msgid "Users Management"
+msgstr "Gestione utenti"
+
+#: src/Services/UbdwpBackgroundRunner.php:96
+msgid "The user who started this job can no longer delete users."
+msgstr "L'utente che ha avviato questa attività non può più eliminare utenti."
+
+#: src/Services/UbdwpDeletionJobs.php:472
+msgid "Preparing"
+msgstr "Preparazione"
+
+#: src/Services/UbdwpDeletionJobs.php:473
+msgid "Waiting for confirmation"
+msgstr "In attesa di conferma"
+
+#: src/Services/UbdwpDeletionJobs.php:474
+msgid "Running"
+msgstr "In esecuzione"
+
+#: src/Services/UbdwpDeletionJobs.php:475
+msgid "Completed"
+msgstr "Completata"
+
+#: src/Services/UbdwpDeletionJobs.php:476
+msgid "Cancelled"
+msgstr "Annullata"
+
+#: src/Services/UbdwpDeletionJobs.php:477
+msgid "Failed"
+msgstr "Non riuscita"
+
+#: src/Services/UbdwpPrivacy.php:259
+#: src/Services/UbdwpPrivacy.php:275
+msgid "Users Bulk Delete With Preview log"
+msgstr "Registro di Users Bulk Delete With Preview"
+
+#: src/Services/UbdwpPrivacy.php:302
+#: src/Services/UbdwpPrivacy.php:317
+msgid "Bulk user deletion log"
+msgstr "Registro delle eliminazioni di massa"
+
+#: src/Services/UbdwpPrivacy.php:305
+#: src/Services/UbdwpPrivacy.php:320
+msgid "Event"
+msgstr "Evento"
+
+#: src/Services/UbdwpPrivacy.php:305
+msgid "Your account was deleted"
+msgstr "Il tuo account è stato eliminato"
+
+#: src/Services/UbdwpPrivacy.php:306
+#: src/Services/UbdwpPrivacy.php:321
+msgid "Date"
+msgstr "Data"
+
+#: src/Services/UbdwpPrivacy.php:308
+#: templates/steps/step-3.php:29
+msgid "Display name"
+msgstr "Nome visualizzato"
+
+#: src/Services/UbdwpPrivacy.php:320
+msgid "You deleted users"
+msgstr "Hai eliminato degli utenti"
+
+#: src/Services/UbdwpPrivacy.php:322
+msgid "Deleted users count"
+msgstr "Numero di utenti eliminati"
+
+#: src/Services/UbdwpPrivacy.php:414
+msgid "Users Bulk Delete With Preview keeps a log of bulk user deletions made by administrators. You can change what is stored and for how long on the plugin's Settings page."
+msgstr "Users Bulk Delete With Preview tiene un registro delle eliminazioni di massa di utenti eseguite dagli amministratori. Puoi modificare cosa viene conservato e per quanto tempo nella pagina delle impostazioni del plugin."
+
+#: src/Services/UbdwpPrivacy.php:415
+msgid "Suggested text:"
+msgstr "Testo suggerito:"
+
+#: src/Services/UbdwpPrivacy.php:416
+msgid "When administrators delete user accounts in bulk, we keep a log of the deletion for security and audit purposes. The log contains the ID of the deleted account, the date of the deletion and, depending on our settings, the email address and display name, which can be stored in full, masked or not at all. The log also records which administrator performed the deletion. Log entries are kept until they are deleted by an administrator or, if a retention period is set, until that period ends. You can request an export or erasure of this data."
+msgstr "Quando gli amministratori eliminano account utente in massa, conserviamo un registro dell'eliminazione per motivi di sicurezza e controllo. Il registro contiene l'ID dell'account eliminato, la data dell'eliminazione e, a seconda delle nostre impostazioni, l'indirizzo email e il nome visualizzato, che possono essere conservati per intero, mascherati o non conservati. Il registro indica anche quale amministratore ha eseguito l'eliminazione. Le voci sono conservate finché un amministratore non le elimina o, se è impostato un periodo di conservazione, fino alla sua scadenza. Puoi richiedere l'esportazione o la cancellazione di questi dati."
+
+#: src/Utils/UbdwpValidation.php:43
+msgid "An unknown error occurred."
+msgstr "Si è verificato un errore sconosciuto."
+
+#: src/Utils/UbdwpValidation.php:243
+msgid "You do not have sufficient permissions to perform this action."
+msgstr "Non hai permessi sufficienti per eseguire questa azione."
+
+#: src/Utils/UbdwpValidation.php:247
+msgid "Invalid nonce"
+msgstr "Nonce non valido"
+
+#: src/Utils/UbdwpValidation.php:251
+msgid "Select type"
+msgstr "Seleziona il tipo"
+
+#: src/Utils/UbdwpValidation.php:255
+msgid "Invalid security token"
+msgstr "Token di sicurezza non valido"
+
+#: src/Utils/UbdwpValidation.php:259
+msgid "Something went wrong. Please try again."
+msgstr "Qualcosa è andato storto. Riprova."
+
+#: src/Utils/UbdwpValidation.php:263
+msgid "User IDs should be an array."
+msgstr "Gli ID utente devono essere un array."
+
+#: src/Utils/UbdwpValidation.php:267
+msgid "Please set at least one filter."
+msgstr "Imposta almeno un filtro."
+
+#: src/Utils/UbdwpValidation.php:271
+msgid "No users found with the given filters"
+msgstr "Nessun utente trovato con i filtri indicati"
+
+#: src/Utils/UbdwpValidation.php:275
+msgid "No users found for the provided IDs."
+msgstr "Nessun utente trovato per gli ID indicati."
+
+#: src/Utils/UbdwpValidation.php:283
+msgid "Failed to create the export file."
+msgstr "Impossibile creare il file di esportazione."
+
+#: src/Utils/UbdwpValidation.php:287
+msgid "Please enter a valid date in YYYY-MM-DD format."
+msgstr "Inserisci una data valida nel formato AAAA-MM-GG."
+
+#: src/Utils/UbdwpValidation.php:291
+msgid "Please enter a valid date range: both dates in YYYY-MM-DD format, and the end date not before the start date."
+msgstr "Inserisci un intervallo di date valido: entrambe le date nel formato AAAA-MM-GG e la data di fine non precedente a quella di inizio."
+
+#: src/Utils/UbdwpValidation.php:295
+msgid "Please choose a valid registration date comparison."
+msgstr "Scegli un confronto valido per la data di registrazione."
+
+#: src/Utils/UbdwpValidation.php:299
+msgid "Please enter a valid number for the selected comparison."
+msgstr "Inserisci un numero valido per il confronto scelto."
+
+#: src/Utils/UbdwpValidation.php:307
+msgid "The preview has expired. Please run the preview again."
+msgstr "L'anteprima è scaduta. Eseguila di nuovo."
+
+#: src/Utils/UbdwpValidation.php:315
+msgid "The deletion job cannot do this in its current state."
+msgstr "L'attività di eliminazione non può farlo nel suo stato attuale."
+
+#: src/Utils/UbdwpValidation.php:319
+msgid "The deletion job is being processed by another request. Please try again in a moment."
+msgstr "L'attività di eliminazione è in elaborazione da parte di un'altra richiesta. Riprova tra un momento."
+
+#: src/Utils/UbdwpValidation.php:323
+msgid "Please type the number of users to confirm the deletion."
+msgstr "Digita il numero di utenti per confermare l'eliminazione."
+
+#: templates/jobs-page.php:29
+msgid "Deletions started on the Bulk Users Delete page or with WP-CLI. Background jobs continue after you leave the page; this page refreshes while a job is running."
+msgstr "Eliminazioni avviate dalla pagina Bulk Users Delete o con WP-CLI. Le attività in background continuano dopo che hai lasciato la pagina; questa pagina si aggiorna mentre un'attività è in esecuzione."
+
+#: templates/jobs-page.php:35
+#: templates/jobs-page.php:60
+msgid "Started by"
+msgstr "Avviata da"
+
+#: templates/jobs-page.php:36
+#: templates/jobs-page.php:61
+msgid "Mode"
+msgstr "Modalità"
+
+#: templates/jobs-page.php:37
+#: templates/jobs-page.php:62
+msgid "Status"
+msgstr "Stato"
+
+#: templates/jobs-page.php:38
+#: templates/jobs-page.php:68
+msgid "Progress"
+msgstr "Avanzamento"
+
+#: templates/jobs-page.php:39
+#: templates/jobs-page.php:69
+msgid "Deleted"
+msgstr "Eliminati"
+
+#: templates/jobs-page.php:40
+#: templates/jobs-page.php:70
+msgid "Not deleted"
+msgstr "Non eliminati"
+
+#: templates/jobs-page.php:41
+#: templates/jobs-page.php:71
+msgid "Created"
+msgstr "Creata"
+
+#: templates/jobs-page.php:42
+msgid "Actions"
+msgstr "Azioni"
+
+#: templates/jobs-page.php:47
+msgid "No deletion jobs yet."
+msgstr "Ancora nessuna attività di eliminazione."
+
+#: templates/jobs-page.php:53
+msgid "Browser"
+msgstr "Browser"
+
+#: templates/jobs-page.php:54
+msgid "Background"
+msgstr "Background"
+
+#: templates/jobs-page.php:55
+msgid "WP-CLI"
+msgstr ""
+
+#: templates/jobs-page.php:74
+#: templates/partials/_confirmation-popup.php:54
+msgid "Cancel"
+msgstr "Annulla"
+
+#. translators: %s: Number of deletion jobs.
+#: templates/jobs-page.php:87
+#, php-format
+msgid "%s job"
+msgid_plural "%s jobs"
+msgstr[0] "%s attività"
+msgstr[1] "%s attività"
+
+#: templates/logs-page.php:42
+msgid "User"
+msgstr "Utente"
+
+#: templates/logs-page.php:43
+msgid "Deleted Users Count"
+msgstr "Numero di utenti eliminati"
+
+#: templates/logs-page.php:44
+msgid "Deleted User Data"
+msgstr "Dati dell'utente eliminato"
+
+#: templates/logs-page.php:45
+msgid "Deletion Time"
+msgstr "Ora dell'eliminazione"
+
+#: templates/partials/_confirmation-popup.php:20
+msgid "Confirm Deletion"
+msgstr "Conferma l'eliminazione"
+
+#: templates/partials/_confirmation-popup.php:21
+msgid "Close"
+msgstr "Chiudi"
+
+#: templates/partials/_confirmation-popup.php:28
+#: templates/steps/step-3.php:28
+#: templates/steps/step-3.php:43
+msgid "User ID"
+msgstr "ID utente"
+
+#: templates/partials/_confirmation-popup.php:31
+#: templates/steps/step-3.php:46
+msgid "Reason"
+msgstr "Motivo"
+
+#: templates/partials/_confirmation-popup.php:37
+msgid "How to run the deletion"
+msgstr "Come eseguire l'eliminazione"
+
+#: templates/partials/_confirmation-popup.php:40
+msgid "In this browser tab (keep the page open)"
+msgstr "In questa scheda del browser (tieni aperta la pagina)"
+
+#: templates/partials/_confirmation-popup.php:44
+msgid "In the background (you can leave this page; progress is shown on the Deletion Jobs page)"
+msgstr "In background (puoi lasciare questa pagina; l'avanzamento è mostrato nella pagina Attività di eliminazione)"
+
+#: templates/partials/_confirmation-popup.php:49
+msgid "Number of users to delete"
+msgstr "Numero di utenti da eliminare"
+
+#: templates/partials/_confirmation-popup.php:55
+msgid "Delete"
+msgstr "Elimina"
+
+#: templates/partials/_existing_user_form.php:20
+msgid "Select existing users"
+msgstr "Seleziona utenti esistenti"
+
+#: templates/partials/_existing_user_form.php:27
+msgid "All users of this site"
+msgstr "Tutti gli utenti di questo sito"
+
+#: templates/partials/_find_user_form.php:19
+msgid "Account"
+msgstr "Account"
+
+#: templates/partials/_find_user_form.php:25
+msgid "User Role"
+msgstr "Ruolo utente"
+
+#: templates/partials/_find_user_form.php:40
+msgid "User Email"
+msgstr "Email utente"
+
+#: templates/partials/_find_user_form.php:45
+#: templates/partials/_find_user_form.php:166
+msgid "Equal to (string)"
+msgstr "Uguale a (testo)"
+
+#: templates/partials/_find_user_form.php:46
+#: templates/partials/_find_user_form.php:167
+msgid "Not equal to (string)"
+msgstr "Diverso da (testo)"
+
+#: templates/partials/_find_user_form.php:47
+#: templates/partials/_find_user_form.php:168
+msgid "Like (string)"
+msgstr "Simile a (testo)"
+
+#: templates/partials/_find_user_form.php:48
+#: templates/partials/_find_user_form.php:169
+msgid "Not like (string)"
+msgstr "Non simile a (testo)"
+
+#: templates/partials/_find_user_form.php:49
+msgid "Ends with (for example @example.com)"
+msgstr "Termina con (ad esempio @example.com)"
+
+#: templates/partials/_find_user_form.php:51
+msgid "Enter user email..."
+msgstr "Inserisci l'email dell'utente..."
+
+#: templates/partials/_find_user_form.php:59
+msgid "User Registration Date"
+msgstr "Data di registrazione dell'utente"
+
+#: templates/partials/_find_user_form.php:63
+msgid "Registration date comparison"
+msgstr "Confronto della data di registrazione"
+
+#: templates/partials/_find_user_form.php:64
+msgid "On or after"
+msgstr "In data o successiva al"
+
+#: templates/partials/_find_user_form.php:65
+msgid "On or before"
+msgstr "In data o precedente al"
+
+#: templates/partials/_find_user_form.php:66
+msgid "On"
+msgstr "Il"
+
+#: templates/partials/_find_user_form.php:67
+msgid "Between"
+msgstr "Tra"
+
+#: templates/partials/_find_user_form.php:71
+msgid "and"
+msgstr "e"
+
+#: templates/partials/_find_user_form.php:89
+msgid "Activity"
+msgstr "Attività"
+
+#: templates/partials/_find_user_form.php:94
+msgid "Content"
+msgstr "Contenuti"
+
+#: templates/partials/_find_user_form.php:99
+msgid "Only users without posts or comments on this site"
+msgstr "Solo utenti senza articoli o commenti su questo sito"
+
+#: templates/partials/_find_user_form.php:104
+msgid "Only users without WooCommerce orders"
+msgstr "Solo utenti senza ordini WooCommerce"
+
+#: templates/partials/_find_user_form.php:122
+msgid "Spam signs"
+msgstr "Segnali di spam"
+
+#: templates/partials/_find_user_form.php:137
+msgid "Fraud signals"
+msgstr "Segnali di frode"
+
+#: templates/partials/_find_user_form.php:152
+msgid "Advanced"
+msgstr "Avanzate"
+
+#: templates/partials/_find_user_form.php:157
+msgid "User Meta"
+msgstr "Metadati utente"
+
+#: templates/partials/_find_user_form.php:164
+msgid "Meta does not exist"
+msgstr "Il metadato non esiste"
+
+#: templates/partials/_find_user_form.php:165
+msgid "Meta is empty or missing"
+msgstr "Il metadato è vuoto o assente"
+
+#: templates/partials/_find_user_form.php:170
+msgid "Equal to (date)"
+msgstr "Uguale a (data)"
+
+#: templates/partials/_find_user_form.php:171
+msgid "Not equal to (date)"
+msgstr "Diverso da (data)"
+
+#: templates/partials/_find_user_form.php:172
+msgid "Less than (date)"
+msgstr "Minore di (data)"
+
+#: templates/partials/_find_user_form.php:173
+msgid "Less than or equal to (date)"
+msgstr "Minore o uguale a (data)"
+
+#: templates/partials/_find_user_form.php:174
+msgid "Greater than (date)"
+msgstr "Maggiore di (data)"
+
+#: templates/partials/_find_user_form.php:175
+msgid "Greater than or equal to (date)"
+msgstr "Maggiore o uguale a (data)"
+
+#: templates/partials/_find_user_form.php:176
+msgid "Equal to (number)"
+msgstr "Uguale a (numero)"
+
+#: templates/partials/_find_user_form.php:177
+msgid "Not equal to (number)"
+msgstr "Diverso da (numero)"
+
+#: templates/partials/_find_user_form.php:178
+msgid "Less than (number)"
+msgstr "Minore di (numero)"
+
+#: templates/partials/_find_user_form.php:179
+msgid "Less than or equal to (number)"
+msgstr "Minore o uguale a (numero)"
+
+#: templates/partials/_find_user_form.php:180
+msgid "Greater than (number)"
+msgstr "Maggiore di (numero)"
+
+#: templates/partials/_find_user_form.php:181
+msgid "Greater than or equal to (number)"
+msgstr "Maggiore o uguale a (numero)"
+
+#: templates/partials/_find_user_form.php:183
+msgid "Enter user meta value"
+msgstr "Inserisci il valore del metadato"
+
+#: templates/partials/_find_user_form.php:185
+msgid "Tip: WordPress stores profile fields such as first_name for every user, even when they are blank. To find users who left a field empty, choose \"Meta is empty or missing\"."
+msgstr "Suggerimento: WordPress salva campi del profilo come first_name per ogni utente, anche se vuoti. Per trovare gli utenti che hanno lasciato vuoto un campo, scegli \"Il metadato è vuoto o assente\"."
+
+#: templates/partials/_step-2-buttons.php:18
+msgid "Previous step"
+msgstr "Passo precedente"
+
+#: templates/partials/_step-2-buttons.php:21
+msgid "Export Selected Users"
+msgstr "Esporta utenti selezionati"
+
+#: templates/partials/_step-2-buttons.php:24
+msgid "Delete selected users"
+msgstr "Elimina utenti selezionati"
+
+#: templates/partials/_step-wizard.php:21
+msgid "Find users"
+msgstr "Trova utenti"
+
+#: templates/partials/_step-wizard.php:25
+msgid "Review and select"
+msgstr "Controlla e seleziona"
+
+#: templates/partials/_step-wizard.php:29
+msgid "Result"
+msgstr "Risultato"
+
+#: templates/partials/_users_table.php:20
+msgid "Clear selection"
+msgstr "Cancella selezione"
+
+#: templates/partials/_users_table.php:37
+msgid "Select"
+msgstr "Seleziona"
+
+#: templates/partials/_woocommerce_filters_form.php:21
+#: assets/build/users.js:1
+msgid "Select products that bought user"
+msgstr "Seleziona i prodotti acquistati dall'utente"
+
+#: templates/partials/_woocommerce_filters_form.php:28
+msgid "Select All"
+msgstr "Seleziona tutto"
+
+#: templates/settings-page.php:27
+msgid "Settings sections"
+msgstr "Sezioni delle impostazioni"
+
+#: templates/settings-page.php:51
+msgid "Privacy"
+msgstr "Privacy"
+
+#: templates/settings-page.php:52
+msgid "What the deletion log keeps about deleted users, and for how long."
+msgstr "Cosa conserva il registro delle eliminazioni sugli utenti eliminati e per quanto tempo."
+
+#: templates/settings-page.php:57
+msgid "Keep log entries for"
+msgstr "Conserva le voci del registro per"
+
+#: templates/settings-page.php:61
+msgid "days"
+msgstr "giorni"
+
+#: templates/settings-page.php:63
+msgid "Older entries and finished deletion jobs are deleted automatically once a day. 0 keeps them until you delete them."
+msgstr "Le voci più vecchie e le attività di eliminazione terminate vengono eliminate automaticamente una volta al giorno. 0 le conserva finché non le elimini."
+
+#: templates/settings-page.php:67
+msgid "Emails and names in new entries"
+msgstr "Email e nomi nelle nuove voci"
+
+#: templates/settings-page.php:70
+msgid "Store masked (j***@example.com)"
+msgstr "Conserva mascherati (j***@example.com)"
+
+#: templates/settings-page.php:71
+msgid "Store in full"
+msgstr "Conserva per intero"
+
+#: templates/settings-page.php:72
+msgid "Do not store (only user IDs)"
+msgstr "Non conservare (solo ID utente)"
+
+#: templates/settings-page.php:74
+msgid "The log is also included in Tools → Export Personal Data and Erase Personal Data."
+msgstr "Il registro è incluso anche in Strumenti → Esporta i dati personali e Cancella i dati personali."
+
+#: templates/settings-page.php:79
+msgid "Save privacy settings"
+msgstr "Salva le impostazioni della privacy"
+
+#: templates/settings-page.php:85
+msgid "Log maintenance"
+msgstr "Manutenzione del registro"
+
+#: templates/settings-page.php:87
+msgid "These actions change the existing entries of the log and cannot be undone."
+msgstr "Queste azioni modificano le voci esistenti del registro e non possono essere annullate."
+
+#: templates/settings-page.php:88
+#: assets/build/users.js:1
+msgid "Open the Logs page"
+msgstr "Apri la pagina Registri"
+
+#: templates/settings-page.php:92
+msgid "Apply to existing entries"
+msgstr "Applica alle voci esistenti"
+
+#: templates/settings-page.php:93
+msgid "Delete entries older than the period above"
+msgstr "Elimina le voci più vecchie del periodo indicato sopra"
+
+#: templates/settings-page.php:94
+msgid "Delete the whole log"
+msgstr "Elimina l'intero registro"
+
+#: templates/steps/step-1.php:38
+msgid "Choose filter type"
+msgstr "Scegli il tipo di filtro"
+
+#: templates/steps/step-1.php:80
+msgid "Preview"
+msgstr "Anteprima"
+
+#: templates/steps/step-1.php:91
+msgid "Clear filters"
+msgstr "Cancella filtri"
+
+#: templates/steps/step-2.php:26
+msgid "Stop deletion"
+msgstr "Interrompi l'eliminazione"
+
+#: templates/steps/step-3.php:31
+msgid "Related content"
+msgstr "Contenuti correlati"
+
+#: assets/build/jobs.js:1
+#: assets/build/logs.js:1
+#: assets/build/settings.js:1
+#: assets/build/users.js:1
+msgid "Dismiss this notice."
+msgstr "Ignora questo avviso."
+
+#: assets/build/jobs.js:1
+#: assets/build/logs.js:1
+#: assets/build/settings.js:1
+#: assets/build/users.js:1
+msgid "An unexpected error occurred."
+msgstr "Si è verificato un errore imprevisto."
+
+#: assets/build/settings.js:1
+msgid "Privacy settings saved."
+msgstr "Impostazioni della privacy salvate."
+
+#: assets/build/users.js:1
+msgid "Preparing the summary…"
+msgstr "Preparazione del riepilogo…"
+
+#: assets/build/users.js:1
+#, js-format
+msgid "Preparing the summary… %d%%"
+msgstr "Preparazione del riepilogo… %d%%"
+
+#: assets/build/users.js:1
+msgid "The deletion runs in the background. You can leave this page and follow it on the Deletion Jobs page."
+msgstr "L'eliminazione è in corso in background. Puoi lasciare questa pagina e seguirla nella pagina Attività di eliminazione."
+
+#: assets/build/users.js:1
+msgid "Open the Deletion Jobs page"
+msgstr "Apri la pagina Attività di eliminazione"
+
+#: assets/build/users.js:1
+msgid "The deletion was stopped."
+msgstr "L'eliminazione è stata interrotta."
+
+#: assets/build/users.js:1
+msgid "The deleted users are listed on the Logs page."
+msgstr "Gli utenti eliminati sono elencati nella pagina Registri."
+
+#: assets/build/users.js:1
+#, js-format
+msgid "Only the first %d deleted users are listed here. All of them are listed on the Logs page."
+msgstr "Qui sono elencati solo i primi %d utenti eliminati. Tutti sono elencati nella pagina Registri."
+
+#: assets/build/users.js:1
+#, js-format
+msgid "All %d users of the preview are selected. Protected users will be skipped."
+msgstr "Tutti i %d utenti dell'anteprima sono selezionati. Gli utenti protetti saranno ignorati."
+
+#: assets/build/users.js:1
+#, js-format
+msgid "Selected users: %d."
+msgstr "Utenti selezionati: %d."
+
+#: assets/build/users.js:1
+#, js-format
+msgid "Select all %d users of the preview"
+msgstr "Seleziona tutti i %d utenti dell'anteprima"
+
+#: assets/build/users.js:1
+msgid "Search for users"
+msgstr "Cerca utenti"
+
+#: assets/build/users.js:1
+msgid "Select meta field"
+msgstr "Seleziona il campo meta"
+
+#: assets/build/users.js:1
+msgid "Select user roles"
+msgstr "Seleziona i ruoli utente"
+
+#. translators: %s: number of users.
+#: assets/build/users.js:2
+#, js-format
+msgid "Found %s user. Select who to delete."
+msgid_plural "Found %s users. Select who to delete."
+msgstr[0] "Trovato %s utente. Seleziona chi eliminare."
+msgstr[1] "Trovati %s utenti. Seleziona chi eliminare."
+
+#: assets/build/users.js:2
+msgid "Select all users on this page"
+msgstr "Seleziona tutti gli utenti di questa pagina"
+
+#: assets/build/users.js:3
+#, js-format
+msgid "%d filter set"
+msgid_plural "%d filters set"
+msgstr[0] "%d filtro impostato"
+msgstr[1] "%d filtri impostati"
+
+#: assets/build/users.js:3
+#, js-format
+msgid "A background deletion is running: %1$d of %2$d users processed (%3$d%%)."
+msgstr "Eliminazione in background in corso: %1$d di %2$d utenti elaborati (%3$d%%)."
+
+#: assets/build/users.js:3
+#, js-format
+msgid "The background deletion is finished. Deleted users: %1$d. Not deleted: %2$d."
+msgstr "L'eliminazione in background è terminata. Utenti eliminati: %1$d. Non eliminati: %2$d."

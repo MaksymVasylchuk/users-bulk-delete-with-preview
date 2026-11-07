@@ -77,25 +77,76 @@ class UbdwpUserFinder {
 	 * @return array<int>|\WP_Error User IDs in ascending order, or an error.
 	 */
 	public function find( string $type, array $request ) {
-		if ( ! in_array( $type, self::TYPES, true ) ) {
+		$is_custom_type = ! in_array( $type, self::TYPES, true );
+
+		if ( $is_custom_type && ! array_key_exists( $type, UbdwpHelperFacade::get_types_of_user_search() ) ) {
 			return UbdwpValidationFacade::to_wp_error( 'select_type' );
 		}
 
-		$data  = UbdwpHelperFacade::sanitize_post_data( array_intersect_key( $request, array_flip( self::FILTER_KEYS ) ) );
-		$error = UbdwpValidationFacade::get_search_error( $type, $data );
+		$data = UbdwpHelperFacade::sanitize_post_data( array_intersect_key( $request, array_flip( self::FILTER_KEYS ) ) );
+
+		// Extra criteria of other plugins are only in the raw request, so validation filters receive it as well.
+		$error = UbdwpValidationFacade::get_search_error( $type, array_merge( $request, $data ) );
 
 		if ( null !== $error ) {
 			return UbdwpValidationFacade::to_wp_error( $error );
 		}
 
-		switch ( $type ) {
+		switch ( $is_custom_type ? 'custom' : $type ) {
+			case 'custom':
+				/**
+				 * Filters the users found by a filter type added with "ubdwp_filter_types".
+				 *
+				 * Users that are not members of the current site are ignored.
+				 *
+				 * @since 2.5.0
+				 *
+				 * @param array<int>|\WP_Error|null $user_ids        User IDs, an error, or null when the type is not handled.
+				 * @param string                    $type            Filter type.
+				 * @param array<string, mixed>      $request         Raw request data (unslashed, not sanitized).
+				 * @param int                       $current_user_id User running the search.
+				 */
+				$custom = apply_filters( 'ubdwp_custom_filter_user_ids', null, $type, $request, $this->current_user_id );
+
+				if ( is_wp_error( $custom ) ) {
+					return $custom;
+				}
+
+				if ( ! is_array( $custom ) ) {
+					return UbdwpValidationFacade::to_wp_error( 'select_type' );
+				}
+
+				$user_ids = $this->repository->filter_site_user_ids( $custom );
+				break;
+
 			case 'select_existing':
-				$user_ids = ! empty( $data['all_users'] )
-					? $this->repository->get_all_site_user_ids()
-					: $this->repository->filter_site_user_ids( $data['user_search'] ?? array() );
+				if ( ! empty( $data['all_users'] ) ) {
+					$user_ids = $this->repository->get_all_site_user_ids();
+					break;
+				}
+
+				/**
+				 * Filters the users chosen in "Choose from existing users", for example to add users of a list.
+				 *
+				 * Users that are not members of the current site are ignored.
+				 *
+				 * @since 2.5.0
+				 *
+				 * @param array<int>           $user_ids User IDs chosen in the form.
+				 * @param array<string, mixed> $request  Raw request data (unslashed, not sanitized).
+				 */
+				$selected = apply_filters( 'ubdwp_selected_user_ids', $data['user_search'] ?? array(), $request );
+				$user_ids = $this->repository->filter_site_user_ids( is_array( $selected ) ? $selected : array() );
 				break;
 
 			case 'find_users_by_woocommerce_filters':
+				if ( empty( $data['products'] ) && empty( $data['all_products'] ) ) {
+					// No product chosen: the validation only lets this through when other plugins add criteria
+					// ("ubdwp_search_error"), which then narrow all users of the site.
+					$user_ids = $this->repository->get_all_site_user_ids();
+					break;
+				}
+
 				$user_ids = $this->repository->filter_site_user_ids(
 					$this->repository->get_users_by_product_purchase( $data['products'] ?? array(), ! empty( $data['all_products'] ) )
 				);

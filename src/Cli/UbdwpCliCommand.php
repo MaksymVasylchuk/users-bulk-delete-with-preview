@@ -328,15 +328,23 @@ class UbdwpCliCommand {
 		$status = $jobs->to_status( $job );
 		$this->print_summary( $status['summary'] );
 
-		if ( (int) $status['summary']['deletable'] < 1 || \WP_CLI\Utils\get_flag_value( $assoc_args, 'dry-run', false ) ) {
+		if ( (int) $status['summary']['deletable'] < 1 ) {
+			$jobs->discard( $job );
+			\WP_CLI::warning( __( 'No users were deleted: none of them can be deleted.', 'users-bulk-delete-with-preview' ) );
+
+			return;
+		}
+
+		if ( \WP_CLI\Utils\get_flag_value( $assoc_args, 'dry-run', false ) ) {
 			$jobs->discard( $job );
 			\WP_CLI::success( __( 'Dry run: no users were deleted.', 'users-bulk-delete-with-preview' ) );
 
 			return;
 		}
 
-		/* translators: %d: number of users. */
-		\WP_CLI::confirm( sprintf( __( 'Delete %d users? This cannot be undone.', 'users-bulk-delete-with-preview' ), (int) $status['summary']['deletable'] ), $assoc_args );
+		$confirm = UbdwpHelperFacade::get_confirm_texts();
+
+		\WP_CLI::confirm( sprintf( $confirm['cli'], (int) $status['summary']['deletable'] ), $assoc_args );
 
 		$background = (bool) \WP_CLI\Utils\get_flag_value( $assoc_args, 'background', false );
 		$job        = $jobs->start( $job, $background ? UbdwpDeletionJobs::MODE_BACKGROUND : UbdwpDeletionJobs::MODE_CLI, (string) (int) $status['summary']['deletable'] );
@@ -497,7 +505,8 @@ class UbdwpCliCommand {
 		}
 
 		$all  = (bool) \WP_CLI\Utils\get_flag_value( $assoc_args, 'all', false );
-		$days = absint( \WP_CLI\Utils\get_flag_value( $assoc_args, 'older-than', 0 ) );
+		$raw  = (string) \WP_CLI\Utils\get_flag_value( $assoc_args, 'older-than', '' );
+		$days = ctype_digit( $raw ) ? (int) $raw : 0;
 
 		if ( ! $all && $days < 1 ) {
 			\WP_CLI::error( __( 'Use --older-than=<days> or --all.', 'users-bulk-delete-with-preview' ) );
@@ -729,7 +738,7 @@ class UbdwpCliCommand {
 			\WP_CLI::line( sprintf( $translations['summaryReassign'], $summary['reassign_users'], $summary['reassign_posts'], self::clean_text( implode( ', ', $summary['reassign_targets'] ) ) ) );
 		}
 
-		if ( $summary['default_users'] > 0 ) {
+		if ( $summary['default_users'] > 0 && ( is_multisite() || $summary['default_posts'] > 0 ) ) {
 			\WP_CLI::line( is_multisite() ? sprintf( $translations['summaryKeep'], $summary['default_users'] ) : sprintf( $translations['summaryTrash'], $summary['default_users'], $summary['default_posts'] ) );
 		}
 
