@@ -121,18 +121,6 @@ The manual installation method requires downloading the Users Bulk Delete With P
    <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-8.png" alt="Logs" width="800" />
 </p>
 
-**9. Deletion Jobs**
-
-<p align="center">
-   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-9.png" alt="Deletion Jobs" width="800" />
-</p>
-
-**10. Settings**
-
-<p align="center">
-   <img src="https://ps.w.org/users-bulk-delete-with-preview/assets/screenshot-10.png" alt="Settings" width="800" />
-</p>
-
 ## Frequently Asked Questions
 
 ### Does this plugin permanently delete users?
