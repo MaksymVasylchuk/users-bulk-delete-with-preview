@@ -20,7 +20,7 @@ msgstr ""
 #: ubdwp-users-bulk-delete-with-preview.php
 #: src/Services/UbdwpPrivacy.php:418
 msgid "Users Bulk Delete With Preview"
-msgstr ""
+msgstr "Users Bulk Delete With Preview"
 
 #. Plugin URI of the plugin
 #: ubdwp-users-bulk-delete-with-preview.php
@@ -164,40 +164,44 @@ msgstr "La tarea se detuvo con el estado: %s"
 msgid "Deleted users: %1$d. Not deleted: %2$d."
 msgstr "Usuarios eliminados: %1$d. No eliminados: %2$d."
 
-#: src/Core/UbdwpLoader.php:148
-#: src/Core/UbdwpLoader.php:149
+#: src/Core/UbdwpLoader.php:165
+#: src/Core/UbdwpLoader.php:166
 msgid "Bulk Users Delete"
-msgstr ""
+msgstr "Bulk Users Delete"
 
-#: src/Core/UbdwpLoader.php:158
-#: src/Core/UbdwpLoader.php:159
+#: src/Core/UbdwpLoader.php:175
+#: src/Core/UbdwpLoader.php:176
 #: src/Pages/UbdwpJobsPage.php:45
 msgid "Deletion Jobs"
 msgstr "Tareas de eliminación"
 
-#: src/Core/UbdwpLoader.php:167
+#: src/Core/UbdwpLoader.php:184
 msgid "Bulk Users Delete Logs"
 msgstr "Registros de Bulk Users Delete"
 
-#: src/Core/UbdwpLoader.php:168
-#: src/Core/UbdwpLoader.php:219
+#: src/Core/UbdwpLoader.php:185
+#: src/Core/UbdwpLoader.php:236
 #: src/Pages/UbdwpLogsPage.php:46
 msgid "Logs"
 msgstr "Registros"
 
-#: src/Core/UbdwpLoader.php:176
+#: src/Core/UbdwpLoader.php:193
 msgid "Bulk Users Delete Settings"
 msgstr "Ajustes de Bulk Users Delete"
 
-#: src/Core/UbdwpLoader.php:177
-#: src/Core/UbdwpLoader.php:220
-#: src/Pages/UbdwpSettingsPage.php:45
+#: src/Core/UbdwpLoader.php:194
+#: src/Core/UbdwpLoader.php:237
+#: src/Pages/UbdwpSettingsPage.php:47
 msgid "Settings"
 msgstr "Ajustes"
 
-#: src/Core/UbdwpLoader.php:218
+#: src/Core/UbdwpLoader.php:235
 msgid "Delete users"
 msgstr "Eliminar usuarios"
+
+#: src/Core/UbdwpLoader.php:241
+msgid "Get Pro"
+msgstr "Obtener Pro"
 
 #: src/Handlers/UbdwpLogsHandler.php:132
 msgid "Anonymized user"
@@ -258,12 +262,12 @@ msgid "No matching records found"
 msgstr "No se encontraron registros coincidentes"
 
 #: src/Helpers/UbdwpHelper.php:118
-#: templates/jobs-page.php:34
-#: templates/jobs-page.php:59
-#: templates/logs-page.php:41
+#: templates/jobs-page.php:38
+#: templates/jobs-page.php:63
+#: templates/logs-page.php:44
 #: templates/partials/_users_table.php:38
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: src/Helpers/UbdwpHelper.php:119
 #: templates/partials/_confirmation-popup.php:29
@@ -303,12 +307,12 @@ msgid "Assign related content to user"
 msgstr "Asignar el contenido relacionado a un usuario"
 
 #: src/Helpers/UbdwpHelper.php:125
-#: src/Helpers/UbdwpHelper.php:602
+#: src/Helpers/UbdwpHelper.php:629
 msgid "Select a user"
 msgstr "Selecciona un usuario"
 
 #: src/Helpers/UbdwpHelper.php:126
-#: src/Helpers/UbdwpHelper.php:604
+#: src/Helpers/UbdwpHelper.php:631
 msgid "Remove all related content"
 msgstr "Eliminar todo el contenido relacionado"
 
@@ -460,21 +464,21 @@ msgstr "No tienes permiso para eliminar este usuario."
 msgid "WordPress could not delete this user."
 msgstr "WordPress no pudo eliminar este usuario."
 
-#: src/Helpers/UbdwpHelper.php:622
+#: src/Helpers/UbdwpHelper.php:649
 msgid "Administrators and other privileged users cannot be deleted with this plugin."
 msgstr "Los administradores y otros usuarios con privilegios no se pueden eliminar con este plugin."
 
-#: src/Helpers/UbdwpHelper.php:622
+#: src/Helpers/UbdwpHelper.php:649
 msgid "Protected"
 msgstr "Protegido"
 
-#: src/Pages/UbdwpSettingsPage.php:61
+#: src/Pages/UbdwpSettingsPage.php:65
 #: templates/settings-page.php:12
 msgid "General"
 msgstr "General"
 
-#: src/Pages/UbdwpSettingsPage.php:115
-#: src/Pages/UbdwpSettingsPage.php:150
+#: src/Pages/UbdwpSettingsPage.php:130
+#: src/Pages/UbdwpSettingsPage.php:165
 #: assets/build/settings.js:1
 msgid "Please enter a number of days."
 msgstr "Introduce un número de días."
@@ -640,87 +644,95 @@ msgstr "Escribe el número de usuarios para confirmar la eliminación."
 msgid "Deletions started on the Bulk Users Delete page or with WP-CLI. Background jobs continue after you leave the page; this page refreshes while a job is running."
 msgstr "Eliminaciones iniciadas en la página Bulk Users Delete o con WP-CLI. Las tareas en segundo plano continúan cuando sales de la página; esta página se actualiza mientras hay una tarea en ejecución."
 
-#: templates/jobs-page.php:35
-#: templates/jobs-page.php:60
+#: templates/jobs-page.php:31
+msgid "Pro runs saved filters on a schedule: every hour, day, week or month, with a report or a warning email before deletion."
+msgstr "Pro ejecuta filtros guardados según una programación: cada hora, día, semana o mes, con un informe o un correo de aviso antes de eliminar."
+
+#: templates/jobs-page.php:39
+#: templates/jobs-page.php:64
 msgid "Started by"
 msgstr "Iniciada por"
 
-#: templates/jobs-page.php:36
-#: templates/jobs-page.php:61
+#: templates/jobs-page.php:40
+#: templates/jobs-page.php:65
 msgid "Mode"
 msgstr "Modo"
 
-#: templates/jobs-page.php:37
-#: templates/jobs-page.php:62
+#: templates/jobs-page.php:41
+#: templates/jobs-page.php:66
 msgid "Status"
 msgstr "Estado"
 
-#: templates/jobs-page.php:38
-#: templates/jobs-page.php:68
+#: templates/jobs-page.php:42
+#: templates/jobs-page.php:72
 msgid "Progress"
 msgstr "Progreso"
 
-#: templates/jobs-page.php:39
-#: templates/jobs-page.php:69
+#: templates/jobs-page.php:43
+#: templates/jobs-page.php:73
 msgid "Deleted"
 msgstr "Eliminados"
 
-#: templates/jobs-page.php:40
-#: templates/jobs-page.php:70
+#: templates/jobs-page.php:44
+#: templates/jobs-page.php:74
 msgid "Not deleted"
 msgstr "No eliminados"
 
-#: templates/jobs-page.php:41
-#: templates/jobs-page.php:71
+#: templates/jobs-page.php:45
+#: templates/jobs-page.php:75
 msgid "Created"
 msgstr "Creada"
 
-#: templates/jobs-page.php:42
+#: templates/jobs-page.php:46
 msgid "Actions"
 msgstr "Acciones"
 
-#: templates/jobs-page.php:47
+#: templates/jobs-page.php:51
 msgid "No deletion jobs yet."
 msgstr "Aún no hay tareas de eliminación."
 
-#: templates/jobs-page.php:53
+#: templates/jobs-page.php:57
 msgid "Browser"
 msgstr "Navegador"
 
-#: templates/jobs-page.php:54
+#: templates/jobs-page.php:58
 msgid "Background"
 msgstr "Segundo plano"
 
-#: templates/jobs-page.php:55
+#: templates/jobs-page.php:59
 msgid "WP-CLI"
-msgstr ""
+msgstr "WP-CLI"
 
-#: templates/jobs-page.php:74
+#: templates/jobs-page.php:78
 #: templates/partials/_confirmation-popup.php:54
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. translators: %s: Number of deletion jobs.
-#: templates/jobs-page.php:87
+#: templates/jobs-page.php:91
 #, php-format
 msgid "%s job"
 msgid_plural "%s jobs"
 msgstr[0] "%s tarea"
 msgstr[1] "%s tareas"
 
-#: templates/logs-page.php:42
+#: templates/logs-page.php:37
+msgid "Pro exports the log to CSV, emails you when a background deletion finishes and can call a webhook after each deletion."
+msgstr "Pro exporta el registro a CSV, te envía un correo cuando termina una eliminación en segundo plano y puede llamar a un webhook después de cada eliminación."
+
+#: templates/logs-page.php:45
 msgid "User"
 msgstr "Usuario"
 
-#: templates/logs-page.php:43
+#: templates/logs-page.php:46
 msgid "Deleted Users Count"
 msgstr "Número de usuarios eliminados"
 
-#: templates/logs-page.php:44
+#: templates/logs-page.php:47
 msgid "Deleted User Data"
 msgstr "Datos del usuario eliminado"
 
-#: templates/logs-page.php:45
+#: templates/logs-page.php:48
 msgid "Deletion Time"
 msgstr "Hora de eliminación"
 
@@ -935,6 +947,19 @@ msgstr "Introduce el valor del metadato"
 msgid "Tip: WordPress stores profile fields such as first_name for every user, even when they are blank. To find users who left a field empty, choose \"Meta is empty or missing\"."
 msgstr "Consejo: WordPress guarda campos de perfil como first_name para cada usuario, aunque estén en blanco. Para encontrar usuarios que dejaron un campo vacío, elige \"El metadato está vacío o no existe\"."
 
+#: templates/partials/_pro_hint.php:27
+msgid "Learn about Pro"
+msgstr "Más sobre Pro"
+
+#: templates/partials/_pro_hint.php:27
+#: templates/settings-page.php:141
+msgid "(opens in a new tab)"
+msgstr "(se abre en una nueva pestaña)"
+
+#: templates/partials/_pro_hint.php:29
+msgid "Hide these tips"
+msgstr "Ocultar estos consejos"
+
 #: templates/partials/_step-2-buttons.php:18
 msgid "Previous step"
 msgstr "Paso anterior"
@@ -976,88 +1001,148 @@ msgstr "Selecciona los productos que compró el usuario"
 msgid "Select All"
 msgstr "Seleccionar todo"
 
-#: templates/settings-page.php:27
+#: templates/settings-page.php:28
 msgid "Settings sections"
 msgstr "Secciones de ajustes"
 
-#: templates/settings-page.php:51
+#: templates/settings-page.php:52
 msgid "Privacy"
 msgstr "Privacidad"
 
-#: templates/settings-page.php:52
+#: templates/settings-page.php:53
 msgid "What the deletion log keeps about deleted users, and for how long."
 msgstr "Qué guarda el registro de eliminación sobre los usuarios eliminados y durante cuánto tiempo."
 
-#: templates/settings-page.php:57
+#: templates/settings-page.php:58
 msgid "Keep log entries for"
 msgstr "Conservar las entradas del registro durante"
 
-#: templates/settings-page.php:61
+#: templates/settings-page.php:62
 msgid "days"
 msgstr "días"
 
-#: templates/settings-page.php:63
+#: templates/settings-page.php:64
 msgid "Older entries and finished deletion jobs are deleted automatically once a day. 0 keeps them until you delete them."
 msgstr "Las entradas antiguas y las tareas de eliminación terminadas se eliminan automáticamente una vez al día. 0 las conserva hasta que las elimines."
 
-#: templates/settings-page.php:67
+#: templates/settings-page.php:68
 msgid "Emails and names in new entries"
 msgstr "Correos y nombres en las nuevas entradas"
 
-#: templates/settings-page.php:70
+#: templates/settings-page.php:71
 msgid "Store masked (j***@example.com)"
 msgstr "Guardar enmascarados (j***@example.com)"
 
-#: templates/settings-page.php:71
+#: templates/settings-page.php:72
 msgid "Store in full"
 msgstr "Guardar completos"
 
-#: templates/settings-page.php:72
+#: templates/settings-page.php:73
 msgid "Do not store (only user IDs)"
 msgstr "No guardar (solo ID de usuario)"
 
-#: templates/settings-page.php:74
+#: templates/settings-page.php:75
 msgid "The log is also included in Tools → Export Personal Data and Erase Personal Data."
 msgstr "El registro también se incluye en Herramientas → Exportar datos personales y Borrar datos personales."
 
-#: templates/settings-page.php:79
+#: templates/settings-page.php:80
 msgid "Save privacy settings"
 msgstr "Guardar ajustes de privacidad"
 
 #: templates/settings-page.php:85
+msgid "Export"
+msgstr "Exportar"
+
+#: templates/settings-page.php:86
+msgid "The CSV file of \"Export Selected Users\" on the Bulk Users Delete page."
+msgstr "El archivo CSV de \"Exportar usuarios seleccionados\" en la página Bulk Users Delete."
+
+#: templates/settings-page.php:90
+msgid "CSV format"
+msgstr "Formato CSV"
+
+#: templates/settings-page.php:93
+msgid "Readable (ID, Username, Email, First Name, Last Name, Role)"
+msgstr "Legible (ID, Username, Email, First Name, Last Name, Role)"
+
+#: templates/settings-page.php:94
+msgid "For importing (user_login, user_email, first_name, last_name, display_name, role, user_registered, user_url)"
+msgstr "Para importar (user_login, user_email, first_name, last_name, display_name, role, user_registered, user_url)"
+
+#: templates/settings-page.php:96
+msgid "The import format uses the field names of WordPress, so the file can be imported on another site with \"wp user import-csv\" or a user import plugin. It has no ID column (importers would overwrite the user with the same ID there) and only the main role of each user. Passwords are never exported."
+msgstr "El formato para importar usa los nombres de campo de WordPress, así que el archivo se puede importar en otro sitio con \"wp user import-csv\" o un plugin de importación de usuarios. No tiene columna ID (los importadores sobrescribirían al usuario con el mismo ID) y solo incluye el perfil principal de cada usuario. Las contraseñas nunca se exportan."
+
+#: templates/settings-page.php:101
+msgid "Save export settings"
+msgstr "Guardar ajustes de exportación"
+
+#: templates/settings-page.php:107
 msgid "Log maintenance"
 msgstr "Mantenimiento del registro"
 
-#: templates/settings-page.php:87
+#: templates/settings-page.php:109
 msgid "These actions change the existing entries of the log and cannot be undone."
 msgstr "Estas acciones cambian las entradas existentes del registro y no se pueden deshacer."
 
-#: templates/settings-page.php:88
+#: templates/settings-page.php:110
 #: assets/build/users.js:1
 msgid "Open the Logs page"
 msgstr "Abrir la página Registros"
 
-#: templates/settings-page.php:92
+#: templates/settings-page.php:114
 msgid "Apply to existing entries"
 msgstr "Aplicar a las entradas existentes"
 
-#: templates/settings-page.php:93
+#: templates/settings-page.php:115
 msgid "Delete entries older than the period above"
 msgstr "Eliminar las entradas anteriores al periodo indicado"
 
-#: templates/settings-page.php:94
+#: templates/settings-page.php:116
 msgid "Delete the whole log"
 msgstr "Eliminar todo el registro"
+
+#: templates/settings-page.php:131
+msgid "Pro add-on"
+msgstr "Complemento Pro"
+
+#: templates/settings-page.php:132
+msgid "Everything in this plugin stays free. The paid add-on adds:"
+msgstr "Todo en este plugin sigue siendo gratis. El complemento de pago añade:"
+
+#: templates/settings-page.php:135
+msgid "Recycle bin: restore deleted users with their password, profile, roles and posts."
+msgstr "Papelera: restaura los usuarios eliminados con su contraseña, sus datos de perfil, sus perfiles de usuario y sus entradas."
+
+#: templates/settings-page.php:136
+msgid "Scheduled cleanups with saved filters, reports and warning emails."
+msgstr "Limpiezas programadas con filtros guardados, informes y correos de aviso."
+
+#: templates/settings-page.php:137
+msgid "Last login, spam and fraud filters, WooCommerce, membership and LMS filters."
+msgstr "Filtros de último acceso, spam y fraude, WooCommerce, membresías y LMS."
+
+#: templates/settings-page.php:138
+msgid "Protection: never delete chosen users, and stop deleted users from registering again."
+msgstr "Protección: no eliminar nunca a los usuarios elegidos e impedir que los eliminados se registren de nuevo."
+
+#: templates/settings-page.php:141
+msgid "Learn more and try it for 7 days"
+msgstr "Más información y pruébalo 7 días"
 
 #: templates/steps/step-1.php:38
 msgid "Choose filter type"
 msgstr "Elige el tipo de filtro"
 
-#: templates/steps/step-1.php:80
+#: templates/steps/step-1.php:77
+msgid "Pro adds filters by last login, spam and fraud signs, purchases, memberships and courses, and saved filters."
+msgstr "Pro añade filtros por último acceso, señales de spam y fraude, compras, membresías y cursos, además de filtros guardados."
+
+#: templates/steps/step-1.php:84
 msgid "Preview"
 msgstr "Vista previa"
 
-#: templates/steps/step-1.php:91
+#: templates/steps/step-1.php:95
 msgid "Clear filters"
 msgstr "Borrar filtros"
 
@@ -1068,6 +1153,10 @@ msgstr "Detener la eliminación"
 #: templates/steps/step-3.php:31
 msgid "Related content"
 msgstr "Contenido relacionado"
+
+#: templates/steps/step-3.php:54
+msgid "Deleted users cannot be restored. With Pro, they go to a recycle bin first and can be restored with their password, profile and posts."
+msgstr "Los usuarios eliminados no se pueden restaurar. Con Pro, primero van a una papelera y se pueden restaurar con su contraseña, perfil y entradas."
 
 #: assets/build/jobs.js:1
 #: assets/build/logs.js:1
@@ -1086,6 +1175,10 @@ msgstr "Se produjo un error inesperado."
 #: assets/build/settings.js:1
 msgid "Privacy settings saved."
 msgstr "Ajustes de privacidad guardados."
+
+#: assets/build/settings.js:1
+msgid "Export settings saved."
+msgstr "Ajustes de exportación guardados."
 
 #: assets/build/users.js:1
 msgid "Preparing the summary…"

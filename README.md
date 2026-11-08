@@ -41,13 +41,24 @@ Introducing the **Users Bulk Delete With Preview** plugin – the ultimate solut
    On single-site installations, selected users are deleted from the site. On multisite installations, selected users are safely removed from the current site without deleting their network account.
 
 7. **Export and Audit Tools**  
-   Export selected users to CSV before taking action and keep a log of deletion operations. Exports are generated on demand and downloaded directly, so user data is never left in public upload folders.
+   Export selected users to CSV before taking action and keep a log of deletion operations. The CSV can be readable or ready for importing on another site (WordPress field names, no passwords). Exports are generated on demand and downloaded directly, so user data is never left in public upload folders.
 
 8. **Large Sites, Background Deletion and WP-CLI**  
    The preview is paged on the server, so it works with tens of thousands of users. Deletions run in batches, in the browser tab or in the background, and can be followed and cancelled on the Deletion Jobs page. The same filters are available on the command line with `wp ubdwp find` and `wp ubdwp delete`.
 
 9. **Translations**  
    The plugin is available in English, Ukrainian, German, French, Spanish, Italian and Portuguese (Brazil).
+
+### Pro add-on
+
+Everything above is free and stays free. The optional paid [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) works on top of this plugin and adds:
+
+* Recycle bin: restore deleted users with their password, profile, roles and posts.
+* Scheduled cleanups: run a saved filter every hour, day, week or month, with reports and warning emails before deletion.
+* Saved filters, last login, spam and fraud filters, WooCommerce, membership and LMS filters.
+* Protection: never delete chosen roles, users or customers, and stop deleted users from registering again.
+
+The add-on can be tried for 7 days.
 
 ## Minimum Requirements
 
@@ -156,7 +167,19 @@ Yes. Run the commands as an administrator with --user, for example: wp ubdwp fin
 ### What personal data does the plugin store (GDPR)?
 The deletion log stores the ID of each deleted account, the date and the administrator who deleted it. By default, emails and display names in new entries are masked (j***@example.com); on the Settings page you can store them in full or not at all, apply the setting to existing entries, set a retention period and delete old entries. The log is included in WordPress Tools > Export Personal Data and Erase Personal Data, and the plugin adds suggested text to the privacy policy guide. CSV exports are downloaded directly and never stored on the server.
 
+### Is there a Pro version?
+Yes, an optional paid add-on. Everything in this plugin stays free; the [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) works on top of it and adds a recycle bin, scheduled cleanups, saved filters, last login, spam, fraud, WooCommerce, membership and LMS filters, and protection of chosen users. It can be tried for 7 days. The plugin shows short tips about it on its own pages; "Hide these tips" hides them for you, and they disappear when the add-on is active.
+
+### Can I delete inactive users automatically on a schedule?
+Not with this plugin alone: every deletion here is started by you, after the preview. The [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) runs saved filters every hour, day, week or month, records the last login of each user, and can email a report or warn users before their accounts are deleted.
+
+### Can deleted users register again?
+Yes, with this plugin alone they can register again with the same email. The [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) can block the emails (Gmail dots and +tags included) and usernames of deleted users.
+
 ## Upgrade Notice
+
+### 2.6.0
+CSV export ready for importing on another site (Settings → General → Export) and information about the optional Pro add-on. No manual upgrade steps are required.
 
 ### 2.5.0
 Grouped search filters, clearer confirmations (also on multisite), a fix that stops negative numbers of days from deleting log entries, and German, French, Spanish, Italian and Portuguese (Brazil) translations. No manual upgrade steps are required.
@@ -229,7 +252,7 @@ Commit the contents of `assets/build` together with the sources: the plugin load
 | `ubdwp_selected_user_ids` | filter | `( $ids, $request )` – change the users chosen in "Choose from existing users" |
 | `ubdwp_find_fields_account`, `_activity`, `_spam`, `_fraud`, `_advanced` | action | Print rows in a group of "Find users according to certain criteria" |
 | `ubdwp_filter_form_top`, `ubdwp_filter_form_buttons` | action | Print content above the filters or next to their buttons |
-| `ubdwp_export_columns`, `ubdwp_export_row` | filter | `( $columns )`, `( $row, $user, $columns )` – columns of "Export Selected Users" |
+| `ubdwp_export_columns`, `ubdwp_export_row` | filter | `( $columns, $format )`, `( $row, $user, $columns )` – columns of "Export Selected Users"; `$format` is `readable` or `import` (since 2.6.0) |
 | `ubdwp_settings_tabs`, `ubdwp_settings_tab` | filter, action | `( $tabs )`, `( $current_tab )` – add tabs to the Settings page |
 | `ubdwp_logs_page_actions` | action | Print buttons on the Logs page |
 | `ubdwp_plugin_pages` | filter | `( $pages )` – page slugs that load the plugin assets and hide notices of other plugins |
@@ -245,6 +268,12 @@ Commit the contents of `assets/build` together with the sources: the plugin load
 | `ubdwp_preview_limit`, `ubdwp_delete_batch_size`, `ubdwp_confirmation_threshold`, `ubdwp_background_time_budget` | filter | Limits of the preview, batches and confirmation |
 
 ## Changelog
+### 2.6.0
+*Release Date - 8 November 2026*
+* New setting Settings → General → Export: the CSV of "Export Selected Users" can be readable (as before) or ready for importing on another site, with the field names of WordPress (user_login, user_email, first_name, last_name, display_name, role, user_registered, user_url) and without IDs or passwords
+* Information about the optional Pro add-on: a "Get Pro" link on the Plugins page, a card on the Settings page and short tips on the pages of the plugin. They are hidden when the add-on is active, and "Hide these tips" hides the tips for you
+* For developers: the `ubdwp_export_columns` filter receives the export format as a second argument
+
 ### 2.5.0
 *Release Date - 7 November 2026*
 * The "Find users according to certain criteria" filters are grouped (Account, Activity, Spam signs, Fraud signals, Advanced) and show how many filters are set; a "Clear filters" button resets them, and the Preview button stays in view while you scroll

@@ -411,6 +411,33 @@ class UbdwpHelper {
 	}
 
 	/**
+	 * Whether the Pro add-on is active.
+	 *
+	 * @return bool True when it is.
+	 */
+	public function is_pro_active(): bool {
+		return defined( 'UBDWPP_PLUGIN_VERSION' );
+	}
+
+	/**
+	 * Whether to show the short notes about the Pro add-on on the pages of the plugin.
+	 *
+	 * @return bool False when the add-on is active or the current user hid the notes.
+	 */
+	public function show_pro_hints(): bool {
+		return ! $this->is_pro_active() && ! get_user_meta( get_current_user_id(), 'ubdwp_hide_pro_hints', true );
+	}
+
+	/**
+	 * Page where the Pro add-on can be bought or tried (Freemius checkout).
+	 *
+	 * @return string URL.
+	 */
+	public function get_pro_url(): string {
+		return 'https://checkout.freemius.com/plugin/43896/plan/77316/';
+	}
+
+	/**
 	 * Return SVG icon for plugin.
 	 *
 	 * @return string Base64-encoded SVG icon.

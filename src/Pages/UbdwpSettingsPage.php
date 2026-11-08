@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 use UsersBulkDeleteWithPreview\Abstract\UbdwpAbstractBasePage;
 use UsersBulkDeleteWithPreview\Facades\UbdwpHelperFacade;
+use UsersBulkDeleteWithPreview\Handlers\UbdwpUsersHandler;
 use UsersBulkDeleteWithPreview\Services\UbdwpPrivacy;
 
 /**
@@ -28,6 +29,7 @@ class UbdwpSettingsPage extends UbdwpAbstractBasePage {
 	 */
 	public function __construct() {
 		$this->register_ajax_call( 'ubdwp_privacy_save', array( $this, 'save_privacy_settings_action' ) );
+		$this->register_ajax_call( 'ubdwp_export_save', array( $this, 'save_export_settings_action' ) );
 		$this->register_ajax_call( 'ubdwp_logs_anonymize', array( $this, 'anonymize_logs_action' ) );
 		$this->register_ajax_call( 'ubdwp_logs_purge', array( $this, 'purge_logs_action' ) );
 	}
@@ -47,8 +49,10 @@ class UbdwpSettingsPage extends UbdwpAbstractBasePage {
 			'current_tab'     => isset( $tabs[ $current ] ) ? $current : 'general',
 			'page_url'        => admin_url( 'admin.php?page=' . self::SLUG ),
 			'privacy'         => UbdwpPrivacy::get_settings(),
+			'export_format'   => UbdwpUsersHandler::get_export_format(),
 			'can_maintain'    => current_user_can( is_multisite() ? self::REMOVE_USERS_CAP : self::DELETE_USERS_CAP ),
 			'logs_url'        => admin_url( 'admin.php?page=ubdwp_admin_logs' ),
+			'pro_url'         => UbdwpHelperFacade::is_pro_active() ? '' : UbdwpHelperFacade::get_pro_url(),
 		) );
 	}
 
@@ -99,6 +103,17 @@ class UbdwpSettingsPage extends UbdwpAbstractBasePage {
 
 			wp_set_script_translations( 'wpubdp-settings-js', 'users-bulk-delete-with-preview', WPUBDP_PLUGIN_DIR . 'languages' );
 		}
+	}
+
+	/**
+	 * Handle AJAX request that saves the format of the CSV export.
+	 *
+	 * @return void
+	 */
+	public function save_export_settings_action(): void {
+		$this->handle_ajax_request( 'privacy_nonce', 'ubdwp_privacy', array( self::MANAGE_OPTIONS_CAP, self::LIST_USERS_CAP ), function () {
+			return UbdwpUsersHandler::save_export_format( sanitize_key( wp_unslash( $_POST['format'] ?? '' ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is checked in "handle_ajax_request" method.
+		} );
 	}
 
 	/**

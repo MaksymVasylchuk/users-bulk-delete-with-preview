@@ -1,3 +1,28 @@
-.idea
+# Operating systems and editors
 .DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*~
+
+# Dependencies (vendor/ is committed: the plugin needs its autoloader)
 node_modules/
+
+# Logs and caches of tools
+*.log
+npm-debug.log*
+.phpunit.result.cache
+.php-cs-fixer.cache
+.phpcs-cache
+.eslintcache
+.stylelintcache
+
+# Local environment and secrets
+.env
+.env.*
+
+# Release packages (assets/build/ is committed: the plugin loads only the built files)
+*.zip
+/dist/

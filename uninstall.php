@@ -27,11 +27,15 @@ function ubdwp_uninstall_current_site(): void {
 	wp_clear_scheduled_hook( 'ubdwp_run_deletion_job' );
 	wp_clear_scheduled_hook( 'ubdwp_daily_cleanup' );
 	delete_option( 'ubdwp_privacy' );
+	delete_option( 'ubdwp_export' );
 
 	if ( function_exists( 'as_unschedule_all_actions' ) ) {
 		as_unschedule_all_actions( 'ubdwp_run_deletion_job', array(), 'ubdwp' );
 	}
 }
+
+// User meta is shared by all sites of a network.
+delete_metadata( 'user', 0, 'ubdwp_hide_pro_hints', '', true );
 
 if ( is_multisite() ) {
 	$ubdwp_site_ids = get_sites( array(

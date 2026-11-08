@@ -73,6 +73,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			</tbody>
 		</table>
+		<?php
+		$pro_hint = __( 'Pro adds filters by last login, spam and fraud signs, purchases, memberships and courses, and saved filters.', 'users-bulk-delete-with-preview' );
+		require __DIR__ . '/../partials/_pro_hint.php';
+		?>
 		<!-- Actions: stay on the screen while the form scrolls -->
 		<div class="ubdwp-form-actions">
 		<p id="ubdwp_form_message" class="ubdwp-form-message" role="alert" hidden></p>
