@@ -51,7 +51,7 @@ Introducing the **Users Bulk Delete With Preview** plugin – the ultimate solut
 
 ### Pro add-on
 
-Everything above is free and stays free. The optional paid [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) works on top of this plugin and adds:
+Everything above is free and stays free. The optional paid [Pro add-on](https://checkout.freemius.com/plugin/43896/?trial=paid) works on top of this plugin and adds:
 
 * Recycle bin: restore deleted users with their password, profile, roles and posts.
 * Scheduled cleanups: run a saved filter every hour, day, week or month, with reports and warning emails before deletion.
@@ -172,13 +172,13 @@ Yes. Run the commands as an administrator with --user, for example: wp ubdwp fin
 The deletion log stores the ID of each deleted account, the date and the administrator who deleted it. By default, emails and display names in new entries are masked (j***@example.com); on the Settings page you can store them in full or not at all, apply the setting to existing entries, set a retention period and delete old entries. The log is included in WordPress Tools > Export Personal Data and Erase Personal Data, and the plugin adds suggested text to the privacy policy guide. CSV exports are downloaded directly and never stored on the server.
 
 ### Is there a Pro version?
-Yes, an optional paid add-on. Everything in this plugin stays free; the [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) works on top of it and adds a recycle bin, scheduled cleanups, saved filters, last login, spam, fraud, WooCommerce, membership and LMS filters, and protection of chosen users. It can be tried for 7 days. The plugin shows short tips about it on its own pages; "Hide these tips" hides them for you, and they disappear when the add-on is active.
+Yes, an optional paid add-on. Everything in this plugin stays free; the [Pro add-on](https://checkout.freemius.com/plugin/43896/?trial=paid) works on top of it and adds a recycle bin, scheduled cleanups, saved filters, last login, spam, fraud, WooCommerce, membership and LMS filters, and protection of chosen users. It can be tried for 7 days. The plugin shows short tips about it on its own pages; "Hide these tips" hides them for you, and they disappear when the add-on is active.
 
 ### Can I delete inactive users automatically on a schedule?
-Not with this plugin alone: every deletion here is started by you, after the preview. The [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) runs saved filters every hour, day, week or month, records the last login of each user, and can email a report or warn users before their accounts are deleted.
+Not with this plugin alone: every deletion here is started by you, after the preview. The [Pro add-on](https://checkout.freemius.com/plugin/43896/?trial=paid) runs saved filters every hour, day, week or month, records the last login of each user, and can email a report or warn users before their accounts are deleted.
 
 ### Can deleted users register again?
-Yes, with this plugin alone they can register again with the same email. The [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) can block the emails (Gmail dots and +tags included) and usernames of deleted users.
+Yes, with this plugin alone they can register again with the same email. The [Pro add-on](https://checkout.freemius.com/plugin/43896/?trial=paid) can block the emails (Gmail dots and +tags included) and usernames of deleted users.
 
 ## Upgrade Notice
 

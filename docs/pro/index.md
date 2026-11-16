@@ -2,7 +2,7 @@
 
 **Users Bulk Delete With Preview Pro** is a paid add-on for the free plugin. It adds what you need to clean up users regularly and safely: a way back, automation, and many more filters.
 
-[Buy or start a 7-day trial](https://checkout.freemius.com/plugin/43896/plan/77316/){target="_blank"}
+[Buy or start a 7-day trial](https://checkout.freemius.com/plugin/43896/?trial=paid){target="_blank"}
 
 ::: warning Pro needs the free plugin
 Install and activate [Users Bulk Delete With Preview](https://wordpress.org/plugins/users-bulk-delete-with-preview/) (version 2.5.0 or newer) first. See [Installation and license](./installation).

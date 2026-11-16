@@ -448,7 +448,7 @@ class UbdwpHelper {
 	 * @return string URL.
 	 */
 	public function get_pro_url(): string {
-		return 'https://checkout.freemius.com/plugin/43896/plan/77316/';
+		return 'https://checkout.freemius.com/plugin/43896/?trial=paid';
 	}
 
 	/**
