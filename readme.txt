@@ -55,6 +55,10 @@ Everything above is free and stays free. The optional paid [Pro add-on](https://
 
 The add-on can be tried for 7 days.
 
+### Documentation
+
+Guides for the free plugin and the Pro add-on, the WP-CLI commands and the hooks for developers: [https://maksymvasylchuk.github.io/users-bulk-delete-with-preview/](https://maksymvasylchuk.github.io/users-bulk-delete-with-preview/)
+
 == Minimum Requirements ==
 
 * PHP 8.0 or greater is required.
@@ -207,10 +211,12 @@ This plugin uses the following third-party libraries:
 
 == Changelog ==
 = 2.6.0 =
-*Release Date - 8 November 2026*
+*Release Date - 16 November 2026*
 
 * New setting Settings → General → Export: the CSV of "Export Selected Users" can be readable (as before) or ready for importing on another site, with the field names of WordPress (user_login, user_email, first_name, last_name, display_name, role, user_registered, user_url) and without IDs or passwords
 * Information about the optional Pro add-on: a "Get Pro" link on the Plugins page, a card on the Settings page and short tips on the pages of the plugin. They are hidden when the add-on is active, and "Hide these tips" hides the tips for you
+* Users protected by the "ubdwp_is_protected_user" filter (for example by the "Never delete" settings of the Pro add-on) are no longer described as administrators: the reason says that the settings exclude them from deletion
+* The settings and the Deletion Jobs page say that finished deletion jobs are removed after 30 days (the log keeps the record of every deletion); before, the settings said a retention period of 0 kept them
 * For developers: the "ubdwp_export_columns" filter receives the export format as a second argument
 
 = 2.5.0 =

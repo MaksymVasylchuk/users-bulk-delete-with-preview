@@ -143,7 +143,7 @@ msgid "Please choose a valid user meta comparison."
 msgstr "Escolha uma comparação de metadados de usuário válida."
 
 #: src/Cli/UbdwpCliCommand.php:660
-#: src/Helpers/UbdwpHelper.php:250
+#: src/Helpers/UbdwpHelper.php:264
 #: src/Utils/UbdwpValidation.php:327
 msgid "The user selected to receive the content is not valid."
 msgstr "O usuário selecionado para receber o conteúdo não é válido."
@@ -164,42 +164,42 @@ msgstr "A tarefa parou com o status: %s"
 msgid "Deleted users: %1$d. Not deleted: %2$d."
 msgstr "Usuários excluídos: %1$d. Não excluídos: %2$d."
 
-#: src/Core/UbdwpLoader.php:165
 #: src/Core/UbdwpLoader.php:166
+#: src/Core/UbdwpLoader.php:167
 msgid "Bulk Users Delete"
 msgstr "Bulk Users Delete"
 
-#: src/Core/UbdwpLoader.php:175
 #: src/Core/UbdwpLoader.php:176
+#: src/Core/UbdwpLoader.php:177
 #: src/Pages/UbdwpJobsPage.php:45
 msgid "Deletion Jobs"
 msgstr "Tarefas de exclusão"
 
-#: src/Core/UbdwpLoader.php:184
+#: src/Core/UbdwpLoader.php:185
 msgid "Bulk Users Delete Logs"
 msgstr "Registros do Bulk Users Delete"
 
-#: src/Core/UbdwpLoader.php:185
-#: src/Core/UbdwpLoader.php:236
+#: src/Core/UbdwpLoader.php:186
+#: src/Core/UbdwpLoader.php:237
 #: src/Pages/UbdwpLogsPage.php:46
 msgid "Logs"
 msgstr "Registros"
 
-#: src/Core/UbdwpLoader.php:193
+#: src/Core/UbdwpLoader.php:194
 msgid "Bulk Users Delete Settings"
 msgstr "Configurações do Bulk Users Delete"
 
-#: src/Core/UbdwpLoader.php:194
-#: src/Core/UbdwpLoader.php:237
+#: src/Core/UbdwpLoader.php:195
+#: src/Core/UbdwpLoader.php:238
 #: src/Pages/UbdwpSettingsPage.php:47
 msgid "Settings"
 msgstr "Configurações"
 
-#: src/Core/UbdwpLoader.php:235
+#: src/Core/UbdwpLoader.php:236
 msgid "Delete users"
 msgstr "Excluir usuários"
 
-#: src/Core/UbdwpLoader.php:241
+#: src/Core/UbdwpLoader.php:269
 msgid "Get Pro"
 msgstr "Obter o Pro"
 
@@ -262,8 +262,8 @@ msgid "No matching records found"
 msgstr "Nenhum registro correspondente encontrado"
 
 #: src/Helpers/UbdwpHelper.php:118
-#: templates/jobs-page.php:38
-#: templates/jobs-page.php:63
+#: templates/jobs-page.php:39
+#: templates/jobs-page.php:64
 #: templates/logs-page.php:44
 #: templates/partials/_users_table.php:38
 msgid "ID"
@@ -307,12 +307,12 @@ msgid "Assign related content to user"
 msgstr "Atribuir o conteúdo relacionado a um usuário"
 
 #: src/Helpers/UbdwpHelper.php:125
-#: src/Helpers/UbdwpHelper.php:629
+#: src/Helpers/UbdwpHelper.php:643
 msgid "Select a user"
 msgstr "Selecione um usuário"
 
 #: src/Helpers/UbdwpHelper.php:126
-#: src/Helpers/UbdwpHelper.php:631
+#: src/Helpers/UbdwpHelper.php:645
 msgid "Remove all related content"
 msgstr "Remover todo o conteúdo relacionado"
 
@@ -422,53 +422,61 @@ msgstr "Esta ação não pode ser desfeita."
 msgid "Delete %d users? This cannot be undone."
 msgstr "Excluir %d usuários? Esta ação não pode ser desfeita."
 
-#: src/Helpers/UbdwpHelper.php:221
+#: src/Helpers/UbdwpHelper.php:234
 msgid "Removed permanently"
 msgstr "Removido permanentemente"
 
 #. translators: %s: username that received the content.
-#: src/Helpers/UbdwpHelper.php:228
+#: src/Helpers/UbdwpHelper.php:241
 #, php-format
 msgid "Reassigned to %s"
 msgstr "Reatribuído a %s"
 
-#: src/Helpers/UbdwpHelper.php:232
+#: src/Helpers/UbdwpHelper.php:245
 msgid "Kept on this site"
 msgstr "Mantido neste site"
 
-#: src/Helpers/UbdwpHelper.php:233
+#: src/Helpers/UbdwpHelper.php:246
 msgid "Handled by WordPress (posts go to the trash)"
 msgstr "Tratado pelo WordPress (os posts vão para a lixeira)"
 
-#: src/Helpers/UbdwpHelper.php:245
+#: src/Helpers/UbdwpHelper.php:258
 msgid "User does not exist."
 msgstr "O usuário não existe."
 
-#: src/Helpers/UbdwpHelper.php:246
+#: src/Helpers/UbdwpHelper.php:259
 msgid "You cannot delete your own account."
 msgstr "Você não pode excluir sua própria conta."
 
-#: src/Helpers/UbdwpHelper.php:247
+#: src/Helpers/UbdwpHelper.php:260
 msgid "User is not a member of this site."
 msgstr "O usuário não é membro deste site."
 
-#: src/Helpers/UbdwpHelper.php:248
+#: src/Helpers/UbdwpHelper.php:261
 msgid "Protected: administrators and other privileged users cannot be deleted."
 msgstr "Protegido: administradores e outros usuários privilegiados não podem ser excluídos."
 
-#: src/Helpers/UbdwpHelper.php:249
+#: src/Helpers/UbdwpHelper.php:262
+msgid "Protected: excluded from deletion by your settings."
+msgstr "Protegido: suas configurações impedem a exclusão deste usuário."
+
+#: src/Helpers/UbdwpHelper.php:263
 msgid "You do not have permission to delete this user."
 msgstr "Você não tem permissão para excluir este usuário."
 
-#: src/Helpers/UbdwpHelper.php:251
+#: src/Helpers/UbdwpHelper.php:265
 msgid "WordPress could not delete this user."
 msgstr "O WordPress não conseguiu excluir este usuário."
 
-#: src/Helpers/UbdwpHelper.php:649
+#: src/Helpers/UbdwpHelper.php:664
 msgid "Administrators and other privileged users cannot be deleted with this plugin."
 msgstr "Administradores e outros usuários privilegiados não podem ser excluídos com este plugin."
 
-#: src/Helpers/UbdwpHelper.php:649
+#: src/Helpers/UbdwpHelper.php:665
+msgid "Excluded from deletion by your settings."
+msgstr "Suas configurações impedem a exclusão deste usuário."
+
+#: src/Helpers/UbdwpHelper.php:666
 msgid "Protected"
 msgstr "Protegido"
 
@@ -644,72 +652,76 @@ msgstr "Digite o número de usuários para confirmar a exclusão."
 msgid "Deletions started on the Bulk Users Delete page or with WP-CLI. Background jobs continue after you leave the page; this page refreshes while a job is running."
 msgstr "Exclusões iniciadas na página Bulk Users Delete ou com o WP-CLI. As tarefas em segundo plano continuam depois que você sai da página; esta página é atualizada enquanto uma tarefa está em execução."
 
-#: templates/jobs-page.php:31
+#: templates/jobs-page.php:30
+msgid "Finished jobs are removed after 30 days; the Logs page keeps the record of every deletion."
+msgstr "Tarefas concluídas são removidas após 30 dias; a página de registro mantém cada exclusão."
+
+#: templates/jobs-page.php:32
 msgid "Pro runs saved filters on a schedule: every hour, day, week or month, with a report or a warning email before deletion."
 msgstr "O Pro executa filtros salvos em uma programação: a cada hora, dia, semana ou mês, com um relatório ou um e-mail de aviso antes da exclusão."
 
-#: templates/jobs-page.php:39
-#: templates/jobs-page.php:64
+#: templates/jobs-page.php:40
+#: templates/jobs-page.php:65
 msgid "Started by"
 msgstr "Iniciada por"
 
-#: templates/jobs-page.php:40
-#: templates/jobs-page.php:65
+#: templates/jobs-page.php:41
+#: templates/jobs-page.php:66
 msgid "Mode"
 msgstr "Modo"
 
-#: templates/jobs-page.php:41
-#: templates/jobs-page.php:66
+#: templates/jobs-page.php:42
+#: templates/jobs-page.php:67
 msgid "Status"
 msgstr "Status"
 
-#: templates/jobs-page.php:42
-#: templates/jobs-page.php:72
+#: templates/jobs-page.php:43
+#: templates/jobs-page.php:73
 msgid "Progress"
 msgstr "Progresso"
 
-#: templates/jobs-page.php:43
-#: templates/jobs-page.php:73
+#: templates/jobs-page.php:44
+#: templates/jobs-page.php:74
 msgid "Deleted"
 msgstr "Excluídos"
 
-#: templates/jobs-page.php:44
-#: templates/jobs-page.php:74
+#: templates/jobs-page.php:45
+#: templates/jobs-page.php:75
 msgid "Not deleted"
 msgstr "Não excluídos"
 
-#: templates/jobs-page.php:45
-#: templates/jobs-page.php:75
+#: templates/jobs-page.php:46
+#: templates/jobs-page.php:76
 msgid "Created"
 msgstr "Criada"
 
-#: templates/jobs-page.php:46
+#: templates/jobs-page.php:47
 msgid "Actions"
 msgstr "Ações"
 
-#: templates/jobs-page.php:51
+#: templates/jobs-page.php:52
 msgid "No deletion jobs yet."
 msgstr "Ainda não há tarefas de exclusão."
 
-#: templates/jobs-page.php:57
+#: templates/jobs-page.php:58
 msgid "Browser"
 msgstr "Navegador"
 
-#: templates/jobs-page.php:58
+#: templates/jobs-page.php:59
 msgid "Background"
 msgstr "Segundo plano"
 
-#: templates/jobs-page.php:59
+#: templates/jobs-page.php:60
 msgid "WP-CLI"
 msgstr "WP-CLI"
 
-#: templates/jobs-page.php:78
+#: templates/jobs-page.php:79
 #: templates/partials/_confirmation-popup.php:54
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. translators: %s: Number of deletion jobs.
-#: templates/jobs-page.php:91
+#: templates/jobs-page.php:92
 #, php-format
 msgid "%s job"
 msgid_plural "%s jobs"
@@ -1022,8 +1034,8 @@ msgid "days"
 msgstr "dias"
 
 #: templates/settings-page.php:64
-msgid "Older entries and finished deletion jobs are deleted automatically once a day. 0 keeps them until you delete them."
-msgstr "Entradas antigas e tarefas de exclusão concluídas são excluídas automaticamente uma vez por dia. 0 as mantém até você excluí-las."
+msgid "Older entries are deleted automatically once a day. 0 keeps them until you delete them. Finished deletion jobs are always removed after 30 days; the log keeps the record of every deletion."
+msgstr "Entradas antigas são excluídas automaticamente uma vez por dia. 0 as mantém até você excluí-las. Tarefas de exclusão concluídas são sempre removidas após 30 dias; o registro mantém cada exclusão."
 
 #: templates/settings-page.php:68
 msgid "Emails and names in new entries"

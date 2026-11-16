@@ -692,7 +692,8 @@ class UbdwpUsersHandler {
 		}
 
 		if ( UbdwpHelperFacade::is_protected_user( $user, $this->current_user_id ) ) {
-			return 'protected';
+			// Users protected by a rule (for example the settings of an add-on) are not administrators.
+			return UbdwpHelperFacade::is_privileged_user( $user ) ? 'protected' : 'protected_rule';
 		}
 
 		$capability = is_multisite() ? 'remove_user' : 'delete_user';

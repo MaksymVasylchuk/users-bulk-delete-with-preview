@@ -61,7 +61,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<input type="number" id="ubdwp_retention_days" class="ubdwp-short" min="0" max="3650" step="1" value="<?php echo esc_attr( $privacy['retention_days'] ); ?>">
 								<span><?php esc_html_e( 'days', 'users-bulk-delete-with-preview' ); ?></span>
 							</div>
-							<p class="description"><?php esc_html_e( 'Older entries and finished deletion jobs are deleted automatically once a day. 0 keeps them until you delete them.', 'users-bulk-delete-with-preview' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Older entries are deleted automatically once a day. 0 keeps them until you delete them. Finished deletion jobs are always removed after 30 days; the log keeps the record of every deletion.', 'users-bulk-delete-with-preview' ); ?></p>
 						</td>
 					</tr>
 					<tr>
