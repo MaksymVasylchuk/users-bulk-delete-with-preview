@@ -3,7 +3,7 @@ Contributors: maksymvasylchuk
 Tags: bulk delete, user management, delete users, preview delete, bulk clean
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.5.0
+Stable tag: 2.6.0
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -36,13 +36,28 @@ Introducing the **Users Bulk Delete With Preview** plugin – the ultimate solut
    On single-site installations, selected users are deleted from the site. On multisite installations, selected users are safely removed from the current site without deleting their network account.
 
 7. **Export and Audit Tools**:
-   Export selected users to CSV before taking action and keep a log of deletion operations. Exports are generated on demand and downloaded directly, so user data is never left in public upload folders.
+   Export selected users to CSV before taking action and keep a log of deletion operations. The CSV can be readable or ready for importing on another site (WordPress field names, no passwords). Exports are generated on demand and downloaded directly, so user data is never left in public upload folders.
 
 8. **Large Sites, Background Deletion and WP-CLI**:
    The preview is paged on the server, so it works with tens of thousands of users. Deletions run in batches, in the browser tab or in the background, and can be followed and cancelled on the Deletion Jobs page. The same filters are available on the command line with wp ubdwp find and wp ubdwp delete.
 
 9. **Translations**:
    The plugin is available in English, Ukrainian, German, French, Spanish, Italian and Portuguese (Brazil).
+
+### Pro add-on
+
+Everything above is free and stays free. The optional paid [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) works on top of this plugin and adds:
+
+* Recycle bin: restore deleted users with their password, profile, roles and posts.
+* Scheduled cleanups: run a saved filter every hour, day, week or month, with reports and warning emails before deletion.
+* Saved filters, last login, spam and fraud filters, WooCommerce, membership and LMS filters.
+* Protection: never delete chosen roles, users or customers, and stop deleted users from registering again.
+
+The add-on can be tried for 7 days.
+
+### Documentation
+
+Guides for the free plugin and the Pro add-on, the WP-CLI commands and the hooks for developers: [https://maksymvasylchuk.github.io/users-bulk-delete-with-preview/](https://maksymvasylchuk.github.io/users-bulk-delete-with-preview/)
 
 == Minimum Requirements ==
 
@@ -87,7 +102,7 @@ On single-site installations, yes: once the deletion is confirmed, the selected 
 
 = Can I restore deleted users? =
 
-No, once users are deleted, they cannot be restored. Please make sure to verify the list during the preview step.
+No, once users are deleted, they cannot be restored. Please make sure to verify the list during the preview step. The [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) adds a recycle bin from which deleted users can be restored.
 
 = Is this plugin compatible with WooCommerce? =
 
@@ -129,7 +144,22 @@ The deletion log stores the ID of each deleted account, the date and the adminis
 
 The readable JavaScript and CSS sources are included in assets/src. The files in assets/build are generated from them with @wordpress/scripts: run npm install and npm run build.
 
+= Is there a Pro version? =
+
+Yes, an optional paid add-on. Everything in this plugin stays free; the [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) works on top of it and adds a recycle bin, scheduled cleanups, saved filters, last login, spam, fraud, WooCommerce, membership and LMS filters, and protection of chosen users. It can be tried for 7 days. The plugin shows short tips about it on its own pages; "Hide these tips" hides them for you, and they disappear when the add-on is active.
+
+= Can I delete inactive users automatically on a schedule? =
+
+Not with this plugin alone: every deletion here is started by you, after the preview. The [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) runs saved filters every hour, day, week or month, records the last login of each user, and can email a report or warn users before their accounts are deleted.
+
+= Can deleted users register again? =
+
+Yes, with this plugin alone they can register again with the same email. The [Pro add-on](https://checkout.freemius.com/plugin/43896/plan/77316/) can block the emails (Gmail dots and +tags included) and usernames of deleted users.
+
 == Upgrade Notice ==
+
+= 2.6.0 =
+CSV export ready for importing on another site (Settings → General → Export) and information about the optional Pro add-on. No manual upgrade steps are required.
 
 = 2.5.0 =
 Grouped search filters, clearer confirmations (also on multisite), a fix that stops negative numbers of days from deleting log entries, and German, French, Spanish, Italian and Portuguese (Brazil) translations. No manual upgrade steps are required.
@@ -180,6 +210,15 @@ This plugin uses the following third-party libraries:
 – [Select2](https://select2.org/) – Licensed under MIT License.
 
 == Changelog ==
+= 2.6.0 =
+*Release Date - 16 November 2026*
+
+* New setting Settings → General → Export: the CSV of "Export Selected Users" can be readable (as before) or ready for importing on another site, with the field names of WordPress (user_login, user_email, first_name, last_name, display_name, role, user_registered, user_url) and without IDs or passwords
+* Information about the optional Pro add-on: a "Get Pro" link on the Plugins page, a card on the Settings page and short tips on the pages of the plugin. They are hidden when the add-on is active, and "Hide these tips" hides the tips for you
+* Users protected by the "ubdwp_is_protected_user" filter (for example by the "Never delete" settings of the Pro add-on) are no longer described as administrators: the reason says that the settings exclude them from deletion
+* The settings and the Deletion Jobs page say that finished deletion jobs are removed after 30 days (the log keeps the record of every deletion); before, the settings said a retention period of 0 kept them
+* For developers: the "ubdwp_export_columns" filter receives the export format as a second argument
+
 = 2.5.0 =
 *Release Date - 7 November 2026*
 

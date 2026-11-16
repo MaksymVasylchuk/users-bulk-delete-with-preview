@@ -9,3 +9,5 @@
 .distignore
 package-lock.json
 languages/script-map.json
+/docs
+/.claude

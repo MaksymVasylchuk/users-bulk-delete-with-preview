@@ -194,10 +194,7 @@ class UbdwpHelper {
 	 * @return bool True when the user must not be deleted.
 	 */
 	public function is_protected_user( \WP_User $user, int $current_user_id ): bool {
-		$protected = is_super_admin( $user->ID )
-			|| user_can( $user, 'manage_options' )
-			|| user_can( $user, 'delete_users' )
-			|| user_can( $user, 'remove_users' );
+		$protected = $this->is_privileged_user( $user );
 
 		/**
 		 * Filters whether a user is protected from deletion by Users Bulk Delete With Preview.
@@ -207,6 +204,22 @@ class UbdwpHelper {
 		 * @param int      $current_user_id User performing the deletion.
 		 */
 		return (bool) apply_filters( 'ubdwp_is_protected_user', $protected, $user, $current_user_id );
+	}
+
+	/**
+	 * Whether a user is an administrator or another user who can manage users; they are never deleted.
+	 *
+	 * Other users can still be protected by the "ubdwp_is_protected_user" filter, for example by the rules of an add-on.
+	 *
+	 * @param \WP_User $user User to check.
+	 *
+	 * @return bool True for privileged users.
+	 */
+	public function is_privileged_user( \WP_User $user ): bool {
+		return is_super_admin( $user->ID )
+			|| user_can( $user, 'manage_options' )
+			|| user_can( $user, 'delete_users' )
+			|| user_can( $user, 'remove_users' );
 	}
 
 	/**
@@ -246,6 +259,7 @@ class UbdwpHelper {
 			'self'             => __( 'You cannot delete your own account.', 'users-bulk-delete-with-preview' ),
 			'not_member'       => __( 'User is not a member of this site.', 'users-bulk-delete-with-preview' ),
 			'protected'        => __( 'Protected: administrators and other privileged users cannot be deleted.', 'users-bulk-delete-with-preview' ),
+			'protected_rule'   => __( 'Protected: excluded from deletion by your settings.', 'users-bulk-delete-with-preview' ),
 			'no_permission'    => __( 'You do not have permission to delete this user.', 'users-bulk-delete-with-preview' ),
 			'invalid_reassign' => __( 'The user selected to receive the content is not valid.', 'users-bulk-delete-with-preview' ),
 			'delete_failed'    => __( 'WordPress could not delete this user.', 'users-bulk-delete-with-preview' ),
@@ -408,6 +422,33 @@ class UbdwpHelper {
 		}
 
 		return $sanitized_data;
+	}
+
+	/**
+	 * Whether the Pro add-on is active.
+	 *
+	 * @return bool True when it is.
+	 */
+	public function is_pro_active(): bool {
+		return defined( 'UBDWPP_PLUGIN_VERSION' );
+	}
+
+	/**
+	 * Whether to show the short notes about the Pro add-on on the pages of the plugin.
+	 *
+	 * @return bool False when the add-on is active or the current user hid the notes.
+	 */
+	public function show_pro_hints(): bool {
+		return ! $this->is_pro_active() && ! get_user_meta( get_current_user_id(), 'ubdwp_hide_pro_hints', true );
+	}
+
+	/**
+	 * Page where the Pro add-on can be bought or tried (Freemius checkout).
+	 *
+	 * @return string URL.
+	 */
+	public function get_pro_url(): string {
+		return 'https://checkout.freemius.com/plugin/43896/plan/77316/';
 	}
 
 	/**
@@ -619,7 +660,10 @@ class UbdwpHelper {
 		$checkbox  = '<input type="checkbox" class="user-checkbox" name="users[' . esc_attr( $user->ID ) . '][id]" value="' . esc_attr( $user->ID ) . '"' . ( $protected ? ' disabled="disabled"' : '' ) . '>';
 
 		if ( $protected ) {
-			$checkbox .= ' <span class="ubdwp-protected" title="' . esc_attr__( 'Administrators and other privileged users cannot be deleted with this plugin.', 'users-bulk-delete-with-preview' ) . '">' . esc_html__( 'Protected', 'users-bulk-delete-with-preview' ) . '</span>';
+			$title     = $this->is_privileged_user( $user )
+				? __( 'Administrators and other privileged users cannot be deleted with this plugin.', 'users-bulk-delete-with-preview' )
+				: __( 'Excluded from deletion by your settings.', 'users-bulk-delete-with-preview' );
+			$checkbox .= ' <span class="ubdwp-protected" title="' . esc_attr( $title ) . '">' . esc_html__( 'Protected', 'users-bulk-delete-with-preview' ) . '</span>';
 		}
 
 		return array(

@@ -35,6 +35,15 @@ $( document ).on(
 
 $( document ).on(
     'click',
+    '.ubdwp-export-save',
+    () => privacyRequest(
+        {action: 'ubdwp_export_save', format: $( '#ubdwp_export_format' ).val()},
+        () => createWordpressError( __( 'Export settings saved.', 'users-bulk-delete-with-preview' ), 'success' )
+    )
+);
+
+$( document ).on(
+    'click',
     '.ubdwp-logs-anonymize',
     () => {
         // eslint-disable-next-line no-alert

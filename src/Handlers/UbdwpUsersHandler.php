@@ -20,6 +20,11 @@ defined( 'ABSPATH' ) || exit;
  */
 class UbdwpUsersHandler {
 	/**
+	 * Option with the format of the CSV export.
+	 */
+	public const EXPORT_OPTION = 'ubdwp_export';
+
+	/**
 	 * Repository for managing users.
 	 *
 	 * @var UbdwpUsersRepository
@@ -294,19 +299,61 @@ class UbdwpUsersHandler {
 	}
 
 	/**
+	 * Format of the CSV export: "readable" headers, or "import" with the field names of WordPress.
+	 *
+	 * @return string Format.
+	 */
+	public static function get_export_format(): string {
+		$settings = get_option( self::EXPORT_OPTION, array() );
+
+		return is_array( $settings ) && 'import' === ( $settings['format'] ?? '' ) ? 'import' : 'readable';
+	}
+
+	/**
+	 * Save the format of the CSV export.
+	 *
+	 * @param string $format "readable" or "import".
+	 *
+	 * @return array{format: string} Saved settings.
+	 */
+	public static function save_export_format( string $format ): array {
+		$settings = array( 'format' => 'import' === $format ? 'import' : 'readable' );
+
+		update_option( self::EXPORT_OPTION, $settings );
+
+		return $settings;
+	}
+
+	/**
 	 * Columns of the CSV export.
+	 *
+	 * In the "import" format the headers are the field names of WordPress (user_login, user_email…), which
+	 * "wp user import-csv" and user import plugins read; there is no ID column, because importers update the
+	 * user with that ID, which on another site is somebody else.
 	 *
 	 * @return array<string, string> Column headers keyed by column.
 	 */
 	private function get_csv_columns(): array {
-		$columns = array(
-			'id'         => 'ID',
-			'username'   => 'Username',
-			'email'      => 'Email',
-			'first_name' => 'First Name',
-			'last_name'  => 'Last Name',
-			'role'       => 'Role',
-		);
+		$format  = self::get_export_format();
+		$columns = 'import' === $format
+			? array(
+				'username'     => 'user_login',
+				'email'        => 'user_email',
+				'first_name'   => 'first_name',
+				'last_name'    => 'last_name',
+				'display_name' => 'display_name',
+				'role'         => 'role',
+				'registered'   => 'user_registered',
+				'url'          => 'user_url',
+			)
+			: array(
+				'id'         => 'ID',
+				'username'   => 'Username',
+				'email'      => 'Email',
+				'first_name' => 'First Name',
+				'last_name'  => 'Last Name',
+				'role'       => 'Role',
+			);
 
 		/**
 		 * Filters the columns of the CSV export of selected users.
@@ -314,10 +361,12 @@ class UbdwpUsersHandler {
 		 * Add columns here and fill them with the "ubdwp_export_row" filter. The built-in columns cannot be removed.
 		 *
 		 * @since 2.5.0
+		 * @since 2.6.0 The $format parameter.
 		 *
 		 * @param array<string, string> $columns Column headers keyed by column.
+		 * @param string                $format  "readable", or "import" for importers (headers are field or meta names).
 		 */
-		$filtered = apply_filters( 'ubdwp_export_columns', $columns );
+		$filtered = apply_filters( 'ubdwp_export_columns', $columns, $format );
 
 		// Built-in columns keep their place and header; added columns follow them.
 		return is_array( $filtered ) ? $columns + array_filter( $filtered, 'is_string' ) : $columns;
@@ -336,12 +385,16 @@ class UbdwpUsersHandler {
 
 		foreach ( $users as $user ) {
 			$row = array(
-				'id'         => (int) $user->ID,
-				'username'   => sanitize_text_field( $user->user_login ),
-				'email'      => sanitize_email( $user->user_email ),
-				'first_name' => sanitize_text_field( $user->first_name ),
-				'last_name'  => sanitize_text_field( $user->last_name ),
-				'role'       => implode( ', ', array_map( 'sanitize_text_field', $user->roles ) ),
+				'id'           => (int) $user->ID,
+				'username'     => sanitize_text_field( $user->user_login ),
+				'email'        => sanitize_email( $user->user_email ),
+				'first_name'   => sanitize_text_field( $user->first_name ),
+				'last_name'    => sanitize_text_field( $user->last_name ),
+				'display_name' => sanitize_text_field( $user->display_name ),
+				// Importers such as "wp user import-csv" accept one role: the import format has the main role only.
+				'role'         => isset( $columns['id'] ) ? implode( ', ', array_map( 'sanitize_text_field', $user->roles ) ) : sanitize_text_field( (string) ( array_values( $user->roles )[0] ?? '' ) ),
+				'registered'   => sanitize_text_field( $user->user_registered ),
+				'url'          => esc_url_raw( $user->user_url ),
 			);
 
 			/**
@@ -639,7 +692,8 @@ class UbdwpUsersHandler {
 		}
 
 		if ( UbdwpHelperFacade::is_protected_user( $user, $this->current_user_id ) ) {
-			return 'protected';
+			// Users protected by a rule (for example the settings of an add-on) are not administrators.
+			return UbdwpHelperFacade::is_privileged_user( $user ) ? 'protected' : 'protected_rule';
 		}
 
 		$capability = is_multisite() ? 'remove_user' : 'delete_user';

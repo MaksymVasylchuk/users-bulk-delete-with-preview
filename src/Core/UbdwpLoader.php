@@ -58,9 +58,11 @@ class UbdwpLoader {
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_styles' ) );
 		add_action( 'in_admin_header', array( $this, 'remove_foreign_notices' ), PHP_INT_MAX );
+		add_action( 'admin_init', array( $this, 'hide_pro_hints' ) );
 
 		// Add action links to the plugin list.
 		add_filter( 'plugin_action_links_' . WPUBDP_BASE_NAME, array( $this, 'action_links' ) );
+		add_filter( 'network_admin_plugin_action_links_' . WPUBDP_BASE_NAME, array( $this, 'network_action_links' ) );
 
 		if ( is_multisite() ) {
 			add_action( 'wp_initialize_site', array( UbdwpActivate::class, 'ubdwp_initialize_new_site' ) );
@@ -79,6 +81,22 @@ class UbdwpLoader {
 
 		// Initialize page objects.
 		$this->init_pages();
+	}
+
+	/**
+	 * Hide the notes about the Pro add-on for the current user ("Hide these tips" link).
+	 *
+	 * @return void
+	 */
+	public function hide_pro_hints(): void {
+		if ( ! isset( $_GET['ubdwp_hide_pro_hints'] ) || ! current_user_can( 'manage_options' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce is checked below.
+			return;
+		}
+
+		check_admin_referer( 'ubdwp_hide_pro_hints' );
+		update_user_meta( get_current_user_id(), 'ubdwp_hide_pro_hints', 1 );
+		wp_safe_redirect( remove_query_arg( array( 'ubdwp_hide_pro_hints', '_wpnonce' ) ) );
+		exit;
 	}
 
 	/**
@@ -220,7 +238,35 @@ class UbdwpLoader {
 		$options_link  = '<a href="' . esc_url( admin_url( 'admin.php?page=ubdwp_admin_settings' ) ) . '">' . esc_html__( 'Settings', 'users-bulk-delete-with-preview' ) . '</a>';
 		array_unshift( $links, $settings_link, $logs_link, $options_link );
 
+		if ( ! UbdwpHelperFacade::is_pro_active() ) {
+			$links[] = $this->get_pro_link();
+		}
+
 		return $links;
+	}
+
+	/**
+	 * Add the "Get Pro" link on the Plugins page of the network admin (the pages of the plugin are in the site admin).
+	 *
+	 * @param array<string> $links Existing action links.
+	 *
+	 * @return array<string> Modified action links.
+	 */
+	public function network_action_links( array $links ): array {
+		if ( ! UbdwpHelperFacade::is_pro_active() ) {
+			$links[] = $this->get_pro_link();
+		}
+
+		return $links;
+	}
+
+	/**
+	 * Link to the Pro add-on.
+	 *
+	 * @return string HTML of the link.
+	 */
+	private function get_pro_link(): string {
+		return '<a href="' . esc_url( UbdwpHelperFacade::get_pro_url() ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Get Pro', 'users-bulk-delete-with-preview' ) . '</a>';
 	}
 
 	/**
@@ -303,7 +349,7 @@ class UbdwpLoader {
 		defined( 'WPUBDP_PLUGIN_DIR' ) || define( 'WPUBDP_PLUGIN_DIR', $plugin_root . '/' );
 		defined( 'WPUBDP_PLUGIN_FILE' ) || define( 'WPUBDP_PLUGIN_FILE', $plugin_root . '/ubdwp-users-bulk-delete-with-preview.php' );
 		defined( 'WPUBDP_PLUGIN_URL' ) || define( 'WPUBDP_PLUGIN_URL', plugin_dir_url( WPUBDP_PLUGIN_FILE ) );
-		defined( 'WPUBDP_PLUGIN_VERSION' ) || define( 'WPUBDP_PLUGIN_VERSION', '2.4.1' );
+		defined( 'WPUBDP_PLUGIN_VERSION' ) || define( 'WPUBDP_PLUGIN_VERSION', '2.6.0' );
 		defined( 'WPUBDP_BASE_NAME' ) || define( 'WPUBDP_BASE_NAME', plugin_basename( WPUBDP_PLUGIN_FILE ) );
 	}
 }

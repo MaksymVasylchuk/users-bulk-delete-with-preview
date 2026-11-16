@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Users Bulk Delete With Preview 2.5.0\n"
+"Project-Id-Version: Users Bulk Delete With Preview 2.6.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/users-bulk-delete-with-preview\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-07T19:38:11+00:00\n"
+"POT-Creation-Date: 2026-11-15T19:48:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: users-bulk-delete-with-preview\n"
@@ -141,7 +141,7 @@ msgid "Please choose a valid user meta comparison."
 msgstr ""
 
 #: src/Cli/UbdwpCliCommand.php:660
-#: src/Helpers/UbdwpHelper.php:250
+#: src/Helpers/UbdwpHelper.php:264
 #: src/Utils/UbdwpValidation.php:327
 msgid "The user selected to receive the content is not valid."
 msgstr ""
@@ -162,39 +162,43 @@ msgstr ""
 msgid "Deleted users: %1$d. Not deleted: %2$d."
 msgstr ""
 
-#: src/Core/UbdwpLoader.php:148
-#: src/Core/UbdwpLoader.php:149
+#: src/Core/UbdwpLoader.php:166
+#: src/Core/UbdwpLoader.php:167
 msgid "Bulk Users Delete"
 msgstr ""
 
-#: src/Core/UbdwpLoader.php:158
-#: src/Core/UbdwpLoader.php:159
+#: src/Core/UbdwpLoader.php:176
+#: src/Core/UbdwpLoader.php:177
 #: src/Pages/UbdwpJobsPage.php:45
 msgid "Deletion Jobs"
 msgstr ""
 
-#: src/Core/UbdwpLoader.php:167
+#: src/Core/UbdwpLoader.php:185
 msgid "Bulk Users Delete Logs"
 msgstr ""
 
-#: src/Core/UbdwpLoader.php:168
-#: src/Core/UbdwpLoader.php:219
+#: src/Core/UbdwpLoader.php:186
+#: src/Core/UbdwpLoader.php:237
 #: src/Pages/UbdwpLogsPage.php:46
 msgid "Logs"
 msgstr ""
 
-#: src/Core/UbdwpLoader.php:176
+#: src/Core/UbdwpLoader.php:194
 msgid "Bulk Users Delete Settings"
 msgstr ""
 
-#: src/Core/UbdwpLoader.php:177
-#: src/Core/UbdwpLoader.php:220
-#: src/Pages/UbdwpSettingsPage.php:45
+#: src/Core/UbdwpLoader.php:195
+#: src/Core/UbdwpLoader.php:238
+#: src/Pages/UbdwpSettingsPage.php:47
 msgid "Settings"
 msgstr ""
 
-#: src/Core/UbdwpLoader.php:218
+#: src/Core/UbdwpLoader.php:236
 msgid "Delete users"
+msgstr ""
+
+#: src/Core/UbdwpLoader.php:269
+msgid "Get Pro"
 msgstr ""
 
 #: src/Handlers/UbdwpLogsHandler.php:132
@@ -256,9 +260,9 @@ msgid "No matching records found"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:118
-#: templates/jobs-page.php:34
-#: templates/jobs-page.php:59
-#: templates/logs-page.php:41
+#: templates/jobs-page.php:39
+#: templates/jobs-page.php:64
+#: templates/logs-page.php:44
 #: templates/partials/_users_table.php:38
 msgid "ID"
 msgstr ""
@@ -301,12 +305,12 @@ msgid "Assign related content to user"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:125
-#: src/Helpers/UbdwpHelper.php:602
+#: src/Helpers/UbdwpHelper.php:643
 msgid "Select a user"
 msgstr ""
 
 #: src/Helpers/UbdwpHelper.php:126
-#: src/Helpers/UbdwpHelper.php:604
+#: src/Helpers/UbdwpHelper.php:645
 msgid "Remove all related content"
 msgstr ""
 
@@ -416,63 +420,71 @@ msgstr ""
 msgid "Delete %d users? This cannot be undone."
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:221
+#: src/Helpers/UbdwpHelper.php:234
 msgid "Removed permanently"
 msgstr ""
 
 #. translators: %s: username that received the content.
-#: src/Helpers/UbdwpHelper.php:228
+#: src/Helpers/UbdwpHelper.php:241
 #, php-format
 msgid "Reassigned to %s"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:232
+#: src/Helpers/UbdwpHelper.php:245
 msgid "Kept on this site"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:233
+#: src/Helpers/UbdwpHelper.php:246
 msgid "Handled by WordPress (posts go to the trash)"
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:245
+#: src/Helpers/UbdwpHelper.php:258
 msgid "User does not exist."
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:246
+#: src/Helpers/UbdwpHelper.php:259
 msgid "You cannot delete your own account."
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:247
+#: src/Helpers/UbdwpHelper.php:260
 msgid "User is not a member of this site."
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:248
+#: src/Helpers/UbdwpHelper.php:261
 msgid "Protected: administrators and other privileged users cannot be deleted."
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:249
+#: src/Helpers/UbdwpHelper.php:262
+msgid "Protected: excluded from deletion by your settings."
+msgstr ""
+
+#: src/Helpers/UbdwpHelper.php:263
 msgid "You do not have permission to delete this user."
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:251
+#: src/Helpers/UbdwpHelper.php:265
 msgid "WordPress could not delete this user."
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:622
+#: src/Helpers/UbdwpHelper.php:664
 msgid "Administrators and other privileged users cannot be deleted with this plugin."
 msgstr ""
 
-#: src/Helpers/UbdwpHelper.php:622
+#: src/Helpers/UbdwpHelper.php:665
+msgid "Excluded from deletion by your settings."
+msgstr ""
+
+#: src/Helpers/UbdwpHelper.php:666
 msgid "Protected"
 msgstr ""
 
-#: src/Pages/UbdwpSettingsPage.php:61
+#: src/Pages/UbdwpSettingsPage.php:65
 #: templates/settings-page.php:12
 msgid "General"
 msgstr ""
 
-#: src/Pages/UbdwpSettingsPage.php:115
-#: src/Pages/UbdwpSettingsPage.php:150
+#: src/Pages/UbdwpSettingsPage.php:130
+#: src/Pages/UbdwpSettingsPage.php:165
 #: assets/build/settings.js:1
 msgid "Please enter a number of days."
 msgstr ""
@@ -638,87 +650,99 @@ msgstr ""
 msgid "Deletions started on the Bulk Users Delete page or with WP-CLI. Background jobs continue after you leave the page; this page refreshes while a job is running."
 msgstr ""
 
-#: templates/jobs-page.php:35
-#: templates/jobs-page.php:60
-msgid "Started by"
+#: templates/jobs-page.php:30
+msgid "Finished jobs are removed after 30 days; the Logs page keeps the record of every deletion."
 msgstr ""
 
-#: templates/jobs-page.php:36
-#: templates/jobs-page.php:61
-msgid "Mode"
-msgstr ""
-
-#: templates/jobs-page.php:37
-#: templates/jobs-page.php:62
-msgid "Status"
-msgstr ""
-
-#: templates/jobs-page.php:38
-#: templates/jobs-page.php:68
-msgid "Progress"
-msgstr ""
-
-#: templates/jobs-page.php:39
-#: templates/jobs-page.php:69
-msgid "Deleted"
+#: templates/jobs-page.php:32
+msgid "Pro runs saved filters on a schedule: every hour, day, week or month, with a report or a warning email before deletion."
 msgstr ""
 
 #: templates/jobs-page.php:40
-#: templates/jobs-page.php:70
-msgid "Not deleted"
+#: templates/jobs-page.php:65
+msgid "Started by"
 msgstr ""
 
 #: templates/jobs-page.php:41
-#: templates/jobs-page.php:71
-msgid "Created"
+#: templates/jobs-page.php:66
+msgid "Mode"
 msgstr ""
 
 #: templates/jobs-page.php:42
-msgid "Actions"
+#: templates/jobs-page.php:67
+msgid "Status"
+msgstr ""
+
+#: templates/jobs-page.php:43
+#: templates/jobs-page.php:73
+msgid "Progress"
+msgstr ""
+
+#: templates/jobs-page.php:44
+#: templates/jobs-page.php:74
+msgid "Deleted"
+msgstr ""
+
+#: templates/jobs-page.php:45
+#: templates/jobs-page.php:75
+msgid "Not deleted"
+msgstr ""
+
+#: templates/jobs-page.php:46
+#: templates/jobs-page.php:76
+msgid "Created"
 msgstr ""
 
 #: templates/jobs-page.php:47
+msgid "Actions"
+msgstr ""
+
+#: templates/jobs-page.php:52
 msgid "No deletion jobs yet."
 msgstr ""
 
-#: templates/jobs-page.php:53
+#: templates/jobs-page.php:58
 msgid "Browser"
 msgstr ""
 
-#: templates/jobs-page.php:54
+#: templates/jobs-page.php:59
 msgid "Background"
 msgstr ""
 
-#: templates/jobs-page.php:55
+#: templates/jobs-page.php:60
 msgid "WP-CLI"
 msgstr ""
 
-#: templates/jobs-page.php:74
+#: templates/jobs-page.php:79
 #: templates/partials/_confirmation-popup.php:54
 msgid "Cancel"
 msgstr ""
 
 #. translators: %s: Number of deletion jobs.
-#: templates/jobs-page.php:87
+#: templates/jobs-page.php:92
 #, php-format
 msgid "%s job"
 msgid_plural "%s jobs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/logs-page.php:42
-msgid "User"
-msgstr ""
-
-#: templates/logs-page.php:43
-msgid "Deleted Users Count"
-msgstr ""
-
-#: templates/logs-page.php:44
-msgid "Deleted User Data"
+#: templates/logs-page.php:37
+msgid "Pro exports the log to CSV, emails you when a background deletion finishes and can call a webhook after each deletion."
 msgstr ""
 
 #: templates/logs-page.php:45
+msgid "User"
+msgstr ""
+
+#: templates/logs-page.php:46
+msgid "Deleted Users Count"
+msgstr ""
+
+#: templates/logs-page.php:47
+msgid "Deleted User Data"
+msgstr ""
+
+#: templates/logs-page.php:48
 msgid "Deletion Time"
 msgstr ""
 
@@ -933,6 +957,19 @@ msgstr ""
 msgid "Tip: WordPress stores profile fields such as first_name for every user, even when they are blank. To find users who left a field empty, choose \"Meta is empty or missing\"."
 msgstr ""
 
+#: templates/partials/_pro_hint.php:27
+msgid "Learn about Pro"
+msgstr ""
+
+#: templates/partials/_pro_hint.php:27
+#: templates/settings-page.php:141
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: templates/partials/_pro_hint.php:29
+msgid "Hide these tips"
+msgstr ""
+
 #: templates/partials/_step-2-buttons.php:18
 msgid "Previous step"
 msgstr ""
@@ -974,88 +1011,148 @@ msgstr ""
 msgid "Select All"
 msgstr ""
 
-#: templates/settings-page.php:27
+#: templates/settings-page.php:28
 msgid "Settings sections"
 msgstr ""
 
-#: templates/settings-page.php:51
+#: templates/settings-page.php:52
 msgid "Privacy"
 msgstr ""
 
-#: templates/settings-page.php:52
+#: templates/settings-page.php:53
 msgid "What the deletion log keeps about deleted users, and for how long."
 msgstr ""
 
-#: templates/settings-page.php:57
+#: templates/settings-page.php:58
 msgid "Keep log entries for"
 msgstr ""
 
-#: templates/settings-page.php:61
+#: templates/settings-page.php:62
 msgid "days"
 msgstr ""
 
-#: templates/settings-page.php:63
-msgid "Older entries and finished deletion jobs are deleted automatically once a day. 0 keeps them until you delete them."
+#: templates/settings-page.php:64
+msgid "Older entries are deleted automatically once a day. 0 keeps them until you delete them. Finished deletion jobs are always removed after 30 days; the log keeps the record of every deletion."
 msgstr ""
 
-#: templates/settings-page.php:67
+#: templates/settings-page.php:68
 msgid "Emails and names in new entries"
 msgstr ""
 
-#: templates/settings-page.php:70
+#: templates/settings-page.php:71
 msgid "Store masked (j***@example.com)"
 msgstr ""
 
-#: templates/settings-page.php:71
+#: templates/settings-page.php:72
 msgid "Store in full"
 msgstr ""
 
-#: templates/settings-page.php:72
+#: templates/settings-page.php:73
 msgid "Do not store (only user IDs)"
 msgstr ""
 
-#: templates/settings-page.php:74
+#: templates/settings-page.php:75
 msgid "The log is also included in Tools → Export Personal Data and Erase Personal Data."
 msgstr ""
 
-#: templates/settings-page.php:79
+#: templates/settings-page.php:80
 msgid "Save privacy settings"
 msgstr ""
 
 #: templates/settings-page.php:85
+msgid "Export"
+msgstr ""
+
+#: templates/settings-page.php:86
+msgid "The CSV file of \"Export Selected Users\" on the Bulk Users Delete page."
+msgstr ""
+
+#: templates/settings-page.php:90
+msgid "CSV format"
+msgstr ""
+
+#: templates/settings-page.php:93
+msgid "Readable (ID, Username, Email, First Name, Last Name, Role)"
+msgstr ""
+
+#: templates/settings-page.php:94
+msgid "For importing (user_login, user_email, first_name, last_name, display_name, role, user_registered, user_url)"
+msgstr ""
+
+#: templates/settings-page.php:96
+msgid "The import format uses the field names of WordPress, so the file can be imported on another site with \"wp user import-csv\" or a user import plugin. It has no ID column (importers would overwrite the user with the same ID there) and only the main role of each user. Passwords are never exported."
+msgstr ""
+
+#: templates/settings-page.php:101
+msgid "Save export settings"
+msgstr ""
+
+#: templates/settings-page.php:107
 msgid "Log maintenance"
 msgstr ""
 
-#: templates/settings-page.php:87
+#: templates/settings-page.php:109
 msgid "These actions change the existing entries of the log and cannot be undone."
 msgstr ""
 
-#: templates/settings-page.php:88
+#: templates/settings-page.php:110
 #: assets/build/users.js:1
 msgid "Open the Logs page"
 msgstr ""
 
-#: templates/settings-page.php:92
+#: templates/settings-page.php:114
 msgid "Apply to existing entries"
 msgstr ""
 
-#: templates/settings-page.php:93
+#: templates/settings-page.php:115
 msgid "Delete entries older than the period above"
 msgstr ""
 
-#: templates/settings-page.php:94
+#: templates/settings-page.php:116
 msgid "Delete the whole log"
+msgstr ""
+
+#: templates/settings-page.php:131
+msgid "Pro add-on"
+msgstr ""
+
+#: templates/settings-page.php:132
+msgid "Everything in this plugin stays free. The paid add-on adds:"
+msgstr ""
+
+#: templates/settings-page.php:135
+msgid "Recycle bin: restore deleted users with their password, profile, roles and posts."
+msgstr ""
+
+#: templates/settings-page.php:136
+msgid "Scheduled cleanups with saved filters, reports and warning emails."
+msgstr ""
+
+#: templates/settings-page.php:137
+msgid "Last login, spam and fraud filters, WooCommerce, membership and LMS filters."
+msgstr ""
+
+#: templates/settings-page.php:138
+msgid "Protection: never delete chosen users, and stop deleted users from registering again."
+msgstr ""
+
+#: templates/settings-page.php:141
+msgid "Learn more and try it for 7 days"
 msgstr ""
 
 #: templates/steps/step-1.php:38
 msgid "Choose filter type"
 msgstr ""
 
-#: templates/steps/step-1.php:80
+#: templates/steps/step-1.php:77
+msgid "Pro adds filters by last login, spam and fraud signs, purchases, memberships and courses, and saved filters."
+msgstr ""
+
+#: templates/steps/step-1.php:84
 msgid "Preview"
 msgstr ""
 
-#: templates/steps/step-1.php:91
+#: templates/steps/step-1.php:95
 msgid "Clear filters"
 msgstr ""
 
@@ -1065,6 +1162,10 @@ msgstr ""
 
 #: templates/steps/step-3.php:31
 msgid "Related content"
+msgstr ""
+
+#: templates/steps/step-3.php:54
+msgid "Deleted users cannot be restored. With Pro, they go to a recycle bin first and can be restored with their password, profile and posts."
 msgstr ""
 
 #: assets/build/jobs.js:1
@@ -1083,6 +1184,10 @@ msgstr ""
 
 #: assets/build/settings.js:1
 msgid "Privacy settings saved."
+msgstr ""
+
+#: assets/build/settings.js:1
+msgid "Export settings saved."
 msgstr ""
 
 #: assets/build/users.js:1

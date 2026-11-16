@@ -980,6 +980,38 @@ body {
     border-top: 1px solid #f0f0f1;
 }
 
+.ubdwp-pro-hint {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr) auto;
+    gap: 6px 8px;
+    align-items: start;
+    max-width: 960px;
+    margin: 12px 0;
+    padding: 8px 12px;
+    border-left: 4px solid #2271b1;
+    background: #f0f6fc;
+    color: #1d2327;
+}
+
+.ubdwp-pro-hint .dashicons {
+    color: #2271b1;
+}
+
+.ubdwp-pro-hint-hide {
+    color: #50575e;
+    font-size: 12px;
+}
+
+.ubdwp-pro-list {
+    margin: 0;
+    padding: 12px 20px 12px 40px;
+    list-style: disc;
+}
+
+.ubdwp-pro-list li {
+    margin-bottom: 4px;
+}
+
 .ubdwp-card-footer {
     display: flex;
     flex-wrap: wrap;
@@ -1001,7 +1033,21 @@ body {
 
     .ubdwp-card-footer .button {
         width: 100%;
+        height: auto;
+        min-height: 40px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        line-height: 1.4;
+        white-space: normal;
         text-align: center;
+    }
+
+    .ubdwp-pro-hint {
+        grid-template-columns: 20px minmax(0, 1fr);
+    }
+
+    .ubdwp-pro-hint-hide {
+        grid-column: 2;
     }
 }
 

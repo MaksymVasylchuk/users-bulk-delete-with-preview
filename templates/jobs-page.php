@@ -27,6 +27,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div id="ubdwp_notices">
 			</div>
 			<p class="description"><?php esc_html_e( 'Deletions started on the Bulk Users Delete page or with WP-CLI. Background jobs continue after you leave the page; this page refreshes while a job is running.', 'users-bulk-delete-with-preview' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Finished jobs are removed after 30 days; the Logs page keeps the record of every deletion.', 'users-bulk-delete-with-preview' ); ?></p>
+			<?php
+			$pro_hint = __( 'Pro runs saved filters on a schedule: every hour, day, week or month, with a report or a warning email before deletion.', 'users-bulk-delete-with-preview' );
+			require WPUBDP_PLUGIN_DIR . 'templates/partials/_pro_hint.php';
+			?>
 			<!-- Deletion jobs -->
 			<table id="ubdwp_jobs" class="wp-list-table widefat striped ubdwp-jobs">
 				<thead>

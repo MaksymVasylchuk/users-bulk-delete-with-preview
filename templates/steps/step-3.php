@@ -50,8 +50,10 @@ if ( ! defined( 'ABSPATH' ) ) {
                     </tbody>
                 </table>
             </div>
-
-
+            <?php
+            $pro_hint = __( 'Deleted users cannot be restored. With Pro, they go to a recycle bin first and can be restored with their password, profile and posts.', 'users-bulk-delete-with-preview' );
+            require __DIR__ . '/../partials/_pro_hint.php';
+            ?>
         </div>
     </div>
 </div>

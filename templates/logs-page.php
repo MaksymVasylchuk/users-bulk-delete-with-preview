@@ -33,6 +33,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			 * @since 2.5.0
 			 */
 			do_action( 'ubdwp_logs_page_actions' );
+
+			$pro_hint = __( 'Pro exports the log to CSV, emails you when a background deletion finishes and can call a webhook after each deletion.', 'users-bulk-delete-with-preview' );
+			require WPUBDP_PLUGIN_DIR . 'templates/partials/_pro_hint.php';
 			?>
 			<!-- Logs table -->
 			<table id="ubdwp_logs_table" class="display" style="width:100%">
