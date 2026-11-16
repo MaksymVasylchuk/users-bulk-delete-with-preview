@@ -26,3 +26,10 @@ npm-debug.log*
 # Release packages (assets/build/ is committed: the plugin loads only the built files)
 *.zip
 /dist/
+
+# Documentation build
+docs/.vitepress/dist
+docs/.vitepress/cache
+
+# Local Claude Code settings
+.claude/
