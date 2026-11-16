@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress';
 
 const repo = 'https://github.com/MaksymVasylchuk/users-bulk-delete-with-preview';
 const wporg = 'https://wordpress.org/plugins/users-bulk-delete-with-preview/';
-const checkout = 'https://checkout.freemius.com/plugin/43896/plan/77316/';
+const checkout = 'https://checkout.freemius.com/plugin/43896/?trial=paid';
 
 export default defineConfig( {
 	title: 'Users Bulk Delete With Preview',
